@@ -1,37 +1,43 @@
-# Base image
-FROM php:8.2-fpm
+# Étape 1 : Image officielle PHP avec Apache
+FROM php:8.2-apache
 
-# Set working directory
-WORKDIR /var/www
-
-# Install dependencies
+# Étape 2 : Installation des dépendances système
 RUN apt-get update && apt-get install -y \
-    build-essential \
+    git \
+    curl \
     libpng-dev \
-    libjpeg-dev \
     libonig-dev \
     libxml2-dev \
     zip \
     unzip \
-    curl \
-    git \
     libpq-dev \
-    libzip-dev \
-    libcurl4-openssl-dev \
-    && docker-php-ext-install pdo pdo_pgsql zip mbstring exif pcntl bcmath
+    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
 
-# Install Composer
+# Étape 3 : Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy existing application directory
+# Étape 4 : Configuration du dossier Laravel
+WORKDIR /var/www
+
+# Étape 5 : Copier le code du projet
 COPY . .
 
-# Set permissions
+# Étape 6 : Donner les droits d’accès
 RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www
+    && chmod -R 755 /var/www/storage
 
-# Expose port
-EXPOSE 8000
+# Étape 7 : Installer les dépendances Laravel
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Laravel entrypoint
-CMD php artisan serve --host=0.0.0.0 --port=8000
+# Étape 8 : Commandes Laravel essentielles
+RUN php artisan config:clear && \
+    php artisan route:clear && \
+    php artisan view:clear && \
+    php artisan config:cache && \
+    php artisan storage:link
+
+# Étape 9 : Exposer le bon port pour Render
+EXPOSE 8080
+
+# Étape 10 : Lancer Laravel sur le bon port
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
