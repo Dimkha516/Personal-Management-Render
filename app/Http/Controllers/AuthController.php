@@ -22,10 +22,18 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        $authResult = $this->authService->login($credentials);
+        try {
+            $authResult = $this->authService->login($credentials);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Erreur serveur',
+                'error' => $e->getMessage()
+            ], 500);
+        }
 
         if (isset($authResult['error'])) {
-
             if ($authResult['error'] === 'first_connexion') {
                 return response()->json([
                     'message' => 'Vous devez changer votre mot de passe avant de vous connecter.',
@@ -35,15 +43,13 @@ class AuthController extends Controller
 
             return response()->json(['error' => $authResult['error']], 401);
         }
-        $user = $authResult['user'];
-        $token = $authResult['token'];
-
 
         return response()->json([
-            'user' => $user,
-            'token' => $token,
+            'user' => $authResult['user'],
+            'token' => $authResult['token'],
         ], 200);
     }
+
 
     // Logout user
     public function logout(Request $request)

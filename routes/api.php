@@ -8,6 +8,8 @@ use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,17 +22,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 
+Route::get('/seed-user', function () {
+    $user = User::firstOrCreate(
+        ['email' => 'rh1@gmail.com'],
+        [
+            'password' => Hash::make('password123'),
+            'status' => 'active',
+            'firstConnexion' => false
+        ]
+    );
 
-// Route::get('/test', function () {
-//     return response()->json(['message' => 'Laravel 10 API is working']);
-// });
+    return response()->json($user);
+});
 
-// Route::post('/login', [UserController::class, 'login']);
-// Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'logout']);
 Route::prefix('v1')->group(function () {
     //--------------- Permissions and Roles Routes ---------------
     Route::prefix('permissions')->group(function () {
@@ -68,7 +73,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth:sanctum')->get("/", [CongeController::class, 'index']);
         Route::middleware('auth:sanctum')->get("/mesConges", [CongeController::class, 'mesConges']);
         Route::middleware('auth:sanctum')->get("/{id}", [CongeController::class, 'show']);
-        
+
         Route::middleware('auth:sanctum')->post("/", [CongeController::class, 'store']);
         Route::middleware('auth:sanctum')->post("/valider/{id}", [congeController::class, 'valider']);
         Route::middleware('auth:sanctum')->post("/reject/{id}", [congeController::class, 'rejeter']);
@@ -82,7 +87,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth:sanctum')->get("/", [CessationController::class, 'index']);
         Route::middleware('auth:sanctum')->get("/mesCessations", [CessationController::class, 'mesCessations']);
         Route::middleware('auth:sanctum')->get("/{id}", [CessationController::class, 'show']);
-        
+
         Route::middleware('auth:sanctum')->post("/", [CessationController::class, 'store']);
         Route::middleware('auth:sanctum')->post("/valider/{id}", [CessationController::class, 'valider']);
         Route::middleware('auth:sanctum')->post("/reject/{id}", [CessationController::class, 'rejeter']);
@@ -90,4 +95,4 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth:sanctum')->put("/{id}", [CessationController::class, 'update']);
         Route::middleware('auth:sanctum')->delete("/{id}", [CessationController::class, 'destroy']);
     });
-});  
+});
