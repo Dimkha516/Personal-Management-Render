@@ -128,7 +128,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
+        Str::slug(env('APP_NAME', 'laravel'), '_') . '_session'
     ),
 
     /*
@@ -155,7 +155,9 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    // 'domain' => env('SESSION_DOMAIN'),
+    'domain' => env('SESSION_DOMAIN', '.onrender.com'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -168,7 +170,9 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    // 'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => env('SESSION_SECURE_COOKIE', true), // true pour HTTPS
+
 
     /*
     |--------------------------------------------------------------------------
@@ -196,7 +200,9 @@ return [
     |
     */
 
-    'same_site' => 'lax',
+    // 'same_site' => 'lax',
+    'same_site' => env('SESSION_SAME_SITE', 'none'), // none pour les requêtes cross-origin
+
 
     /*
     |--------------------------------------------------------------------------
