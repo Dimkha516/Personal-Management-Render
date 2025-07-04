@@ -6,6 +6,7 @@ use App\Http\Controllers\CongeController;
 use App\Http\Controllers\EmployesController;
 use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\UserController;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
@@ -27,9 +28,21 @@ Route::get('/seed-user', function () {
     $user = User::firstOrCreate(
         ['email' => 'rh1@gmail.com'],
         [
+            'name' => 'Koris',
             'password' => Hash::make('password123'),
+            'role_id' => 1,
             'status' => 'active',
             'firstConnexion' => false
+        ]
+    );
+
+    return response()->json($user);
+});
+
+Route::get('/seed-role', function () {
+    $user = Role::firstOrCreate(
+        [
+            'name' => 'admin'
         ]
     );
 
