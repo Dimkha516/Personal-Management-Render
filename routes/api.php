@@ -91,6 +91,18 @@ Route::get('/migrate', function () {
     }
 });
 
+Route::get('/hard-reset-migrations', function () {
+    try {
+        // Supprimer les tables Laravel standard
+        Schema::dropIfExists('roles');
+        Schema::dropIfExists('migrations'); // <- Supprime le cache des migrations
+
+        return response()->json(['message' => '✅ Tables roles et migrations supprimées avec succès']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
 
 Route::get('/seed-user', function () {
     $user = User::firstOrCreate(
