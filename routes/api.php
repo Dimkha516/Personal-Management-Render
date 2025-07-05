@@ -81,6 +81,15 @@ Route::get('/nuclear-reset', function () {
     }
 });
 
+Route::get('/drop-roles', function () {
+    try {
+        Schema::dropIfExists('roles');
+        return response()->json(['message' => '✅ Table roles supprimée avec succès']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
 
 Route::get('/migrate', function () {
     try {
