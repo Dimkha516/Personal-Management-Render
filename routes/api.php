@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schema;
+
 
 
 /*
@@ -58,6 +60,24 @@ Route::get('/force-reset-db', function () {
         return response()->json(['message' => '🎉 Base de données réinitialisée et migrations relancées']);
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+Route::get('/nuclear-reset', function () {
+    try {
+        // Liste toutes les tables existantes
+        $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
+
+        foreach ($tables as $table) {
+            Schema::drop($table->tablename);
+        }
+
+        // Relancer les migrations sans transaction cassée
+        Artisan::call('migrate', ['--force' => true]);
+
+        return response()->json(['message' => '🚀 Toutes les tables supprimées et recréées avec succès']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
     }
 });
 
