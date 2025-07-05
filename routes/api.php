@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +24,20 @@ use App\Models\User;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::get('/test-db', function () {
+    try {
+        DB::connection()->getPdo();
+        return response()->json(['success' => true, 'message' => 'Connexion réussie à PostgreSQL 🎉']);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Échec de connexion',
+            'error' => $e->getMessage(),
+            'used_connection' => config('database.default')
+        ]);
+    }
+});
 
 
 Route::get('/seed-user', function () {
