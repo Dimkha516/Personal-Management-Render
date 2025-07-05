@@ -44,10 +44,14 @@ Route::get('/reset-db', function () {
     try {
         DB::statement('DROP SCHEMA public CASCADE;');
         DB::statement('CREATE SCHEMA public;');
+        DB::statement('GRANT ALL ON SCHEMA public TO public;');
         Artisan::call('migrate', ['--force' => true]);
-        return response()->json(['message' => 'Base réinitialisée et migrations OK ✅']);
+        return response()->json(['message' => 'Base réinitialisée et migrations terminées ✅']);
     } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()]);
+        return response()->json([
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
     }
 });
 
