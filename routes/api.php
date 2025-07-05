@@ -40,6 +40,16 @@ Route::get('/test-db', function () {
     }
 });
 
+Route::get('/reset-db', function () {
+    try {
+        DB::statement('DROP SCHEMA public CASCADE;');
+        DB::statement('CREATE SCHEMA public;');
+        Artisan::call('migrate', ['--force' => true]);
+        return response()->json(['message' => 'Base réinitialisée et migrations OK ✅']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
 
 Route::get('/migrate', function () {
     try {
