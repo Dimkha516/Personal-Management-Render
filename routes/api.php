@@ -40,6 +40,15 @@ Route::get('/test-db', function () {
     }
 });
 
+Route::get('/force-reset-users', function () {
+    try {
+        DB::statement('DROP TABLE IF EXISTS users CASCADE;');
+        return response()->json(['message' => 'Table users supprimée avec succès']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
 Route::get('/reset-db', function () {
     try {
         DB::statement('DROP SCHEMA public CASCADE;');
