@@ -29,15 +29,14 @@ RUN chown -R www-data:www-data /var/www \
 # Étape 7 : Installer les dépendances Laravel
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Étape 8 : Commandes Laravel essentielles
+# Étape 8 : Nettoyer les caches Laravel (sans figer)
 RUN php artisan config:clear && \
     php artisan route:clear && \
     php artisan view:clear && \
-    php artisan config:cache && \
     php artisan storage:link
 
-# Étape 9 : Exposer le bon port pour Render
+# Étape 9 : Exposer le port
 EXPOSE 8080
 
-# Étape 10 : Lancer Laravel sur le bon port
+# Étape 10 : Lancer Laravel sur le port 8080
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
