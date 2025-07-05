@@ -49,20 +49,18 @@ Route::get('/force-reset-users', function () {
     }
 });
 
-Route::get('/reset-db', function () {
+Route::get('/force-reset-db', function () {
     try {
-        DB::statement('DROP SCHEMA public CASCADE;');
-        DB::statement('CREATE SCHEMA public;');
-        DB::statement('GRANT ALL ON SCHEMA public TO public;');
+        DB::statement('DROP SCHEMA public CASCADE');
+        DB::statement('CREATE SCHEMA public');
         Artisan::call('migrate', ['--force' => true]);
-        return response()->json(['message' => 'Base réinitialisée et migrations terminées ✅']);
+
+        return response()->json(['message' => '🎉 Base de données réinitialisée et migrations relancées']);
     } catch (\Exception $e) {
-        return response()->json([
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
+        return response()->json(['error' => $e->getMessage()]);
     }
 });
+
 
 Route::get('/migrate', function () {
     try {
