@@ -63,21 +63,12 @@ Route::get('/force-reset-db', function () {
     }
 });
 
-Route::get('/nuclear-reset', function () {
+Route::get('/clean-migrations', function () {
     try {
-        // Liste toutes les tables existantes
-        $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
-
-        foreach ($tables as $table) {
-            Schema::drop($table->tablename);
-        }
-
-        // Relancer les migrations sans transaction cassée
-        Artisan::call('migrate', ['--force' => true]);
-
-        return response()->json(['message' => '🚀 Toutes les tables supprimées et recréées avec succès']);
+        DB::table('migrations')->where('migration', 'like', '%create_roles_table%')->delete();
+        return response()->json(['message' => '🧹 Migration "create_roles_table" supprimée du cache Laravel']);
     } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+        return response()->json(['error' => $e->getMessage()]);
     }
 });
 
