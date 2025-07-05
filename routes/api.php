@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Artisan;
 
 
 /*
@@ -36,6 +37,16 @@ Route::get('/test-db', function () {
             'error' => $e->getMessage(),
             'used_connection' => config('database.default')
         ]);
+    }
+});
+
+
+Route::get('/migrate', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return response()->json(['message' => 'Migrations exécutées avec succès']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
     }
 });
 
