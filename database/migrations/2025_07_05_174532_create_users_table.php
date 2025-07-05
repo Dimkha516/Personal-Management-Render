@@ -12,13 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->id(); // bigint unsigned auto_increment
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('firstConnexion')->nullable()->default(true);
             $table->rememberToken();
             $table->timestamps();
+            $table->enum('status', ['attente_attribution', 'actif', 'inactif'])->default('attente_attribution');
+
+            // Clé étrangère vers la table roles (⚠️ elle doit exister)
+            $table->foreignId('role_id')->constrained()->onDelete('cascade');
         });
     }
 
