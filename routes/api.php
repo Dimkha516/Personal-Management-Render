@@ -101,19 +101,29 @@ Route::get('/seed-role', function () {
     return response()->json($user);
 });
 
-Route::get('/constraint-services-types-agent', function () {
+Route::get('/constraint-typesconges-employes', function () {
     try {
-        // services.name UNIQUE
-        DB::statement('ALTER TABLE services ADD CONSTRAINT services_name_unique UNIQUE(name)');
+        // types_conges.libelle UNIQUE
+        DB::statement('ALTER TABLE types_conges ADD CONSTRAINT types_conges_libelle_unique UNIQUE(libelle)');
 
-        // types_agent.name UNIQUE
-        DB::statement('ALTER TABLE types_agent ADD CONSTRAINT types_agent_name_unique UNIQUE(name)');
+        // employes.fonction_id → fonctions.id
+        DB::statement('ALTER TABLE employes ADD CONSTRAINT employes_fonction_id_foreign FOREIGN KEY (fonction_id) REFERENCES fonctions(id) ON DELETE CASCADE');
 
-        return response()->json(['success' => true, 'message' => '✅ Contraintes services.name + types_agent.name ajoutées avec succès']);
+        // employes.service_id → services.id
+        DB::statement('ALTER TABLE employes ADD CONSTRAINT employes_service_id_foreign FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE');
+
+        // employes.type_agent_id → types_agent.id
+        DB::statement('ALTER TABLE employes ADD CONSTRAINT employes_type_agent_id_foreign FOREIGN KEY (type_agent_id) REFERENCES types_agent(id) ON DELETE CASCADE');
+
+        // employes.user_id → users.id (nullable)
+        DB::statement('ALTER TABLE employes ADD CONSTRAINT employes_user_id_foreign FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL');
+
+        return response()->json(['success' => true, 'message' => '✅ Contraintes types_conges + employes ajoutées avec succès']);
     } catch (\Exception $e) {
         return response()->json(['success' => false, 'error' => $e->getMessage()]);
     }
 });
+
 
 
 Route::prefix('v1')->group(function () {
