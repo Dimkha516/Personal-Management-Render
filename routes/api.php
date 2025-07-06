@@ -101,18 +101,15 @@ Route::get('/seed-role', function () {
     return response()->json($user);
 });
 
-Route::get('/constraint-permissions-permission-role', function () {
+Route::get('/constraint-users-fonctions', function () {
     try {
-        // permissions.name UNIQUE
-        DB::statement('ALTER TABLE permissions ADD CONSTRAINT permissions_name_unique UNIQUE(name)');
+        // users.role_id → roles.id
+        DB::statement('ALTER TABLE users ADD CONSTRAINT users_role_id_foreign FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE');
 
-        // permission_role.role_id → roles.id
-        DB::statement('ALTER TABLE permission_role ADD CONSTRAINT permission_role_role_id_foreign FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE');
+        // fonctions.name UNIQUE
+        DB::statement('ALTER TABLE fonctions ADD CONSTRAINT fonctions_name_unique UNIQUE(name)');
 
-        // permission_role.permission_id → permissions.id
-        DB::statement('ALTER TABLE permission_role ADD CONSTRAINT permission_role_permission_id_foreign FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE');
-
-        return response()->json(['success' => true, 'message' => '✅ Contraintes permissions + permission_role ajoutées avec succès']);
+        return response()->json(['success' => true, 'message' => '✅ Contraintes users.role_id + fonctions.name ajoutées avec succès']);
     } catch (\Exception $e) {
         return response()->json(['success' => false, 'error' => $e->getMessage()]);
     }
