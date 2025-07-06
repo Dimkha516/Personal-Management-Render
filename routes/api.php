@@ -100,29 +100,24 @@ Route::get('/seed-role', function () {
 
     return response()->json($user);
 });
-
-Route::get('/constraint-typesconges-employes', function () {
+ 
+Route::get('/constraint-documents-conges', function () {
     try {
-        // types_conges.libelle UNIQUE
-        DB::statement('ALTER TABLE types_conges ADD CONSTRAINT types_conges_libelle_unique UNIQUE(libelle)');
+        // documents.employe_id → employes.id
+        DB::statement('ALTER TABLE documents ADD CONSTRAINT documents_employe_id_foreign FOREIGN KEY (employe_id) REFERENCES employes(id) ON DELETE CASCADE');
 
-        // employes.fonction_id → fonctions.id
-        DB::statement('ALTER TABLE employes ADD CONSTRAINT employes_fonction_id_foreign FOREIGN KEY (fonction_id) REFERENCES fonctions(id) ON DELETE CASCADE');
+        // conges.employe_id → employes.id
+        DB::statement('ALTER TABLE conges ADD CONSTRAINT conges_employe_id_foreign FOREIGN KEY (employe_id) REFERENCES employes(id) ON DELETE CASCADE');
 
-        // employes.service_id → services.id
-        DB::statement('ALTER TABLE employes ADD CONSTRAINT employes_service_id_foreign FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE');
+        // conges.type_conge_id → types_conges.id
+        DB::statement('ALTER TABLE conges ADD CONSTRAINT conges_type_conge_id_foreign FOREIGN KEY (type_conge_id) REFERENCES types_conges(id) ON DELETE CASCADE');
 
-        // employes.type_agent_id → types_agent.id
-        DB::statement('ALTER TABLE employes ADD CONSTRAINT employes_type_agent_id_foreign FOREIGN KEY (type_agent_id) REFERENCES types_agent(id) ON DELETE CASCADE');
-
-        // employes.user_id → users.id (nullable)
-        DB::statement('ALTER TABLE employes ADD CONSTRAINT employes_user_id_foreign FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL');
-
-        return response()->json(['success' => true, 'message' => '✅ Contraintes types_conges + employes ajoutées avec succès']);
+        return response()->json(['success' => true, 'message' => '✅ Contraintes documents + conges ajoutées avec succès']);
     } catch (\Exception $e) {
         return response()->json(['success' => false, 'error' => $e->getMessage()]);
     }
 });
+
 
 
 
