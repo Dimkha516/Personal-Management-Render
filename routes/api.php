@@ -52,14 +52,6 @@ Route::get('/migrate', function () {
     }
 });
 
-Route::get('/reset-migrations-table', function () {
-    try {
-        DB::table('migrations')->truncate();
-        return ['message' => '✅ Table `migrations` vidée avec succès'];
-    } catch (\Exception $e) {
-        return ['error' => $e->getMessage()];
-    }
-});
 
 
 Route::get('/list-tables', function () {
@@ -74,44 +66,6 @@ Route::get('/rebuild-config', function () {
     Artisan::call('view:clear');
     return ['message' => '✅ Cache Laravel régénéré'];
 });
-
-
-Route::get('/seed-user', function () {
-    $user = User::firstOrCreate(
-        ['email' => 'rh1@gmail.com'],
-        [
-            'name' => 'Koris',
-            'password' => Hash::make('password123'),
-            'role_id' => 1,
-            'status' => 'active',
-            'firstConnexion' => false
-        ]
-    );
-
-    return response()->json($user);
-});
-
-Route::get('/seed-role', function () {
-    $user = Role::firstOrCreate(
-        [
-            'name' => 'admin'
-        ]
-    );
-
-    return response()->json($user);
-});
-
-Route::get('/constraint-cessations', function () {
-    try {
-        // cessations.conge_id → conges.id
-        DB::statement('ALTER TABLE cessations ADD CONSTRAINT cessations_conge_id_foreign FOREIGN KEY (conge_id) REFERENCES conges(id) ON DELETE CASCADE');
-
-        return response()->json(['success' => true, 'message' => '✅ Contrainte cessations.conge_id ajoutée avec succès']);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'error' => $e->getMessage()]);
-    }
-});
-
 
 
 
