@@ -42,45 +42,6 @@ Route::get('/test-db', function () {
     }
 });
 
-Route::get('/force-reset-users', function () {
-    try {
-        DB::statement('DROP TABLE IF EXISTS users CASCADE;');
-        return response()->json(['message' => 'Table users supprimée avec succès']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()]);
-    }
-});
-
-Route::get('/force-reset-db', function () {
-    try {
-        DB::statement('DROP SCHEMA public CASCADE');
-        DB::statement('CREATE SCHEMA public');
-        Artisan::call('migrate', ['--force' => true]);
-
-        return response()->json(['message' => '🎉 Base de données réinitialisée et migrations relancées']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()]);
-    }
-});
-
-Route::get('/clean-migrations', function () {
-    try {
-        DB::table('migrations')->where('migration', 'like', '%create_roles_table%')->delete();
-        return response()->json(['message' => '🧹 Migration "create_roles_table" supprimée du cache Laravel']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()]);
-    }
-});
-
-Route::get('/drop-roles', function () {
-    try {
-        Schema::dropIfExists('roles');
-        return response()->json(['message' => '✅ Table roles supprimée avec succès']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()]);
-    }
-});
-
 
 Route::get('/migrate', function () {
     try {
@@ -90,19 +51,6 @@ Route::get('/migrate', function () {
         return response()->json(['error' => $e->getMessage()]);
     }
 });
-
-Route::get('/hard-reset-migrations', function () {
-    try {
-        // Supprimer les tables Laravel standard
-        Schema::dropIfExists('roles');
-        Schema::dropIfExists('migrations'); // <- Supprime le cache des migrations
-
-        return response()->json(['message' => '✅ Tables roles et migrations supprimées avec succès']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()]);
-    }
-});
-
 
 Route::get('/seed-user', function () {
     $user = User::firstOrCreate(
@@ -128,6 +76,16 @@ Route::get('/seed-role', function () {
 
     return response()->json($user);
 });
+
+Route::get('/alter-roles-unique', function () {
+    try {
+        DB::statement('ALTER TABLE roles ADD CONSTRAINT roles_name_unique UNIQUE(name)');
+        return ['message' => '✅ Contrainte UNIQUE ajoutée à roles.name'];
+    } catch (\Exception $e) {
+        return ['error' => $e->getMessage()];
+    }
+});
+
 
 Route::prefix('v1')->group(function () {
     //--------------- Permissions and Roles Routes ---------------
