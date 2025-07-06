@@ -61,11 +61,12 @@ Route::get('/reset-migrations-table', function () {
     }
 });
 
+
 Route::get('/list-tables', function () {
     $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
     return collect($tables)->pluck('tablename');
 });
-
+ 
 Route::get('/rebuild-config', function () {
     Artisan::call('config:clear');
     Artisan::call('config:cache');
