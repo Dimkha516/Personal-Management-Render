@@ -57,6 +57,14 @@ Route::get('/list-tables', function () {
     return collect($tables)->pluck('tablename');
 });
 
+Route::get('/rebuild-config', function () {
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    return ['message' => '✅ Cache Laravel régénéré'];
+});
+
 
 Route::get('/seed-user', function () {
     $user = User::firstOrCreate(
