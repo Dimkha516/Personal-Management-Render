@@ -52,6 +52,15 @@ Route::get('/migrate', function () {
     }
 });
 
+Route::get('/reset-migrations-table', function () {
+    try {
+        DB::table('migrations')->truncate();
+        return ['message' => '✅ Table `migrations` vidée avec succès'];
+    } catch (\Exception $e) {
+        return ['error' => $e->getMessage()];
+    }
+});
+
 Route::get('/list-tables', function () {
     $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
     return collect($tables)->pluck('tablename');
