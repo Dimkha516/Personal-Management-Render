@@ -67,6 +67,251 @@ Route::get('/rebuild-config', function () {
     return ['message' => '✅ Cache Laravel régénéré'];
 });
 
+//-----------------------------------------------------SEEDERS6------------------------------------------
+
+Route::get('/seed-roles', function () {
+    try {
+        $roles = ['admin', 'employe', 'rh', 'directeur'];
+
+        foreach ($roles as $role) {
+            DB::table('roles')->updateOrInsert(['name' => $role]);
+        }
+
+        return response()->json(['success' => true, 'message' => '✅ Roles insérés avec succès']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+Route::get('/seed-permissions', function () {
+    try {
+        $permissions = ['voir_conges', 'valider_conges', 'gerer_utilisateurs', 'voir_statistiques'];
+
+        foreach ($permissions as $perm) {
+            DB::table('permissions')->updateOrInsert(['name' => $perm]);
+        }
+
+        return response()->json(['success' => true, 'message' => '✅ Permissions insérées avec succès']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+Route::get('/seed-role-permission', function () {
+    try {
+        $role = DB::table('roles')->where('name', 'admin')->first();
+        $permissions = DB::table('permissions')->pluck('id');
+
+        foreach ($permissions as $permId) {
+            DB::table('permission_role')->updateOrInsert([
+                'role_id' => $role->id,
+                'permission_id' => $permId
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => '✅ Permissions assignées à admin']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+
+Route::get('/seed-admin-user', function () {
+    try {
+        $role = DB::table('roles')->where('name', 'admin')->first();
+
+        DB::table('users')->updateOrInsert([
+            'email' => 'admin@admin.com'
+        ], [
+            'password' => Hash::make('password123'),
+            'email_verified_at' => now(),
+            'firstConnexion' => false,
+            'status' => 'actif',
+            'role_id' => $role->id,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        return response()->json(['success' => true, 'message' => '✅ Utilisateur admin créé']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+Route::get('/seed-types-conges', function () {
+    try {
+        $types = [
+            ['libelle' => 'Annuel', 'jours_par_defaut' => 30],
+            ['libelle' => 'Maternité', 'jours_par_defaut' => 90],
+            ['libelle' => 'Maladie', 'jours_par_defaut' => 15],
+        ];
+
+        foreach ($types as $type) {
+            DB::table('types_conges')->updateOrInsert(['libelle' => $type['libelle']], $type);
+        }
+
+        return response()->json(['success' => true, 'message' => '✅ Types de congé insérés']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+Route::get('/seed-types-agent', function () {
+    try {
+        $types = ['Contractuel', 'Fonctionnaire', 'Volontaire'];
+
+        foreach ($types as $name) {
+            DB::table('types_agent')->updateOrInsert(['name' => $name]);
+        }
+
+        return response()->json(['success' => true, 'message' => '✅ Types d\'agents insérés']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+Route::get('/seed-services', function () {
+    try {
+        $services = ['Informatique', 'RH', 'Comptabilité', 'Direction'];
+
+        foreach ($services as $name) {
+            DB::table('services')->updateOrInsert(['name' => $name]);
+        }
+
+        return response()->json(['success' => true, 'message' => '✅ Services insérés']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+Route::get('/seed-fonctions', function () {
+    try {
+        $fonctions = ['Développeur', 'Chef RH', 'Comptable', 'Directeur général'];
+
+        foreach ($fonctions as $name) {
+            DB::table('fonctions')->updateOrInsert(['name' => $name]);
+        }
+
+        return response()->json(['success' => true, 'message' => '✅ Fonctions insérées']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+
+Route::get('/seed-employes', function () {
+    try {
+        $fonctionId = DB::table('fonctions')->where('name', 'Développeur')->value('id');
+        $serviceId = DB::table('services')->where('name', 'Informatique')->value('id');
+        $typeAgentId = DB::table('types_agent')->where('name', 'Contractuel')->value('id');
+        $userId = DB::table('users')->where('email', 'admin@admin.com')->value('id');
+
+        DB::table('employes')->updateOrInsert([
+            'email' => 'employe1@example.com'
+        ], [
+            'nom' => 'Doe',
+            'prenom' => 'John',
+            'adresse' => 'Dakar',
+            'date_naiss' => '1990-01-01',
+            'lieu_naiss' => 'Dakar',
+            'situation_matrimoniale' => 'Célibataire',
+            'date_prise_service' => '2020-01-01',
+            'genre' => 'Masculin',
+            'type_contrat' => 'CDI',
+            'solde_conge_jours' => 20,
+            'fonction_id' => $fonctionId,
+            'service_id' => $serviceId,
+            'type_agent_id' => $typeAgentId,
+            'user_id' => $userId,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['success' => true, 'message' => '✅ Employé inséré']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+Route::get('/seed-documents', function () {
+    try {
+        $employeId = DB::table('employes')->where('email', 'employe1@example.com')->value('id');
+
+        DB::table('documents')->insertOrIgnore([
+            'nom' => 'Contrat CDI',
+            'fichier' => 'contrat_cdi.pdf',
+            'description' => 'Contrat de travail de John Doe',
+            'employe_id' => $employeId,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['success' => true, 'message' => '✅ Document inséré']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+
+Route::get('/seed-conges', function () {
+    try {
+        $employeId = DB::table('employes')->where('email', 'employe1@example.com')->value('id');
+        $typeCongeId = DB::table('types_conges')->where('libelle', 'Annuel')->value('id');
+
+        DB::table('conges')->insertOrIgnore([
+            'employe_id' => $employeId,
+            'type_conge_id' => $typeCongeId,
+            'date_demande' => now()->subDays(10),
+            'date_debut' => now()->subDays(5),
+            'date_fin' => now(),
+            'nombre_jours' => 5,
+            'statut' => 'approuve',
+            'motif' => 'Repos annuel',
+            'commentaire' => 'Aucun',
+            'piece_jointe' => null,
+            'note_pdf' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['success' => true, 'message' => '✅ Congé inséré']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+
+Route::get('/seed-cessations', function () {
+    try {
+        $congeId = DB::table('conges')->first()?->id;
+
+        if (!$congeId) {
+            return response()->json(['error' => 'Aucun congé trouvé']);
+        }
+
+        DB::table('cessations')->insertOrIgnore([
+            'conge_id' => $congeId,
+            'date_debut' => now()->subDays(2),
+            'date_fin' => now(),
+            'statut' => 'valide',
+            'motif' => 'Fin de contrat temporaire',
+            'commentaire' => 'RAS',
+            'fiche_cessation_pdf' => 'fiche_test.pdf',
+            'nombre_jours' => 2,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['success' => true, 'message' => '✅ Cessation insérée']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+
+
+//-----------------------------------------------------SEEDERS6------------------------------------------
+
 
 
 Route::prefix('v1')->group(function () {
