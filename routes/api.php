@@ -52,6 +52,12 @@ Route::get('/migrate', function () {
     }
 });
 
+Route::get('/list-tables', function () {
+    $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
+    return collect($tables)->pluck('tablename');
+});
+
+
 Route::get('/seed-user', function () {
     $user = User::firstOrCreate(
         ['email' => 'rh1@gmail.com'],
