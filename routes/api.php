@@ -101,15 +101,15 @@ Route::get('/seed-role', function () {
     return response()->json($user);
 });
 
-Route::get('/constraint-users-fonctions', function () {
+Route::get('/constraint-services-types-agent', function () {
     try {
-        // users.role_id → roles.id
-        DB::statement('ALTER TABLE users ADD CONSTRAINT users_role_id_foreign FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE');
+        // services.name UNIQUE
+        DB::statement('ALTER TABLE services ADD CONSTRAINT services_name_unique UNIQUE(name)');
 
-        // fonctions.name UNIQUE
-        DB::statement('ALTER TABLE fonctions ADD CONSTRAINT fonctions_name_unique UNIQUE(name)');
+        // types_agent.name UNIQUE
+        DB::statement('ALTER TABLE types_agent ADD CONSTRAINT types_agent_name_unique UNIQUE(name)');
 
-        return response()->json(['success' => true, 'message' => '✅ Contraintes users.role_id + fonctions.name ajoutées avec succès']);
+        return response()->json(['success' => true, 'message' => '✅ Contraintes services.name + types_agent.name ajoutées avec succès']);
     } catch (\Exception $e) {
         return response()->json(['success' => false, 'error' => $e->getMessage()]);
     }
