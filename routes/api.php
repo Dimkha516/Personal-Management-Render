@@ -66,7 +66,7 @@ Route::get('/list-tables', function () {
     $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
     return collect($tables)->pluck('tablename');
 });
- 
+
 Route::get('/rebuild-config', function () {
     Artisan::call('config:clear');
     Artisan::call('config:cache');
@@ -101,12 +101,20 @@ Route::get('/seed-role', function () {
     return response()->json($user);
 });
 
-Route::get('/alter-roles-unique', function () {
+Route::get('/constraint-permissions-permission-role', function () {
     try {
-        DB::statement('ALTER TABLE roles ADD CONSTRAINT roles_name_unique UNIQUE(name)');
-        return ['message' => '✅ Contrainte UNIQUE ajoutée à roles.name'];
+        // permissions.name UNIQUE
+        DB::statement('ALTER TABLE permissions ADD CONSTRAINT permissions_name_unique UNIQUE(name)');
+
+        // permission_role.role_id → roles.id
+        DB::statement('ALTER TABLE permission_role ADD CONSTRAINT permission_role_role_id_foreign FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE');
+
+        // permission_role.permission_id → permissions.id
+        DB::statement('ALTER TABLE permission_role ADD CONSTRAINT permission_role_permission_id_foreign FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE');
+
+        return response()->json(['success' => true, 'message' => '✅ Contraintes permissions + permission_role ajoutées avec succès']);
     } catch (\Exception $e) {
-        return ['error' => $e->getMessage()];
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
     }
 });
 
