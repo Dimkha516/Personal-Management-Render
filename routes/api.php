@@ -100,19 +100,13 @@ Route::get('/seed-role', function () {
 
     return response()->json($user);
 });
- 
-Route::get('/constraint-documents-conges', function () {
+
+Route::get('/constraint-cessations', function () {
     try {
-        // documents.employe_id → employes.id
-        DB::statement('ALTER TABLE documents ADD CONSTRAINT documents_employe_id_foreign FOREIGN KEY (employe_id) REFERENCES employes(id) ON DELETE CASCADE');
+        // cessations.conge_id → conges.id
+        DB::statement('ALTER TABLE cessations ADD CONSTRAINT cessations_conge_id_foreign FOREIGN KEY (conge_id) REFERENCES conges(id) ON DELETE CASCADE');
 
-        // conges.employe_id → employes.id
-        DB::statement('ALTER TABLE conges ADD CONSTRAINT conges_employe_id_foreign FOREIGN KEY (employe_id) REFERENCES employes(id) ON DELETE CASCADE');
-
-        // conges.type_conge_id → types_conges.id
-        DB::statement('ALTER TABLE conges ADD CONSTRAINT conges_type_conge_id_foreign FOREIGN KEY (type_conge_id) REFERENCES types_conges(id) ON DELETE CASCADE');
-
-        return response()->json(['success' => true, 'message' => '✅ Contraintes documents + conges ajoutées avec succès']);
+        return response()->json(['success' => true, 'message' => '✅ Contrainte cessations.conge_id ajoutée avec succès']);
     } catch (\Exception $e) {
         return response()->json(['success' => false, 'error' => $e->getMessage()]);
     }
