@@ -4,11 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('cessations', function (Blueprint $table) {
@@ -20,12 +16,11 @@ return new class extends Migration
             $table->text('motif')->nullable();
             $table->text('commentaire')->nullable();
             $table->string('fiche_cessation_pdf')->nullable();
-            $table->integer('nombre_jours')->nullable();
             $table->timestamps();
-
-            $table->foreign('conge_id')->references('id')->on('conges')->onDelete('cascade');
+            $table->integer('nombre_jours')->nullable();
         });
     }
+
     public function down(): void
     {
         Schema::dropIfExists('cessations');
