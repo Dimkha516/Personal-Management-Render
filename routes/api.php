@@ -88,24 +88,37 @@ Route::get('/seed-permissions', function () {
         $permissions = [
             'lister-utilisateurs',
             'creer-compte-employe',
-            'lister-utilisateurs',
             'modifier-utilisateur',
+            'modifer-utilisateur',
             'supprimer-utilisateur',
-            'lister-employes',
+            'creer-type-contrat',
+            'creer-role',
+            'attribuer-role',
+            'retirer-role',
+            'creer-service',
+            'modifier-service',
+            'supprimer-service',
+            'affecter-chef-service',
+            'creer-fonction',
+            'modifier-fonction',
+            'supprimer-fonction',
             'lister-employes',
             'ajouter-employe',
-            'modifer-employe',
+            'modifier-employe',
             'supprimer-employe',
-            'lister-conges',
             'lister-conges',
             'traiter-demande-conge',
             'modifier-demande-conge',
             'supprimer-demande-conge',
             'lister-cessations',
-            'lister-cessations',
             'traiter-demande-cessations',
             'modifier-demande-cessations',
             'supprimer-demande-cessations',
+            'traiter-demande-permission',
+            'lister-conges',
+            'lister-cessations',
+            'faire-demande-conge',
+            'faire-demande-cessation',
         ];
 
         foreach ($permissions as $perm) {
@@ -123,34 +136,52 @@ Route::get('/seed-role-permission', function () {
         // Structure rôle => [permissions]
         $rolesWithPermissions = [
             'admin' => [
+                //-----PARTIE UTILISATEURS
                 'lister-utilisateurs',
                 'creer-compte-employe',
                 'modifier-utilisateur',
+                'modifer-utilisateur',
                 'supprimer-utilisateur',
+                //----- CONTRATS
+                'creer-type-contrat',
+                //----- ROLES
+                'creer-role',
+                'attribuer-role',
+                'retirer-role',
+                //----- SERVICES
+                'creer-service',
+                'modifier-service',
+                'supprimer-service',
+                'affecter-chef-service',
+                //----- FONCTIONS
+                'creer-fonction',
+                'modifier-fonction',
+                'supprimer-fonction'
+            ],
+            'rh' => [
+                //----- EMPLOYES
                 'lister-employes',
                 'ajouter-employe',
-                'modifer-employe',
+                'modifier-employe',
                 'supprimer-employe',
+                //----- CONGES
                 'lister-conges',
                 'traiter-demande-conge',
                 'modifier-demande-conge',
                 'supprimer-demande-conge',
+                //----- CESSATIONS
                 'lister-cessations',
                 'traiter-demande-cessations',
                 'modifier-demande-cessations',
                 'supprimer-demande-cessations',
-            ],
-            'rh' => [
-                'lister-employes',
-                'ajouter-employe',
-                'modifer-employe',
-                'supprimer-employe',
-                'lister-conges',
-                'traiter-demande-conge',
+                //----- PERMISSION
+                'traiter-demande-permission'
             ],
             'employe' => [
                 'lister-conges',
                 'lister-cessations',
+                'faire-demande-conge',
+                'faire-demande-cessation',
             ],
         ];
 
