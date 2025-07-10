@@ -353,8 +353,8 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth:sanctum')->get("/{id}", [CongeController::class, 'show']);
 
         Route::middleware('auth:sanctum')->post("/", [CongeController::class, 'store']);
-        Route::middleware('auth:sanctum')->post("/valider/{id}", [congeController::class, 'valider']);
-        Route::middleware('auth:sanctum')->post("/reject/{id}", [congeController::class, 'rejeter']);
+        Route::middleware('auth:sanctum')->post("/traiterDemandeConge/{id}", [CongeController::class, 'traiter']);
+
 
         Route::middleware('auth:sanctum')->put("/{id}", [CongeController::class, 'update']);
         Route::middleware('auth:sanctum')->delete("/{id}", [congeController::class, 'destroy']);
@@ -367,8 +367,8 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth:sanctum')->get("/{id}", [CessationController::class, 'show']);
 
         Route::middleware('auth:sanctum')->post("/", [CessationController::class, 'store']);
-        Route::middleware('auth:sanctum')->post("/valider/{id}", [CessationController::class, 'valider']);
-        Route::middleware('auth:sanctum')->post("/reject/{id}", [CessationController::class, 'rejeter']);
+        Route::middleware('auth:sanctum')->post("/traiterDemandeCessation/{id}", [CessationController::class, 'traiter']);
+
 
         Route::middleware('auth:sanctum')->put("/{id}", [CessationController::class, 'update']);
         Route::middleware('auth:sanctum')->delete("/{id}", [CessationController::class, 'destroy']);

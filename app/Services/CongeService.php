@@ -105,67 +105,43 @@ class CongeService
         return $this->congeRepo->destroy($id);
     }
 
-    //--------------------------------------- VALIDER UN CONGE
-
-    public function valider(int $id, array $data)
+    //------------------ TRAITER DEMANDE CONGE: VALIDER OU REJETER----------------------------
+    public function traiterDemande(int $id, array $data)
     {
         $conge = $this->congeRepo->getById($id);
-        // $conge = $this->congeRepo->findOrFail($id); // retourne un seul modèle
 
-
-        if ($conge->statut !== 'en_attente') {
-            throw ValidationException::withMessages(['statut' => 'Cette demande a déjà été traitée.']);
-        }
-
-        // Calcul des jours ouvrables réels (hors jours fériés)
-        // $dateDebut = Carbon::parse($data['date_debut']);
-        // $dateFin = Carbon::parse($data['date_fin']);
-
-        // $joursOuvrables = $this->calculJoursOuvrables($dateDebut, $dateFin);
-
-        $employe = $conge->employe;
-
-        // Vérification du solde:
-        // if ($employe->solde_conge_jours < $joursOuvrables) {
-        //     throw ValidationException::withMessages([
-        //         'solde' => 'Le solde de congé de cet employé est insiffisant pour cette demande'
-        //     ]);
-        // }
-
-        // Mise à jour de la demande:
-        $conge->update([
-            // 'date_debut' => $dateDebut,
-            // 'date_fin' => $dateFin,
-            // 'nb_jours' => $joursOuvrables,
-            'statut' => 'approuve',
-            'commentaire' => $data['commentaire'] ?? null,
-            // 'fichier_validation' => $this->genererPdfNote($conge),
-        ]);
-
-        // Déduction du solde employé:
-        // $employe->decrement('solde_conge_jours', $joursOuvrables);
-
-        return $conge;
-    }
-
-    public function rejectDemande(int $id, array $data)
-    {
-        $conge = $this->congeRepo->getById($id);
-  
         if ($conge->statut !== 'en_attente') {
             throw ValidationException::withMessages([
-                'statut' => 'Seules les demandes en attente peuvent être rejetées.'
+                'statut' => 'Cette demande a déjà été traitée.'
             ]);
         }
 
-        $conge->update([
-            'statut' => 'refuse',
-            'motif' => $data['motif']
-        ]);
+        if ($data['decision'] === 'valide') {
+            // Mise à jour du statut uniquement
+            $conge->update([
+                'statut' => 'approuve',
+                'commentaire' => $data['commentaire'] ?? null,
+            ]);
+        } elseif ($data['decision'] === 'rejete') {
+            if (empty($data['motif'])) {
+                throw ValidationException::withMessages([
+                    'motif' => 'Le motif du rejet est requis.'
+                ]);
+            }
+
+            $conge->update([
+                'statut' => 'refuse',
+                'motif' => $data['motif'],
+                'commentaire' => $data['commentaire'] ?? null,
+            ]);
+        } else {
+            throw ValidationException::withMessages([
+                'decision' => 'La décision doit être "valide" ou "rejete".'
+            ]);
+        }
 
         return $conge;
     }
-
 
 
     //----------------------------SPECIFIC METHODES-SERVICES----------------------------------

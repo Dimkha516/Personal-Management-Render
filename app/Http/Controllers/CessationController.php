@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CessationRequest;
+use App\Http\Requests\CessationTraitementRequest;
 use App\Http\Requests\CessationValidationRequest;
 use App\Services\CessationService;
 use Illuminate\Http\Request;
@@ -25,13 +26,15 @@ class CessationController extends Controller
         ], 200);
     }
 
-    public function valider($id, CessationValidationRequest $request)
+    public function traiter($id, CessationTraitementRequest $request)
     {
-        $cessation = $this->cessationService->valider($id, $request->validated());
+        $cessation = $this->cessationService->traiterCessation($id, $request->validated());
 
         return response()->json([
-            'message' => 'Cessation validée',
+            'message' => 'Décision sur la cessation enregistrée',
             'data' => $cessation
-        ], 201);
+        ]);
     }
+
+
 }

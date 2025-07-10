@@ -6,6 +6,7 @@ use App\Interfaces\CessationInterface;
 use App\Models\Conge;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class CessationService
 {
@@ -28,7 +29,13 @@ class CessationService
 
             throw new \Exception('le congé doit être validé pour soumettre une cessation');
         }
- 
+
+        if (isset($data['piece_jointe'])) {
+            $path = $data['piece_jointe']->store('cessations_pieces');
+            $data['piece_jointe'] = $path;
+        }
+
+
         return $this->cessationRepository->store([
             'conge_id' => $conge->id,
             'date_debut' => $data['date_debut'],
@@ -38,34 +45,62 @@ class CessationService
         ]);
     }
 
-    public function valider(int $id, array $data)
+    public function traiterCessation(int $id, array $data)
     {
         $cessation = $this->cessationRepository->findOrFail($id);
 
         if ($cessation->statut !== 'en_attente') {
-            throw new \Exception('Déjà traité');
+            throw new \Exception('Cette cessation a déjà été traitée.');
         }
 
-        $dateDebut = Carbon::parse($data['date_debut']);
-        $dateFin = Carbon::parse($data['date_fin']);
-        $nbJours = $this->calculJoursOuvrables($dateDebut, $dateFin);
-
-
-        $cessation->update([
-            'statut' => 'valide',
-            'date_debut' => $dateDebut,
-            'date_fin' => $dateFin,
-            'nombre_jours' => $nbJours,
-            'commentaire' => $data['commentaire'],
-            // 'fiche_cessation_pdf' => $this->uploadFichier($cessation), 
-        ]);
-
-        // Déduire le solde:
+        $decision = $data['decision'];
         $employe = $cessation->conge->employe;
-        $employe->decrement('solde_conge_jours', $nbJours);
+
+        if ($decision === 'valide') {
+            $dateDebut = Carbon::parse($data['date_debut']);
+            $dateFin = Carbon::parse($data['date_fin']);
+            $nbJours = $this->calculJoursOuvrables($dateDebut, $dateFin);
+
+            if ($employe->solde_conge_jours < $nbJours) {
+                throw ValidationException::withMessages([
+                    'solde' => 'Le solde de congé est insuffisant.'
+                ]);
+            }
+
+            // Mise à jour
+            $cessation->update([
+                'statut' => 'valide',
+                'date_debut' => $dateDebut,
+                'date_fin' => $dateFin,
+                'nombre_jours' => $nbJours,
+                'commentaire' => $data['commentaire'] ?? null,
+                // 'fiche_cessation_pdf' => $this->uploadFichier($cessation)
+            ]);
+
+            // Déduction du solde
+            $employe->decrement('solde_conge_jours', $nbJours);
+        } elseif ($decision === 'rejete') {
+            if (empty($data['motif'])) {
+                throw ValidationException::withMessages([
+                    'motif' => 'Le motif de rejet est requis.'
+                ]);
+            }
+
+            $cessation->update([
+                'statut' => 'rejete',
+                'motif' => $data['motif'],
+                'commentaire' => $data['commentaire'] ?? null,
+            ]);
+        } else {
+            throw ValidationException::withMessages([
+                'decision' => 'Valeur invalide pour la décision. (valide ou rejete)'
+            ]);
+        }
 
         return $cessation;
     }
+
+
 
 
     //----------------------------SPECIFIC METHODES-SERVICES----------------------------------
