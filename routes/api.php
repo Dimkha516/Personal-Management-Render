@@ -85,7 +85,28 @@ Route::get('/seed-roles', function () {
 
 Route::get('/seed-permissions', function () {
     try {
-        $permissions = ['voir_conges', 'valider_conges', 'gerer_utilisateurs', 'voir_statistiques'];
+        $permissions = [
+            'lister-utilisateurs',
+            'creer-compte-employe',
+            'lister-utilisateurs',
+            'modifier-utilisateur',
+            'supprimer-utilisateur',
+            'lister-employes',
+            'lister-employes',
+            'ajouter-employe',
+            'modifer-employe',
+            'supprimer-employe',
+            'lister-conges',
+            'lister-conges',
+            'traiter-demande-conge',
+            'modifier-demande-conge',
+            'supprimer-demande-conge',
+            'lister-cessations',
+            'lister-cessations',
+            'traiter-demande-cessations',
+            'modifier-demande-cessations',
+            'supprimer-demande-cessations',
+        ];
 
         foreach ($permissions as $perm) {
             DB::table('permissions')->updateOrInsert(['name' => $perm]);
@@ -99,21 +120,65 @@ Route::get('/seed-permissions', function () {
 
 Route::get('/seed-role-permission', function () {
     try {
-        $role = DB::table('roles')->where('name', 'admin')->first();
-        $permissions = DB::table('permissions')->pluck('id');
+        // Structure rôle => [permissions]
+        $rolesWithPermissions = [
+            'admin' => [
+                'lister-utilisateurs',
+                'creer-compte-employe',
+                'modifier-utilisateur',
+                'supprimer-utilisateur',
+                'lister-employes',
+                'ajouter-employe',
+                'modifer-employe',
+                'supprimer-employe',
+                'lister-conges',
+                'traiter-demande-conge',
+                'modifier-demande-conge',
+                'supprimer-demande-conge',
+                'lister-cessations',
+                'traiter-demande-cessations',
+                'modifier-demande-cessations',
+                'supprimer-demande-cessations',
+            ],
+            'rh' => [
+                'lister-employes',
+                'ajouter-employe',
+                'modifer-employe',
+                'supprimer-employe',
+                'lister-conges',
+                'traiter-demande-conge',
+            ],
+            'employe' => [
+                'lister-conges',
+                'lister-cessations',
+            ],
+        ];
 
-        foreach ($permissions as $permId) {
-            DB::table('permission_role')->updateOrInsert([
-                'role_id' => $role->id,
-                'permission_id' => $permId
-            ]);
+        foreach ($rolesWithPermissions as $roleName => $permissionNames) {
+            $role = DB::table('roles')->where('name', $roleName)->first();
+
+            if (!$role) {
+                continue; // Ignorer si le rôle n'existe pas
+            }
+
+            foreach ($permissionNames as $permName) {
+                $permission = DB::table('permissions')->where('name', $permName)->first();
+
+                if ($permission) {
+                    DB::table('permission_role')->updateOrInsert([
+                        'role_id' => $role->id,
+                        'permission_id' => $permission->id
+                    ]);
+                }
+            }
         }
 
-        return response()->json(['success' => true, 'message' => '✅ Permissions assignées à admin']);
+        return response()->json(['success' => true, 'message' => '✅ Permissions assignées aux rôles']);
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()]);
     }
 });
+
 
 
 Route::get('/seed-admin-user', function () {
@@ -199,7 +264,7 @@ Route::get('/seed-fonctions', function () {
 });
 
 
-Route::get('/seed-employes', function () {
+Route::get('/seed-employes-admin', function () {
     try {
         $fonctionId = DB::table('fonctions')->where('name', 'Développeur')->value('id');
         $serviceId = DB::table('services')->where('name', 'Informatique')->value('id');
