@@ -1,0 +1,29 @@
+--------------------------------------------------LES PERMISSIONS REQUISES POUR LES DIFFERENTES ACTIONS
+
+-------------------------------------------------SUR LES UTILISATEURS:
+1: getAllUsers()          => lister-utilisateurs
+2: createUserForEmploye() => creer-compte-employe
+3: show()                 => lister-utilisateurs 
+4: update()               => modifier-utilisateur
+5: destroy()             => supprimer-utilisateur
+
+-------------------------------------------------SUR LES EMPLOYES:
+1: index()   => lister-employes 
+2: show()    => lister-employes  
+3: store()   => ajouter-employe 
+4: update()  => modifer-employe 
+5: destroy() => supprimer-employe 
+
+-------------------------------------------------SUR LES CONGES:
+1: index()          => lister-conges
+2: show()           => lister-conges
+3: traiterDemande() => traiter-demande-conge
+4: update()         => modifier-demande-conge 
+5: destroy()        => supprimer-demande-conge
+
+-------------------------------------------------SUR LES CESSATIONS:
+1: index()          => lister-cessations
+2: show()           => lister-cessations
+3: traiterDemande() => traiter-demande-cessations
+4: update()         => modifier-demande-cessations
+5: destroy()        => supprimer-demande-cessations

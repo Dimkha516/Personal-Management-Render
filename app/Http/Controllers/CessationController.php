@@ -16,13 +16,24 @@ class CessationController extends Controller
         $this->cessationService = $cessationService;
     }
 
+    public function index()
+    {
+        return response()->json($this->cessationService->list(), 200);
+    }
+
+    public function mesCessations()
+    {
+        $conges = $this->cessationService->connectedUserCessationsList();
+        return response()->json($conges);
+    }
+
     public function store(CessationRequest $request)
     {
         $cessation = $this->cessationService->create($request->validated());
 
         return response()->json([
             'message' => 'Demande de cessation créée avec succès',
-            'cessation' => $cessation 
+            'cessation' => $cessation
         ], 200);
     }
 
@@ -35,6 +46,4 @@ class CessationController extends Controller
             'data' => $cessation
         ]);
     }
-
-
 }

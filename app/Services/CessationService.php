@@ -17,6 +17,22 @@ class CessationService
         $this->cessationRepository = $cessationRepository;
     }
 
+    public function list()
+    {
+        return $this->cessationRepository->all();
+    }
+
+    public function connectedUserCessationsList()
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->employe) {
+            return collect(); // ou throw une exception si besoin
+        }
+
+        return $this->cessationRepository->getById($user->employe->id);
+    }
+
 
     public function create(array $data)
     {
