@@ -212,27 +212,42 @@ Route::get('/seed-role-permission', function () {
 
 
 
-Route::get('/seed-admin-user', function () {
+Route::get('/seed-users', function () {
     try {
-        $role = DB::table('roles')->where('name', 'admin')->first();
+        // Structure: rôle => email
+        $usersToCreate = [
+            'rh'      => 'rh@rh.com',
+            'employe' => 'employe@employe.com',
+            'directeur'   => 'direc@direc.com',
+        ];
 
-        DB::table('users')->updateOrInsert([
-            'email' => 'admin@admin.com'
-        ], [
-            'password' => Hash::make('password123'),
-            'email_verified_at' => now(),
-            'firstConnexion' => false,
-            'status' => 'actif',
-            'role_id' => $role->id,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
+        foreach ($usersToCreate as $roleName => $email) {
+            $role = DB::table('roles')->where('name', $roleName)->first();
 
-        return response()->json(['success' => true, 'message' => '✅ Utilisateur admin créé']);
+            if (!$role) {
+                continue; // Ignorer si le rôle n'existe pas
+            }
+
+            DB::table('users')->updateOrInsert([
+                'email' => $email
+            ], [
+                'password' => Hash::make('password123'), // même mot de passe pour tous au départ
+                'email_verified_at' => now(),
+                'firstConnexion' => false,
+                'status' => 'actif',
+                'role_id' => $role->id,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => '✅ Utilisateurs avec rôles créés']);
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()]);
     }
 });
+
+
 
 Route::get('/seed-types-conges', function () {
     try {
