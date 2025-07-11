@@ -310,39 +310,85 @@ Route::get('/seed-fonctions', function () {
 });
 
 
-Route::get('/seed-employes-admin', function () {
+Route::get('/seed-employes', function () {
     try {
-        $fonctionId = DB::table('fonctions')->where('name', 'Développeur')->value('id');
-        $serviceId = DB::table('services')->where('name', 'Informatique')->value('id');
-        $typeAgentId = DB::table('types_agent')->where('name', 'Contractuel')->value('id');
-        $userId = DB::table('users')->where('email', 'admin@admin.com')->value('id');
+        // Liste des employés à insérer
+        $employes = [
+            [
+                'email' => 'employe@employe.com',
+                'nom' => 'Ndiaye',
+                'prenom' => 'Baba',
+                'adresse' => 'Dakar',
+                'date_naiss' => '1990-01-01',
+                'lieu_naiss' => 'Dakar',
+                'situation_matrimoniale' => 'Célibataire',
+                'date_prise_service' => '2020-01-01',
+                'genre' => 'Masculin',
+                'type_contrat' => 'CDI',
+                'solde_conge_jours' => 20,
+                'user_email' => 'admin1@admin.com',
+                'fonction_name' => 'Développeur',
+                'service_name' => 'Informatique',
+                'type_agent_name' => 'Contractuel',
+            ],
+            [
+                'email' => 'rh@rh.com',
+                'nom' => 'Ndiaye',
+                'prenom' => 'Awa',
+                'adresse' => 'Thiès',
+                'date_naiss' => '1992-05-10',
+                'lieu_naiss' => 'Thiès',
+                'situation_matrimoniale' => 'Mariée',
+                'date_prise_service' => '2021-03-01',
+                'genre' => 'Féminin',
+                'type_contrat' => 'CDD',
+                'solde_conge_jours' => 15,
+                'user_email' => 'rh@rh.com',
+                'fonction_name' => 'Chef RH',
+                'service_name' => 'RH',
+                'type_agent_name' => 'Fonctionnaire',
+            ],
+            // Tu peux ajouter autant d'employés que nécessaire ici
+        ];
 
-        DB::table('employes')->updateOrInsert([
-            'email' => 'employe1@example.com'
-        ], [
-            'nom' => 'Doe',
-            'prenom' => 'John',
-            'adresse' => 'Dakar',
-            'date_naiss' => '1990-01-01',
-            'lieu_naiss' => 'Dakar',
-            'situation_matrimoniale' => 'Célibataire',
-            'date_prise_service' => '2020-01-01',
-            'genre' => 'Masculin',
-            'type_contrat' => 'CDI',
-            'solde_conge_jours' => 20,
-            'fonction_id' => $fonctionId,
-            'service_id' => $serviceId,
-            'type_agent_id' => $typeAgentId,
-            'user_id' => $userId,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        foreach ($employes as $emp) {
+            $fonctionId = DB::table('fonctions')->where('name', $emp['fonction_name'])->value('id');
+            $serviceId = DB::table('services')->where('name', $emp['service_name'])->value('id');
+            $typeAgentId = DB::table('types_agent')->where('name', $emp['type_agent_name'])->value('id');
+            $userId = DB::table('users')->where('email', $emp['user_email'])->value('id');
 
-        return response()->json(['success' => true, 'message' => '✅ Employé inséré']);
+            if (!$fonctionId || !$serviceId || !$typeAgentId || !$userId) {
+                continue; // Ignorer si une référence n'existe pas
+            }
+
+            DB::table('employes')->updateOrInsert([
+                'email' => $emp['email']
+            ], [
+                'nom' => $emp['nom'],
+                'prenom' => $emp['prenom'],
+                'adresse' => $emp['adresse'],
+                'date_naiss' => $emp['date_naiss'],
+                'lieu_naiss' => $emp['lieu_naiss'],
+                'situation_matrimoniale' => $emp['situation_matrimoniale'],
+                'date_prise_service' => $emp['date_prise_service'],
+                'genre' => $emp['genre'],
+                'type_contrat' => $emp['type_contrat'],
+                'solde_conge_jours' => $emp['solde_conge_jours'],
+                'fonction_id' => $fonctionId,
+                'service_id' => $serviceId,
+                'type_agent_id' => $typeAgentId,
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => '✅ Employés insérés avec succès']);
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()]);
     }
 });
+
 
 Route::get('/seed-documents', function () {
     try {
