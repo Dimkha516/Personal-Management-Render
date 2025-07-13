@@ -5,6 +5,7 @@ use App\Http\Controllers\CessationController;
 use App\Http\Controllers\CongeController;
 use App\Http\Controllers\EmployesController;
 use App\Http\Controllers\PermissionRoleController;
+use App\Http\Controllers\TypesCongesController;
 use App\Http\Controllers\UserController;
 use App\Models\Role;
 use Illuminate\Http\Request;
@@ -331,24 +332,6 @@ Route::get('/seed-employes', function () {
                 'service_name' => 'Informatique',
                 'type_agent_name' => 'Contractuel',
             ],
-            // [
-            //     'email' => 'rh@rh.com',
-            //     'nom' => 'Ndiaye',
-            //     'prenom' => 'Awa',
-            //     'adresse' => 'Thiès',
-            //     'date_naiss' => '1992-05-10',
-            //     'lieu_naiss' => 'Thiès',
-            //     'situation_matrimoniale' => 'Mariée',
-            //     'date_prise_service' => '2021-03-01',
-            //     'genre' => 'Féminin',
-            //     'type_contrat' => 'CDD',
-            //     'solde_conge_jours' => 15,
-            //     'user_email' => 'rh@rh.com',
-            //     'fonction_name' => 'Chef RH',
-            //     'service_name' => 'RH',
-            //     'type_agent_name' => 'Fonctionnaire',
-            // ],
-            // Tu peux ajouter autant d'employés que nécessaire ici
         ];
 
         foreach ($employes as $emp) {
@@ -467,7 +450,7 @@ Route::get('/seed-cessations', function () {
 
 
 
-//-----------------------------------------------------SEEDERS6------------------------------------------
+//-----------------------------------------------------SEEDERS-END------------------------------------------
 
 
 
@@ -529,5 +512,17 @@ Route::prefix('v1')->group(function () {
 
         Route::middleware('auth:sanctum')->put("/{id}", [CessationController::class, 'update']);
         Route::middleware('auth:sanctum')->delete("/{id}", [CessationController::class, 'destroy']);
+    });
+
+    //--------------- SERVICES Routes ---------------
+    Route::prefix('services')->group(function () {});
+    //--------------- FONCTIONS Routes ---------------
+    Route::prefix('fonctions')->group(function () {});
+
+    //--------------- TYPES CONGES Routes ---------------
+    Route::prefix('typesConges')->group(function () {
+        Route::get("/", [TypesCongesController::class, 'index']);
+        Route::get("/{id}", [TypesCongesController::class, 'show']);
+        Route::post("/", [TypesCongesController::class, 'store']);
     });
 });
