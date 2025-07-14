@@ -29,8 +29,19 @@ class CessationService
         if (!$user || !$user->employe) {
             return collect(); // ou throw une exception si besoin
         }
+        $cessations = $this->cessationRepository->getById($user->employe->id);
 
-        return $this->cessationRepository->getById($user->employe->id);
+        if (!$cessations) {
+            return response()->json([
+                'message' => 'Aucune cessation pour cet employé'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'liste cessations employé',
+            'cessations' => $cessations
+        ]);
+        // return $this->cessationRepository->getById($user->employe->id);
     }
 
 

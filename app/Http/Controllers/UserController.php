@@ -49,7 +49,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Utilisateur créé avec succès',
             'data' => $user
-        ], 201);
+        ], 201); 
     }
 
     public function show(int $id, Request $request, PermissionService $permissionService): JsonResponse
