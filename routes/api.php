@@ -526,3 +526,5 @@ Route::prefix('v1')->group(function () {
         Route::post("/", [TypesCongesController::class, 'store']);
     });
 });
+
+// Pas de motif pour le congé

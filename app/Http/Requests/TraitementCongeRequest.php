@@ -24,8 +24,8 @@ class TraitementCongeRequest extends FormRequest
     {
         return [
             'decision' => ['required', Rule::in(['valide', 'rejete'])],
-            'date_debut' => 'required_if:decision,valide|date|before_or_equal:date_fin',
-            'date_fin' => 'required_if:decision,valide|date|after_or_equal:date_debut',
+            // 'date_debut' => 'required_if:decision,valide|date|before_or_equal:date_fin',
+            // 'date_fin' => 'required_if:decision,valide|date|after_or_equal:date_debut',
             'motif' => 'required_if:decision,rejete|string',
             'commentaire' => 'nullable|string',
         ];
@@ -35,8 +35,8 @@ class TraitementCongeRequest extends FormRequest
     {
         return [
             'decision.required' => 'Vous devez spécifier une décision.',
-            'date_debut.required_if' => 'La date de début est requise pour une validation.',
-            'date_fin.required_if' => 'La date de fin est requise pour une validation.',
+            // 'date_debut.required_if' => 'La date de début est requise pour une validation.',
+            // 'date_fin.required_if' => 'La date de fin est requise pour une validation.',
             'motif.required_if' => 'Le motif est requis en cas de rejet.',
         ];
     }
