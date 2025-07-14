@@ -21,6 +21,11 @@ class CessationController extends Controller
         return response()->json($this->cessationService->list(), 200);
     }
 
+    public function show($id)
+    {
+        return response()->json($this->cessationService->find($id),  200);
+    }
+
     public function mesCessations()
     {
         $conges = $this->cessationService->connectedUserCessationsList();

@@ -66,6 +66,11 @@ class CessationService
     }
 
 
+    public function find(int $id)
+    {
+        return $this->cessationRepository->getById($id);
+    }
+
 
     public function create(array $data)
     {
