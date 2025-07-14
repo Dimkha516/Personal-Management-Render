@@ -5,6 +5,7 @@ use App\Http\Controllers\CessationController;
 use App\Http\Controllers\CongeController;
 use App\Http\Controllers\EmployesController;
 use App\Http\Controllers\PermissionRoleController;
+use App\Http\Controllers\StatistiqueController;
 use App\Http\Controllers\TypesCongesController;
 use App\Http\Controllers\UserController;
 use App\Models\Role;
@@ -524,6 +525,12 @@ Route::prefix('v1')->group(function () {
         Route::get("/", [TypesCongesController::class, 'index']);
         Route::get("/{id}", [TypesCongesController::class, 'show']);
         Route::post("/", [TypesCongesController::class, 'store']);
+    });
+
+    //--------------- STATISTICS Routes ---------------
+    Route::prefix('stats')->group(function () {
+        Route::get('/', [StatistiqueController::class, 'index']); // Toutes les stats
+        Route::get('/{entity}', [StatistiqueController::class, 'show']); // Stats ciblées
     });
 });
 
