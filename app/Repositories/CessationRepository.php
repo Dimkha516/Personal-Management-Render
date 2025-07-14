@@ -28,6 +28,12 @@ class CessationRepository implements CessationInterface
         //     ->get();
     }
 
+    public function getByEmployeId(int $employeId)
+    {
+        return Cessation::where('employe_id', $employeId)->get();
+    }
+
+
 
     public function findOrFail($id)
     {
