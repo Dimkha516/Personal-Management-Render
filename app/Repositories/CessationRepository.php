@@ -30,8 +30,11 @@ class CessationRepository implements CessationInterface
 
     public function getByEmployeId(int $employeId)
     {
-        return Cessation::where('employe_id', $employeId)->get();
+        return Cessation::whereHas('conge', function ($query) use ($employeId) {
+            $query->where('employe_id', $employeId);
+        })->with('conge')->get();
     }
+
 
 
 
