@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\CessationInterface;
 use App\Models\Conge;
+use App\Models\TypeConge;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -74,27 +75,28 @@ class CessationService
 
     public function create(array $data)
     {
+        $typeCongeId = TypeConge::findOrFail($data['type_conge_id']);
 
-        $user = Auth::user();
+        // $conge = Conge::findOrFail($data['conge_id']);
 
-        $conge = Conge::findOrFail($data['conge_id']);
+        // if ($conge->statut !== 'approuve') {
 
-        if ($conge->statut !== 'approuve') {
-
-            throw new \Exception('le congé doit être validé pour soumettre une cessation');
-        }
+        //     throw new \Exception('le congé doit être validé pour soumettre une cessation');
+        // }
 
         if (isset($data['piece_jointe'])) {
             $path = $data['piece_jointe']->store('cessations_pieces');
             $data['piece_jointe'] = $path;
         }
-
+        // $nbJours = $this->calculJoursOuvrables($data['dateDebut'], $data['dateFin']);
 
         return $this->cessationRepository->store([
-            'conge_id' => $conge->id,
+            // 'conge_id' => $conge->id,
+            'type_conge_id' => $typeCongeId->id,
             'date_debut' => $data['date_debut'],
             'date_fin' => $data['date_fin'],
-            'motif' => $data['motif']
+            'motif' => $data['motif'],
+            // 'nombre_jours' => $nbJours,
             // 'piece_jointe' => $this->uploadFichier($data['piece_jointe']),
         ]);
     }

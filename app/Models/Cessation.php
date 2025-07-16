@@ -8,16 +8,18 @@ class Cessation extends Model
 {
     protected $fillable = [
         'conge_id',
+        'type_conge_id',
         'date_debut',
         'date_fin',
         'statut',
         'commentaire',
         'fiche_cessation_pdf',
-        'nombre_jours'  
+        'nombre_jours'
     ];
 
-    public function conge()
+
+    public function typeConge()
     {
-        return $this->belongsTo(Conge::class);
+        return $this->belongsTo(TypeConge::class);
     }
 }

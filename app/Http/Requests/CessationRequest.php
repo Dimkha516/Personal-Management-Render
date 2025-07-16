@@ -22,7 +22,8 @@ class CessationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'conge_id' => 'required|exists:conges,id',
+            // 'conge_id' => 'required|exists:conges,id',
+            'type_conge_id' => 'required|exists:types_conges,id',
             'date_debut' => 'required|date|after_or_equal:today',
             'date_fin' => 'required|date|after_or_equal:date_debut',
             'motif' => 'required|string|min:5',
@@ -33,7 +34,9 @@ class CessationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'conge_id.required' => 'Le congé concerné est requis.',
+            // 'conge_id.required' => 'Le congé concerné est requis.',
+            'type_conge_id.required' => 'Le types de congé concerné est requis.',
+            'type_conge_id.exists' => "Ce type de congé n'est pas valide",
             'date_debut.required' => 'La date de début est requise.',
             'date_fin.required' => 'La date de fin est requise.',
             'motif.required' => 'Le motif de la demande de cessation est obligatoire.',
