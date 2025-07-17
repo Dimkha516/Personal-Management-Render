@@ -40,27 +40,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        // 'api' => [
-        //     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        //     \Illuminate\Session\Middleware\StartSession::class,
-        //     \Illuminate\Cookie\Middleware\EncryptCookies::class,
-        //     \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        //     \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        //     \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
-        //     'throttle:api',
-        //     \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
-        //     \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        // ],
-        // 'api' => [
-        //     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        //     \Illuminate\Session\Middleware\StartSession::class,
-        //     \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        //     \Illuminate\Cookie\Middleware\EncryptCookies::class,
-        //     \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        //     \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
-        //     'throttle:api',
-        //     \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        // ],
+        // LA PARTIE SUIVANTE AVANT GESTION DURREE TOKEN EST OK:  
         'api' => [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
@@ -87,5 +67,7 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+        'auth.expirable' => \App\Http\Middleware\AuthWithExpiration::class,
     ];
 }

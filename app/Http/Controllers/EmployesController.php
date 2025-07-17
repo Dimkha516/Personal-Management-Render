@@ -30,7 +30,7 @@ class EmployesController extends Controller
 
     public function index(Request $request, PermissionService $permissionService): JsonResponse
     {
-        $this->checkPermission($request, 'lister-employes', $permissionService);
+        // $this->checkPermission($request, 'lister-employes', $permissionService);
 
         $employes = $this->employeService->getAllEmployes();
 

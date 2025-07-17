@@ -16,7 +16,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
-
+use App\Http\Middleware\ExpireInactiveToken;
 
 
 /*
@@ -448,11 +448,7 @@ Route::get('/seed-cessations', function () {
         return response()->json(['error' => $e->getMessage()]);
     }
 });
-
-
-
 //-----------------------------------------------------SEEDERS-END------------------------------------------
-
 
 
 Route::prefix('v1')->group(function () {
@@ -464,55 +460,57 @@ Route::prefix('v1')->group(function () {
     //--------------- Authentication Routes ---------------
     Route::prefix('auth')->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
-        Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
-        Route::middleware('auth:sanctum')->get("/connectedUser", [AuthController::class, 'connectedUser']);
+        Route::middleware('auth.expirable')->post('/logout', [AuthController::class, 'logout']);
+        Route::middleware('auth.expirable')->get("/connectedUser", [AuthController::class, 'connectedUser']);
     });
 
     //--------------- Users Routes ---------------
     Route::prefix('users')->group(function () {
-        Route::middleware('auth:sanctum')->get("/all", [UserController::class, 'index']);
-        Route::middleware('auth:sanctum')->post('/create-employe-account', [UserController::class, 'createUserForEmploye']);
-        Route::middleware('auth:sanctum')->get("/{id}", [UserController::class, 'show']);
-        Route::middleware('auth:sanctum')->put("/{id}", [UserController::class, 'update']);
-        Route::middleware('auth:sanctum')->delete("/{id}", [UserController::class, 'destroy']);
-        Route::middleware(['auth:sanctum'])->post('/change-password', [UserController::class, 'changePassword']);
+        Route::middleware('auth.expirable')->get("/all", [UserController::class, 'index']);
+        Route::middleware('auth.expirable')->post('/create-employe-account', [UserController::class, 'createUserForEmploye']);
+        Route::middleware('auth.expirable')->get("/{id}", [UserController::class, 'show']);
+        Route::middleware('auth.expirable')->put("/{id}", [UserController::class, 'update']);
+        Route::middleware('auth.expirable')->delete("/{id}", [UserController::class, 'destroy']);
+        Route::middleware(['auth.expirable'])->post('/change-password', [UserController::class, 'changePassword']);
         Route::post('/change-password', [UserController::class, 'changePassword']);
     });
 
     //--------------- Employes Routes ---------------
     Route::prefix('employes')->group(function () {
-        Route::middleware('auth:sanctum')->get("/", [EmployesController::class, 'index']);
-        Route::middleware('auth:sanctum')->get("/{id}", [EmployesController::class, 'show']);
-        Route::middleware('auth:sanctum')->post("/", [EmployesController::class, 'store']);
-        Route::middleware('auth:sanctum')->put("/{id}", [EmployesController::class, 'update']);
+        // Route::middleware('auth:sanctum')->get("/", [EmployesController::class, 'index']);
+        Route::middleware(['auth.expirable'])->get("/", [EmployesController::class, 'index']);
+        Route::middleware('auth.expirable')->get("/{id}", [EmployesController::class, 'show']);
+        Route::middleware('auth.expirable')->post("/", [EmployesController::class, 'store']);
+        Route::middleware('auth.expirable')->put("/{id}", [EmployesController::class, 'update']);
     });
 
     //--------------- Conges Routes ---------------
     Route::prefix('conges')->group(function () {
-        Route::middleware('auth:sanctum')->get("/", [CongeController::class, 'index']);
-        Route::middleware('auth:sanctum')->get("/mesConges", [CongeController::class, 'mesConges']);
-        Route::middleware('auth:sanctum')->get("/{id}", [CongeController::class, 'show']);
+        // Route::middleware('auth:sanctum')->get("/", [CongeController::class, 'index']);
+        Route::middleware(['auth.expirable'])->get("/", [CongeController::class, 'index']);
+        Route::middleware('auth.expirable')->get("/mesConges", [CongeController::class, 'mesConges']);
+        Route::middleware('auth.expirable')->get("/{id}", [CongeController::class, 'show']);
 
-        Route::middleware('auth:sanctum')->post("/", [CongeController::class, 'store']);
-        Route::middleware('auth:sanctum')->post("/traiterDemandeConge/{id}", [CongeController::class, 'traiter']);
+        Route::middleware('auth.expirable')->post("/", [CongeController::class, 'store']);
+        Route::middleware('auth.expirable')->post("/traiterDemandeConge/{id}", [CongeController::class, 'traiter']);
 
 
-        Route::middleware('auth:sanctum')->put("/{id}", [CongeController::class, 'update']);
-        Route::middleware('auth:sanctum')->delete("/{id}", [congeController::class, 'destroy']);
+        Route::middleware('auth.expirable')->put("/{id}", [CongeController::class, 'update']);
+        Route::middleware('auth.expirable')->delete("/{id}", [congeController::class, 'destroy']);
     });
 
     //--------------- Cessations Routes ---------------
     Route::prefix('cessations')->group(function () {
-        Route::middleware('auth:sanctum')->get("/", [CessationController::class, 'index']);
-        Route::middleware('auth:sanctum')->get("/mesCessations", [CessationController::class, 'mesCessations']);
-        Route::middleware('auth:sanctum')->get("/{id}", [CessationController::class, 'show']);
+        Route::middleware('auth.expirable')->get("/", [CessationController::class, 'index']);
+        Route::middleware('auth.expirable')->get("/mesCessations", [CessationController::class, 'mesCessations']);
+        Route::middleware('auth.expirable')->get("/{id}", [CessationController::class, 'show']);
 
-        Route::middleware('auth:sanctum')->post("/", [CessationController::class, 'store']);
-        Route::middleware('auth:sanctum')->post("/traiterDemandeCessation/{id}", [CessationController::class, 'traiter']);
+        Route::middleware('auth.expirable')->post("/", [CessationController::class, 'store']);
+        Route::middleware('auth.expirable')->post("/traiterDemandeCessation/{id}", [CessationController::class, 'traiter']);
 
 
-        Route::middleware('auth:sanctum')->put("/{id}", [CessationController::class, 'update']);
-        Route::middleware('auth:sanctum')->delete("/{id}", [CessationController::class, 'destroy']);
+        Route::middleware('auth.expirable')->put("/{id}", [CessationController::class, 'update']);
+        Route::middleware('auth.expirable')->delete("/{id}", [CessationController::class, 'destroy']);
     });
 
     //--------------- SERVICES Routes ---------------
@@ -534,4 +532,92 @@ Route::prefix('v1')->group(function () {
     });
 });
 
+
+
+// Route::prefix('v1')->group(function () {
+//     //--------------- Permissions and Roles Routes ---------------
+//     Route::prefix('permissions')->group(function () {
+//         Route::get('/roles-permissions', [PermissionRoleController::class, 'index']);
+//     });
+
+//     //--------------- Authentication Routes ---------------
+//     Route::prefix('auth')->group(function () {
+//         Route::post('/login', [AuthController::class, 'login']);
+//         Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+//         Route::middleware('auth:sanctum')->get("/connectedUser", [AuthController::class, 'connectedUser']);
+//     });
+
+//     //--------------- Users Routes ---------------
+//     Route::prefix('users')->group(function () {
+//         Route::middleware('auth:sanctum')->get("/all", [UserController::class, 'index']);
+//         Route::middleware('auth:sanctum')->post('/create-employe-account', [UserController::class, 'createUserForEmploye']);
+//         Route::middleware('auth:sanctum')->get("/{id}", [UserController::class, 'show']);
+//         Route::middleware('auth:sanctum')->put("/{id}", [UserController::class, 'update']);
+//         Route::middleware('auth:sanctum')->delete("/{id}", [UserController::class, 'destroy']);
+//         Route::middleware(['auth:sanctum'])->post('/change-password', [UserController::class, 'changePassword']);
+//         Route::post('/change-password', [UserController::class, 'changePassword']);
+//     });
+
+//     //--------------- Employes Routes ---------------
+//     Route::prefix('employes')->group(function () {
+//         // Route::middleware('auth:sanctum')->get("/", [EmployesController::class, 'index']);
+//         Route::middleware(['auth.expirable'])->get("/", [EmployesController::class, 'index']);
+//         Route::middleware('auth:sanctum')->get("/{id}", [EmployesController::class, 'show']);
+//         Route::middleware('auth:sanctum')->post("/", [EmployesController::class, 'store']);
+//         Route::middleware('auth:sanctum')->put("/{id}", [EmployesController::class, 'update']);
+//     });
+
+//     //--------------- Conges Routes ---------------
+//     Route::prefix('conges')->group(function () {
+//         // Route::middleware('auth:sanctum')->get("/", [CongeController::class, 'index']);
+//         Route::middleware(['auth.expirable'])->get("/", [CongeController::class, 'index']);
+//         Route::middleware('auth:sanctum')->get("/mesConges", [CongeController::class, 'mesConges']);
+//         Route::middleware('auth:sanctum')->get("/{id}", [CongeController::class, 'show']);
+
+//         Route::middleware('auth:sanctum')->post("/", [CongeController::class, 'store']);
+//         Route::middleware('auth:sanctum')->post("/traiterDemandeConge/{id}", [CongeController::class, 'traiter']);
+
+
+//         Route::middleware('auth:sanctum')->put("/{id}", [CongeController::class, 'update']);
+//         Route::middleware('auth:sanctum')->delete("/{id}", [congeController::class, 'destroy']);
+//     });
+
+//     //--------------- Cessations Routes ---------------
+//     Route::prefix('cessations')->group(function () {
+//         Route::middleware('auth:sanctum')->get("/", [CessationController::class, 'index']);
+//         Route::middleware('auth:sanctum')->get("/mesCessations", [CessationController::class, 'mesCessations']);
+//         Route::middleware('auth:sanctum')->get("/{id}", [CessationController::class, 'show']);
+
+//         Route::middleware('auth:sanctum')->post("/", [CessationController::class, 'store']);
+//         Route::middleware('auth:sanctum')->post("/traiterDemandeCessation/{id}", [CessationController::class, 'traiter']);
+
+
+//         Route::middleware('auth:sanctum')->put("/{id}", [CessationController::class, 'update']);
+//         Route::middleware('auth:sanctum')->delete("/{id}", [CessationController::class, 'destroy']);
+//     });
+
+//     //--------------- SERVICES Routes ---------------
+//     Route::prefix('services')->group(function () {});
+//     //--------------- FONCTIONS Routes ---------------
+//     Route::prefix('fonctions')->group(function () {});
+
+//     //--------------- TYPES CONGES Routes ---------------
+//     Route::prefix('typesConges')->group(function () {
+//         Route::get("/", [TypesCongesController::class, 'index']);
+//         Route::get("/{id}", [TypesCongesController::class, 'show']);
+//         Route::post("/", [TypesCongesController::class, 'store']);
+//     });
+
+//     //--------------- STATISTICS Routes ---------------
+//     Route::prefix('stats')->group(function () {
+//         Route::get('/', [StatistiqueController::class, 'index']); // Toutes les stats
+//         Route::get('/{entity}', [StatistiqueController::class, 'show']); // Stats ciblées
+//     });
+// });
+
+/*
+1: Mettre à jour les routes en utilisant auth.expirable à la place de sanctum
+2: Push des modifs
+3: Tester avec le front
+*/ 
 // Pas de motif pour le congé

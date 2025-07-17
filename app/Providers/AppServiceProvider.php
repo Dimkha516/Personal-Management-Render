@@ -13,6 +13,8 @@ use App\Repositories\EmployeRepository;
 use App\Repositories\TypesCongesRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Sanctum;
+use App\Models\PersonalAccessToken; 
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(EmployeInterface::class, EmployeRepository::class);
         $this->app->bind(CongesInterface::class, CongeRepository::class);
         $this->app->bind(CessationInterface::class, CessationRepository::class);
-         $this->app->bind(TypesCongesInterface::class, TypesCongesRepository::class); 
+        $this->app->bind(TypesCongesInterface::class, TypesCongesRepository::class);
     }
 
     /**
@@ -33,6 +35,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
     }
 }

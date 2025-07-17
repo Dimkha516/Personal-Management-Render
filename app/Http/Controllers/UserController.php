@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function index(Request $request, PermissionService $permissionService): JsonResponse
     {
-        $this->checkPermission($request, 'lister-utilisateurs', $permissionService);
+        // $this->checkPermission($request, 'lister-utilisateurs', $permissionService);
 
         $users = $this->userService->getAllUsers();
         if (!$users) {
