@@ -480,6 +480,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('employes')->group(function () {
         // Route::middleware('auth:sanctum')->get("/", [EmployesController::class, 'index']);
         Route::middleware(['auth.expirable'])->get("/", [EmployesController::class, 'index']);
+        Route::middleware(['auth.expirable'])->get("/soldeConge", [EmployesController::class, 'getSoldeConge']);
         Route::middleware('auth.expirable')->get("/{id}", [EmployesController::class, 'show']);
         Route::middleware('auth.expirable')->post("/", [EmployesController::class, 'store']);
         Route::middleware('auth.expirable')->put("/{id}", [EmployesController::class, 'update']);

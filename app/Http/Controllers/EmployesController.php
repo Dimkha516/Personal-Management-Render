@@ -12,6 +12,7 @@ use App\Traits\HandlesPermissions;
 use Dom\Document;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EmployesController extends Controller
 {
@@ -23,7 +24,7 @@ class EmployesController extends Controller
     public function __construct(
         EmployeService $employeService,
         DocumentUploadService $documentService
-    ) {  
+    ) {
         $this->employeService = $employeService;
         $this->documentService = $documentService;
     }
@@ -84,7 +85,7 @@ class EmployesController extends Controller
 
         // Validation + Upload des documents
         $validator  = new DocumentValidationService();
-        $uploadler = new DocumentUploadService(); 
+        $uploadler = new DocumentUploadService();
 
         foreach ($documents as $doc) {
             $validator->validate($doc['fichier']);
@@ -96,6 +97,20 @@ class EmployesController extends Controller
             'message' => 'Employé créé avec succès',
             'data' => $employe
         ], 201);
+    }
+
+    public function getSoldeConge()
+    {
+        $user = Auth::user();
+
+        // $soldeConge = optional($user->employe)->solde_conge_jours; // null si pas d'employé lié
+
+
+        if (!$user || !$user->employe) {
+            throw new \Exception("Utilisateur ou employé non trouvé");
+        }
+
+        return $user->employe->solde_conge_jours;
     }
 
 
@@ -131,7 +146,7 @@ class EmployesController extends Controller
         );
 
         // dd($fieldsToUpdate);
-        
+
         if (!empty($fieldsToUpdate)) {
             $employe = $this->employeService->updateEmploye($id, $fieldsToUpdate);
         }
