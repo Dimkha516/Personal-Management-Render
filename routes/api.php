@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CessationController;
 use App\Http\Controllers\CongeController;
+use App\Http\Controllers\DisponibiliteController;
 use App\Http\Controllers\EmployesController;
 use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\StatistiqueController;
@@ -511,6 +512,19 @@ Route::prefix('v1')->group(function () {
 
         Route::middleware('auth.expirable')->put("/{id}", [CessationController::class, 'update']);
         Route::middleware('auth.expirable')->delete("/{id}", [CessationController::class, 'destroy']);
+    });
+
+
+    //--------------- DISPONIBILITES Routes ---------------
+    Route::prefix('disponibilites')->group(function () {
+        Route::middleware('auth.expirable')->get("/", [DisponibiliteController::class, 'index']);
+        Route::middleware('auth.expirable')->get("/mesDisponibilites", [DisponibiliteController::class, 'mesDisponibilites']);
+        // Route::middleware(['auth:sanctum'])->get('/mesDisponibilites', [DisponibiliteController::class, 'mesDisponibilites']);
+        Route::middleware('auth.expirable')->get("/{id}", [DisponibiliteController::class, 'show']);
+
+        Route::middleware('auth.expirable')->post("/", [DisponibiliteController::class, 'store']);
+        Route::middleware('auth.expirable')->post("/traiterDemandeCessation/{id}", [DisponibiliteController::class, 'traiter']);
+
     });
 
     //--------------- SERVICES Routes ---------------

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
 use App\Models\PersonalAccessToken;
-
+use Illuminate\Support\Facades\Auth;
 
 class AuthWithExpiration
 {
@@ -17,6 +17,7 @@ class AuthWithExpiration
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
+
     public function handle(Request $request, Closure $next): Response
     {
         $accessToken = $request->bearerToken();
@@ -38,19 +39,58 @@ class AuthWithExpiration
         Log::info("⏱️ Token last used at: " . ($token->last_used_at ?? $token->created_at));
         Log::info("⏳ Inactivity duration: {$inactiveSince} min");
 
-        if ($inactiveSince >= 15) { // mettre à 15 en prod  
-        $token->delete();
+        // Vérifier l'inactivité
+        $inactiveSince = now()->diffInMinutes($token->last_used_at ?? $token->created_at);
+        if ($inactiveSince >= 15) {
+            $token->delete();
             return response()->json(['message' => 'Session expirée pour inactivité'], Response::HTTP_UNAUTHORIZED);
         }
 
-        // Mettre à jour manuellement last_used_at
+        // Mettre à jour la dernière utilisation
         $token->forceFill(['last_used_at' => now()])->save();
 
-        // Charger l'utilisateur connecté
-        $request->setUserResolver(function () use ($token) {
-            return $token->tokenable;
-        });
+        // Charger manuellement l'utilisateur connecté
+        $user = $token->tokenable;
+
+        $request->setUserResolver(fn() => $user);
+        Auth::setUser($user); // 🔥 Ceci est la clé pour faire fonctionner Auth::user()
 
         return $next($request);
     }
+    // public function handle(Request $request, Closure $next): Response
+    // {
+    //     $accessToken = $request->bearerToken();
+
+    //     if (!$accessToken || !Str::contains($accessToken, '|')) {
+    //         return response()->json(['message' => 'Token invalide'], Response::HTTP_UNAUTHORIZED);
+    //     }
+
+    //     [$tokenId, $tokenValue] = explode('|', $accessToken, 2);
+
+    //     $token = PersonalAccessToken::find($tokenId);
+
+    //     if (!$token || !hash_equals($token->token, hash('sha256', $tokenValue))) {
+    //         return response()->json(['message' => 'Token non reconnu'], Response::HTTP_UNAUTHORIZED);
+    //     }
+
+    //     // Vérifier l'inactivité
+    //     $inactiveSince = now()->diffInMinutes($token->last_used_at ?? $token->created_at);
+    //     Log::info("⏱️ Token last used at: " . ($token->last_used_at ?? $token->created_at));
+    //     Log::info("⏳ Inactivity duration: {$inactiveSince} min");
+
+    //     if ($inactiveSince >= 15) { // mettre à 15 en prod  
+    //     $token->delete();
+    //         return response()->json(['message' => 'Session expirée pour inactivité'], Response::HTTP_UNAUTHORIZED);
+    //     }
+
+    //     // Mettre à jour manuellement last_used_at
+    //     $token->forceFill(['last_used_at' => now()])->save();
+
+    //     // Charger l'utilisateur connecté
+    //     $request->setUserResolver(function () use ($token) {
+    //         return $token->tokenable;
+    //     });
+
+    //     return $next($request);
+    // }
 }
