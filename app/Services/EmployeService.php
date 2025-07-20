@@ -72,7 +72,7 @@ class EmployeService
 
                 'gestion_absences' => [
                     'conges' => $employe->conges,
-                    // 'cessations' => $employe->cessations,
+                    'cessations' => $employe->cessations,
                     'disponibilites' => $employe->disponibilites
                 ],
 

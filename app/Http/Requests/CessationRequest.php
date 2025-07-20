@@ -23,6 +23,7 @@ class CessationRequest extends FormRequest
     {
         return [
             // 'conge_id' => 'required|exists:conges,id',
+            // 'employe_id' => 'required|exists:employes,id',
             'type_conge_id' => 'required|exists:types_conges,id',
             'date_debut' => 'required|date|after_or_equal:today',
             'date_fin' => 'required|date|after_or_equal:date_debut',
@@ -35,6 +36,7 @@ class CessationRequest extends FormRequest
     {
         return [
             // 'conge_id.required' => 'Le congé concerné est requis.',
+            // 'employe_id.required' => 'ID employe invalide ou inconnu',
             'type_conge_id.required' => 'Le types de congé concerné est requis.',
             'type_conge_id.exists' => "Ce type de congé n'est pas valide",
             'date_debut.required' => 'La date de début est requise.',

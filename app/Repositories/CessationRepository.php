@@ -35,7 +35,13 @@ class CessationRepository implements CessationInterface
         })->with('conge')->get();
     }
 
-
+    public function getByConnectedUserEmployeId(int $employeId)
+    {
+        return Cessation::where('employe_id', $employeId)
+            ->with(['typeConge']) // uniquement les relations existantes
+            ->latest()
+            ->get();
+    }
 
 
     public function findOrFail($id)

@@ -123,7 +123,7 @@ class EmployesController extends Controller
             'service',
             'typeAgent',
             'conges',
-            // 'cessations',
+            'cessations',
             'disponibilites',
             'documents'
         ])->findOrFail($id);

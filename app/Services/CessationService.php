@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\CessationInterface;
 use App\Models\Conge;
+use App\Models\Employe;
 use App\Models\TypeConge;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -23,36 +24,18 @@ class CessationService
         return $this->cessationRepository->all();
     }
 
-    // public function connectedUserCessationsList()
-    // {
-    //     $user = Auth::user();
-
-    //     if (!$user || !$user->employe) {
-    //         return collect(); // ou throw une exception si besoin
-    //     }
-    //     $cessations = $this->cessationRepository->getById($user->employe->id);
-
-    //     if (!$cessations) {
-    //         return response()->json([
-    //             'message' => 'Aucune cessation pour cet employé'
-    //         ]);
-    //     }
-
-    //     return response()->json([
-    //         'message' => 'liste cessations employé',
-    //         'cessations' => $cessations
-    //     ]);
-    //     // return $this->cessationRepository->getById($user->employe->id);
-    // }
     public function connectedUserCessationsList()
     {
         $user = Auth::user();
 
         if (!$user || !$user->employe) {
-            return collect(); // ou throw une exception si besoin
+            return response()->json([
+                'message' => 'Employé non trouvé pour l’utilisateur connecté.'
+            ], 404);
         }
 
-        $cessations = $this->cessationRepository->getByEmployeId($user->employe->id);
+        // Utiliser la nouvelle méthode du repository
+        $cessations = $this->cessationRepository->getByConnectedUserEmployeId($user->employe->id);
 
         if ($cessations->isEmpty()) {
             return response()->json([
@@ -61,10 +44,33 @@ class CessationService
         }
 
         return response()->json([
-            'message' => 'Liste des cessations de l\'employé',
+            'message' => 'Liste des cessations de l\'employé connecté',
             'cessations' => $cessations
         ]);
     }
+
+
+    // public function connectedUserCessationsList()
+    // {
+    //     $user = Auth::user();
+
+    //     if (!$user || !$user->employe) {
+    //         return collect(); // ou throw une exception si besoin
+    //     }
+
+    //     $cessations = $this->cessationRepository->getByEmployeId($user->employe->id);
+
+    //     if ($cessations->isEmpty()) {
+    //         return response()->json([
+    //             'message' => 'Aucune cessation pour cet employé'
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'Liste des cessations de l\'employé',
+    //         'cessations' => $cessations
+    //     ]);
+    // }
 
 
     public function find(int $id)
@@ -75,6 +81,9 @@ class CessationService
 
     public function create(array $data)
     {
+        $employe = Employe::where('user_id', Auth::id())->firstOrFail();
+        // dd($employe);
+
         $typeCongeId = TypeConge::findOrFail($data['type_conge_id']);
 
         // $conge = Conge::findOrFail($data['conge_id']);
@@ -92,6 +101,7 @@ class CessationService
 
         return $this->cessationRepository->store([
             // 'conge_id' => $conge->id,
+            'employe_id' => $employe->id,
             'type_conge_id' => $typeCongeId->id,
             'date_debut' => $data['date_debut'],
             'date_fin' => $data['date_fin'],
