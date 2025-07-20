@@ -58,4 +58,8 @@ class Employe extends Model
     {
         return $this->hasMany(Cessation::class);
     }
+
+    public function disponibilites() {
+        return $this->hasMany(Disponibilite::class);
+    }
 }

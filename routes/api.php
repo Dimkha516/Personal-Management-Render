@@ -484,6 +484,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth.expirable')->get("/{id}", [EmployesController::class, 'show']);
         Route::middleware('auth.expirable')->post("/", [EmployesController::class, 'store']);
         Route::middleware('auth.expirable')->put("/{id}", [EmployesController::class, 'update']);
+        Route::get('/dossiers/{id}', [EmployesController::class, 'getEmployeDoc']);
     });
 
     //--------------- Conges Routes ---------------
@@ -525,7 +526,6 @@ Route::prefix('v1')->group(function () {
 
         Route::middleware('auth.expirable')->post("/", [DisponibiliteController::class, 'store']);
         Route::middleware('auth.expirable')->post("/traiterDemandeCessation/{id}", [DisponibiliteController::class, 'traiter']);
-
     });
 
     //--------------- SERVICES Routes ---------------

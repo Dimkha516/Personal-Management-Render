@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateEmployeRequest;
 use App\Http\Requests\UpdateEmployeRequest;
+use App\Models\Employe;
 use App\Services\DocumentUploadService;
 use App\Services\DocumentValidationService;
 use App\Services\EmployeService;
@@ -111,6 +112,25 @@ class EmployesController extends Controller
         }
 
         return $user->employe->solde_conge_jours;
+    }
+
+    public function getEmployeDoc($id)
+    {
+
+        $employe = Employe::with([
+            'user',
+            'fonction',
+            'service',
+            'typeAgent',
+            'conges',
+            // 'cessations',
+            'disponibilites',
+            'documents'
+        ])->findOrFail($id);
+  
+        $dossier = $this->employeService->buildDossier($employe);
+
+        return response()->json($dossier);
     }
 
 

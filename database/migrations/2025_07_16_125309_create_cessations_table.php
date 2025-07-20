@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('type_conge_id')->references('id')->on('types_conges')->onDelete('cascade');
-        });
+        }); 
     }
 
     /**

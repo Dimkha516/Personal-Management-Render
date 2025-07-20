@@ -35,3 +35,42 @@
 
 
 -------------------------------------------------SUR LES SERVICES:
+-------------------------------------------------------------------
+
+Structure de l'objet d'un dossier d'employé:
+{
+    dossier: {
+        infos_perso: {
+            nom,
+            prenom,
+            email,
+            adresse,
+            date_naissance,
+            lieu_naissance,
+            situation_matimoniale,
+            genre 
+        },
+        infos_profess: {
+            date_prise_service,
+            type_contrat,
+            fonction,
+            service,
+            type_agent
+        },
+        gestion_absences: {
+            conges: {
+                
+            },
+            cessations: {
+
+            },
+            disponibilites: {
+
+            }
+        },
+        documents_admin: {
+
+        }
+
+    }
+}
