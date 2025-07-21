@@ -16,7 +16,7 @@
         },
         {
             "url": "https://personal-management.onrender.com/api/v1",
-            "description": "Serveur de production" 
+            "description": "Serveur de production"
         }
     ],
     "security": [
@@ -590,10 +590,263 @@
                 }
             }
         },
-        "/employes": {},
-        "/employes/soldeConge": {},
-        "/employes/{id}": {},
-        "/employes/dossiers/{id}": {},
+        "/employes": {
+            "get": {
+                "tags": ["Employés"],
+                "summary": "Liste tous les employés",
+                "description": "Récupère la liste de tous les employés",
+                "responses": {
+                    "200": {
+                        "description": "Liste des employés récupérée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Employe"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Employés"],
+                "summary": "Créer un nouvel employé",
+                "description": "Crée un nouvel employé",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "nom",
+                                    "prenom",
+                                    "email",
+                                    "date_naiss",
+                                    "lieu_naiss",
+                                    "situation_matrimoniale",
+                                    "date_prise_service",
+                                    "genre",
+                                    "type_contrat",
+                                    "fonction_id",
+                                    "service_id",
+                                    "type_agent_id"
+                                ],
+                                "properties": {
+                                    "nom": { "type": "string" },
+                                    "prenom": { "type": "string" },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "date_naiss": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "lieu_naiss": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "situation_matrimoniale": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Célibataire",
+                                            "Marié",
+                                            "Divorcé",
+                                            "Veuve"
+                                        ]
+                                    },
+                                    "date_prise_service": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "genre": {
+                                        "type": "string",
+                                        "enum": ["Homme", "Femme"]
+                                    },
+                                    "type_contrat": {
+                                        "type": "string",
+                                        "enum": [
+                                            "CDI",
+                                            "CDD",
+                                            "Intérim",
+                                            "Stage",
+                                            "Apprentissage"
+                                        ]
+                                    },
+                                    "fonction_id": { "type": "integer" },
+                                    "service_id": { "type": "integer" },
+                                    "type_agent_id": { "type": "integer" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Employé créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/employes/soldeConge": {
+            "get": {
+                "tags": ["Employés"],
+                "summary": "Solde de congés",
+                "description": "Récupère le solde de congés de l'employé connecté",
+                "responses": {
+                    "200": {
+                        "description": "Solde de congés récupéré",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "solde": { "type": "integer" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/employes/{id}": {
+            "get": {
+                "tags": ["Employés"],
+                "summary": "Afficher un employé",
+                "description": "Récupère les détails d'un employé spécifique",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID de l'employé"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Employé trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Employe"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Employés"],
+                "summary": "Mettre à jour un employé",
+                "description": "Met à jour les informations d'un employé",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID de l'employé"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": { "type": "string" },
+                                    "prenom": { "type": "string" },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "telephone": { "type": "string" },
+                                    "poste": { "type": "string" },
+                                    "salaire": { "type": "number" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Employé mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/employes/dossiers/{id}": {
+            "get": {
+                "tags": ["Employés"],
+                "summary": "Documents d'un employé",
+                "description": "Récupère les documents d'un employé (sans authentification requise)",
+                "security": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID de l'employé"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Documents récupérés",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/conges": {},
         "/conges/mesConges": {},
         "/conges/{id}": {},
