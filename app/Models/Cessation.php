@@ -8,7 +8,7 @@ class Cessation extends Model
 {
     protected $fillable = [
         'employe_id',
-        'conge_id',
+        // 'conge_id',
         'type_conge_id',
         'date_debut',
         'date_fin',

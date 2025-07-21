@@ -547,6 +547,7 @@ Route::prefix('v1')->group(function () {
     });
 });
 
+// components fermé avant tags
 
 
 // Route::prefix('v1')->group(function () {
