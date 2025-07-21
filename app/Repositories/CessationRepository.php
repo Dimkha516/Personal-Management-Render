@@ -15,7 +15,11 @@ class CessationRepository implements CessationInterface
     }
     public function all()
     {
-        return Cessation::all();
+        // return Cessation::all();
+        return $this->model
+            ->with(['employe:id,prenom,nom,solde_conge_jours'])
+            ->latest()
+            ->get();
     }
 
     public function getById(int $id)

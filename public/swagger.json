@@ -1,0 +1,29 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Laravel RH Management API",
+    "version": "1.0.0",
+    "description": "Documentation de l'API RH Management avec authentification Sanctum."
+  },
+  "servers": [
+    {
+      "url": "http://localhost/api/v1",
+      "description": "Serveur local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "sanctumAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "sanctumAuth": []
+    }
+  ],
+  "paths": {}
+}
