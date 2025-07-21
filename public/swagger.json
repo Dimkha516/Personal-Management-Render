@@ -15,8 +15,8 @@
             "description": "Serveur de développement"
         },
         {
-            "url": "https://https://personal-management.onrender.com/api/v1",
-            "description": "Serveur de production"
+            "url": "https://personal-management.onrender.com/api/v1",
+            "description": "Serveur de production" 
         }
     ],
     "security": [
