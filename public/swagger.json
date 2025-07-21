@@ -847,21 +847,938 @@
                 }
             }
         },
-        "/conges": {},
-        "/conges/mesConges": {},
-        "/conges/{id}": {},
-        "/conges/traiterDemandeConge/{id}": {},
-        "/cessations": {},
-        "/cessations/mesCessations": {},
-        "/cessations/{id}": {},
-        "/cessations/traiterDemandeCessation/{id}": {},
-        "/disponibilites": {},
-        "/disponibilites/mesDisponibilites": {},
-        "/disponibilites/{id}": {},
-        "/disponibilites/traiterDemandeCessation/{id}": {},
-        "/typesConges": {},
-        "/typesConges/{id}": {},
-        "/stats": {},
-        "/stats/{entity}": {}
+        "/conges": {
+            "get": {
+                "tags": ["Congés"],
+                "summary": "Liste tous les congés",
+                "description": "Récupère la liste de tous les congés",
+                "responses": {
+                    "200": {
+                        "description": "Liste des congés récupérée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Conge"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Congés"],
+                "summary": "Créer une demande de congé",
+                "description": "Crée une nouvelle demande de congé",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["type_conge_id", "piece_jointe"],
+                                "properties": {
+                                    "type_conge_id": { "type": "integer" },
+                                    "piece_jointe": {
+                                        "type": "string",
+                                        "format": "file"
+                                    },
+                                    "motif": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Demande de congé créée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/conges/mesConges": {
+            "get": {
+                "tags": ["Congés"],
+                "summary": "Mes congés",
+                "description": "Récupère les congés de l'employé connecté",
+                "responses": {
+                    "200": {
+                        "description": "Congés de l'employé récupérés",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Conge"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/conges/{id}": {
+            "get": {
+                "tags": ["Congés"],
+                "summary": "Afficher un congé",
+                "description": "Récupère les détails d'un congé spécifique",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID du congé"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Congé trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Conge"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Congés"],
+                "summary": "Mettre à jour un congé",
+                "description": "Met à jour une demande de congé",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID du congé"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "date_fin": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "motif": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Congé mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Congés"],
+                "summary": "Supprimer un congé",
+                "description": "Supprime une demande de congé",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID du congé"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Congé supprimé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/conges/traiterDemandeConge/{id}": {
+            "post": {
+                "tags": ["Congés"],
+                "summary": "Traiter une demande de congé",
+                "description": "Approuve ou refuse une demande de congé",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID du congé"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["decision"],
+                                "properties": {
+                                    "decision": {
+                                        "type": "string",
+                                        "enum": ["valide", "rejete"]
+                                    },
+                                    "commentaire": { "type": "string" },
+                                    "motif": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Demande traitée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cessations": {
+            "get": {
+                "tags": ["Cessations"],
+                "summary": "Liste toutes les cessations",
+                "description": "Récupère la liste de toutes les cessations",
+                "responses": {
+                    "200": {
+                        "description": "Liste des cessations récupérée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Cessation"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Cessations"],
+                "summary": "Créer une demande de cessation",
+                "description": "Crée une nouvelle demande de cessation",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "type_conge_id",
+                                    "date_debut",
+                                    "date_fin",
+                                    "motif"
+                                ],
+                                "properties": {
+                                    "type_conge_id": { "type": "integer" },
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "date_fin": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "motif": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Demande de cessation créée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cessations/mesCessations": {
+            "get": {
+                "tags": ["Cessations"],
+                "summary": "Mes cessations",
+                "description": "Récupère les cessations de l'employé connecté",
+                "responses": {
+                    "200": {
+                        "description": "Cessations de l'employé récupérées",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Cessation"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cessations/{id}": {
+            "get": {
+                "tags": ["Cessations"],
+                "summary": "Afficher une cessation",
+                "description": "Récupère les détails d'une cessation spécifique",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID de la cessation"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cessation trouvée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Cessation"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Cessations"],
+                "summary": "Mettre à jour une cessation",
+                "description": "Met à jour une demande de cessation",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID de la cessation"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "date_cessation": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "motif": { "type": "string" },
+                                    "type": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cessation mise à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Cessations"],
+                "summary": "Supprimer une cessation",
+                "description": "Supprime une demande de cessation",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID de la cessation"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cessation supprimée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cessations/traiterDemandeCessation/{id}": {
+            "post": {
+                "tags": ["Cessations"],
+                "summary": "Traiter une demande de cessation",
+                "description": "Approuve ou refuse une demande de cessation",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID de la cessation"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "decision",
+                                    "date_debut",
+                                    "date_fin",
+                                    "motif"
+                                ],
+                                "properties": {
+                                    "decision": {
+                                        "type": "decion",
+                                        "enum": ["valide", "rejete"]
+                                    },
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "date_fin": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "motif": { "type": "string" },
+                                    "commentaire": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Demande traitée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/disponibilites": {
+            "get": {
+                "tags": ["Disponibilités"],
+                "summary": "Liste toutes les disponibilités",
+                "description": "Récupère la liste de toutes les disponibilités",
+                "responses": {
+                    "200": {
+                        "description": "Liste des disponibilités récupérée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Disponibilite"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Disponibilités"],
+                "summary": "Créer une demande de disponibilité",
+                "description": "Crée une nouvelle demande de mise en disponibilité",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "date_debut",
+                                    "date_fin",
+                                    "motif",
+                                    "avec_solde",
+                                    "motif"
+                                ],
+                                "properties": {
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "date_fin": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "motif": { "type": "string" },
+                                    "avec_solde": {
+                                        "type": "string",
+                                        "format": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Demande de disponibilité créée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/disponibilites/mesDisponibilites": {
+            "get": {
+                "tags": ["Disponibilités"],
+                "summary": "Mes disponibilités",
+                "description": "Récupère les disponibilités de l'employé connecté",
+                "responses": {
+                    "200": {
+                        "description": "Disponibilités de l'employé récupérées",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Disponibilite"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/disponibilites/{id}": {
+            "get": {
+                "tags": ["Disponibilités"],
+                "summary": "Afficher une disponibilité",
+                "description": "Récupère les détails d'une disponibilité spécifique",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID de la disponibilité"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Disponibilité trouvée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Disponibilite"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/disponibilites/traiterDemandeCessation/{id}": {
+            "post": {
+                "tags": ["Disponibilités"],
+                "summary": "Traiter une demande de disponibilité",
+                "description": "Approuve ou refuse une demande de mise en disponibilité",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID de la disponibilité"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "decision",
+                                    "date_debut",
+                                    "date_fin",
+                                    "motif"
+                                ],
+                                "properties": {
+                                    "decision": {
+                                        "type": "string",
+                                        "enum": ["valide", "rejete"]
+                                    },
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "date_fin": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "motif": { "type": "string" },
+                                    "commentaire": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Demande traitée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/typesConges": {
+            "get": {
+                "tags": ["Types de Congés"],
+                "summary": "Liste tous les types de congés",
+                "description": "Récupère la liste de tous les types de congés (sans authentification requise)",
+                "security": [],
+                "responses": {
+                    "200": {
+                        "description": "Liste des types de congés récupérée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TypeConge"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Types de Congés"],
+                "summary": "Créer un type de congé",
+                "description": "Crée un nouveau type de congé (sans authentification requise)",
+                "security": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["libelle", "jours_par_defaut"],
+                                "properties": {
+                                    "libelle": { "type": "string" },
+                                    "jours_par_defaut": { "type": "integer" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Type de congé créé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/typesConges/{id}": {
+            "get": {
+                "tags": ["Types de Congés"],
+                "summary": "Afficher un type de congé",
+                "description": "Récupère les détails d'un type de congé spécifique (sans authentification requise)",
+                "security": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },
+                        "description": "ID du type de congé"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Type de congé trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TypeConge"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stats": {
+            "get": {
+                "tags": ["Statistiques"],
+                "summary": "Toutes les statistiques",
+                "description": "Récupère toutes les statistiques de l'application (sans authentification requise)",
+                "security": [],
+                "responses": {
+                    "200": {
+                        "description": "Statistiques récupérées",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "total_employes": {
+                                                    "type": "integer"
+                                                },
+                                                "total_conges": {
+                                                    "type": "integer"
+                                                },
+                                                "conges_en_attente": {
+                                                    "type": "integer"
+                                                },
+                                                "conges_approuves": {
+                                                    "type": "integer"
+                                                },
+                                                "total_cessations": {
+                                                    "type": "integer"
+                                                },
+                                                "total_disponibilites": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stats/{entity}": {
+            "get": {
+                "tags": ["Statistiques"],
+                "summary": "Statistiques ciblées",
+                "description": "Récupère les statistiques pour une entité spécifique (sans authentification requise)",
+                "security": [],
+                "parameters": [
+                    {
+                        "name": "entity",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "employes",
+                                "conges",
+                                "cessations",
+                                "disponibilites"
+                            ]
+                        },
+                        "description": "Entité pour laquelle récupérer les statistiques"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Statistiques de l'entité récupérées",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": { "type": "object" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

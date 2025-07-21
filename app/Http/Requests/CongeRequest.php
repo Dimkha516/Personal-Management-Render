@@ -48,7 +48,7 @@ class CongeRequest extends FormRequest
             if ($user->employe) {
                 $rules['employe_id'][] = Rule::notIn([$user->employe->id]);
             }
-        }
+        }  
 
         // Vérification de l'ancienneté si employe_id fourni:
         if ($this->has('employe_id')) {
