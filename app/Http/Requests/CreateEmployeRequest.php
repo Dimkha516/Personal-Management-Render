@@ -24,6 +24,7 @@ class CreateEmployeRequest extends FormRequest
         return [
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
+            'telephone' => 'required|unique|regex:/^(77|70|76|75|78)[0-9]{7}$/',
             'email' => 'required|email|unique:employes,email',
             'adresse' => 'required|string|max:255',
             'date_naiss' => 'required|date',
@@ -49,6 +50,9 @@ class CreateEmployeRequest extends FormRequest
         return [
             'nom.required' => 'Le nom est requis.',
             'prenom.required' => 'Le prénom est requis.',
+            'telephone.required' => 'Le champ téléphone est obligatoire.',
+            'telephone.regex' => 'Le numéro de téléphone doit commencer par 77, 70, 76, 75 ou 78 et faire 9 chiffres au total.',
+            'telephone.unique' => 'Ce numéro de téléphone existe deja',
             'email.required' => 'le mail est requis',
             'adresse.required' => 'L\'adresse est requise.',
             'date_naiss.required' => 'La date de naissance est requise.',

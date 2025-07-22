@@ -57,9 +57,10 @@
             "Employe": {
                 "type": "object",
                 "properties": {
-                    "id": { "type": "integer" },
+                    "id": { "type": "integer" },  
                     "nom": { "type": "string" },
                     "prenom": { "type": "string" },
+                    "telephone": {"type": "string"},
                     "email": { "type": "string" },
                     "adresse": { "type": "string" },
                     "date_naiss": { "type": "string", "format": "date" },
@@ -633,6 +634,7 @@
                                 "required": [
                                     "nom",
                                     "prenom",
+                                    "telephone",
                                     "email",
                                     "date_naiss",
                                     "lieu_naiss",
@@ -647,6 +649,7 @@
                                 "properties": {
                                     "nom": { "type": "string" },
                                     "prenom": { "type": "string" },
+                                    "telephone": { "type": "string" },
                                     "email": {
                                         "type": "string",
                                         "format": "email"

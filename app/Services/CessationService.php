@@ -50,29 +50,6 @@ class CessationService
     }
 
 
-    // public function connectedUserCessationsList()
-    // {
-    //     $user = Auth::user();
-
-    //     if (!$user || !$user->employe) {
-    //         return collect(); // ou throw une exception si besoin
-    //     }
-
-    //     $cessations = $this->cessationRepository->getByEmployeId($user->employe->id);
-
-    //     if ($cessations->isEmpty()) {
-    //         return response()->json([
-    //             'message' => 'Aucune cessation pour cet employé'
-    //         ]);
-    //     }
-
-    //     return response()->json([
-    //         'message' => 'Liste des cessations de l\'employé',
-    //         'cessations' => $cessations
-    //     ]);
-    // }
-
-
     public function find(int $id)
     {
         return $this->cessationRepository->getById($id);
