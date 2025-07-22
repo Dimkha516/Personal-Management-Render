@@ -39,7 +39,7 @@ class EmployesController extends Controller
         if (!$employes) {
             return response()->json([
                 'message' => 'No employes found'
-            ], 404);
+            ], 204);
         }
 
         return response()->json([
@@ -57,7 +57,7 @@ class EmployesController extends Controller
         if (!$employe) {
             return response()->json([
                 'message' => 'Employé non trouvé'
-            ], 404);
+            ], 204);
         }
 
         return response()->json([

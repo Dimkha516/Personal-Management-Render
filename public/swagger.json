@@ -153,6 +153,15 @@
                     "updated_at": { "type": "string", "format": "date-time" }
                 }
             },
+            "Service": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                }
+            },
 
             "ApiResponse": {
                 "type": "object",
@@ -1782,6 +1791,71 @@
                     }
                 }
             }
+        },
+        "/services": {
+            "get": {
+                "tags": ["Services"],
+                "summary": "Liste tous les Services",
+                "description": "Récupère la liste de tous les types services",
+                
+                "responses": {
+                    "200": {
+                        "description": "Liste des services récupérée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Service"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Services"],
+                "summary": "Créer un Service",
+                "description": "Crée un nouveau service",
+                "security": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["name"],
+                                "properties": {
+                                    "name": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Service crée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }  
+                    }
+                }
+            }
         }
+
     }
 }

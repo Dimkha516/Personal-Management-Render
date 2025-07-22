@@ -6,6 +6,7 @@ use App\Http\Controllers\CongeController;
 use App\Http\Controllers\DisponibiliteController;
 use App\Http\Controllers\EmployesController;
 use App\Http\Controllers\PermissionRoleController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StatistiqueController;
 use App\Http\Controllers\TypesCongesController;
 use App\Http\Controllers\UserController;
@@ -529,7 +530,11 @@ Route::prefix('v1')->group(function () {
     });
 
     //--------------- SERVICES Routes ---------------
-    Route::prefix('services')->group(function () {});
+    Route::prefix('services')->group(function () {
+        Route::middleware('auth.expirable')->get("/", [ServiceController::class, 'index']);
+        Route::middleware('auth.expirable')->get("/{id}", [ServiceController::class, 'show']);
+        Route::middleware('auth.expirable')->post("/", [ServiceController::class, 'store']);
+    });
     //--------------- FONCTIONS Routes ---------------
     Route::prefix('fonctions')->group(function () {});
 
