@@ -120,7 +120,8 @@ class CessationService
         }
 
         $decision = $data['decision'];
-        $employe = $cessation->conge->employe;
+        // $employe = $cessation->conge->employe;
+        $employe = $cessation->employe;
 
         if ($decision === 'valide') {
             $dateDebut = Carbon::parse($data['date_debut']);
