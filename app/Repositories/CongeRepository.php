@@ -13,7 +13,7 @@ class CongeRepository implements CongesInterface
     {
         $this->model = new Conge();
     }
-  
+
 
     public function getAll()
     {
@@ -22,6 +22,12 @@ class CongeRepository implements CongesInterface
             ->with(['typeConge:id,libelle'])
             ->latest()
             ->get();
+    }
+
+    // CongesRepository.php
+    public function getByEmployeId(int $employeId)
+    {
+        return Conge::where('employe_id', $employeId)->get();
     }
 
     public function getCongesByEmployeId($employeId)

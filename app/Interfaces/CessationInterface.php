@@ -12,4 +12,5 @@ interface CessationInterface
   public function delete($id);
   public function getByEmployeId(int $employeId);
   public function getByConnectedUserEmployeId(int $employeId);
+
 }

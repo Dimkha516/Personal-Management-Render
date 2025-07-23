@@ -59,8 +59,6 @@ class CessationService
     public function create(array $data)
     {
         $employe = Employe::where('user_id', Auth::id())->firstOrFail();
-        // dd($employe);
-
         $typeCongeId = TypeConge::findOrFail($data['type_conge_id']);
 
         // $conge = Conge::findOrFail($data['conge_id']);

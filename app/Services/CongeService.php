@@ -32,11 +32,16 @@ class CongeService
         $user = Auth::user();
 
         if (!$user || !$user->employe) {
-            return collect(); // ou throw une exception si besoin
+            return response()->json([
+                'message' => 'Employé non trouvé pour l’utilisateur connecté.'
+            ], 404);
         }
 
-        return $this->congeRepo->getById($user->employe->id);
+        $conges = $this->congeRepo->getByEmployeId($user->employe->id);
+
+        return $conges;
     }
+
 
 
     //--------------------------------------- UN CONGE AVEC SON ID
