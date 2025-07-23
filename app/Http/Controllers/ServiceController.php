@@ -58,4 +58,9 @@ class ServiceController extends Controller
             'service' => $service
         ], 201);
     }
+
+    public function updateChefService(int $id) {
+        $service = $this->servService->addChefService($id);
+        return $service;
+    }
 }

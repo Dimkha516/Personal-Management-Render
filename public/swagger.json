@@ -57,10 +57,10 @@
             "Employe": {
                 "type": "object",
                 "properties": {
-                    "id": { "type": "integer" },  
+                    "id": { "type": "integer" },
                     "nom": { "type": "string" },
                     "prenom": { "type": "string" },
-                    "telephone": {"type": "string"},
+                    "telephone": { "type": "string" },
                     "email": { "type": "string" },
                     "adresse": { "type": "string" },
                     "date_naiss": { "type": "string", "format": "date" },
@@ -1797,7 +1797,6 @@
                 "tags": ["Services"],
                 "summary": "Liste tous les Services",
                 "description": "Récupère la liste de tous les types services",
-                
                 "responses": {
                     "200": {
                         "description": "Liste des services récupérée",
@@ -1827,7 +1826,6 @@
                 "tags": ["Services"],
                 "summary": "Créer un Service",
                 "description": "Crée un nouveau service",
-                "security": [],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1851,11 +1849,47 @@
                                     "$ref": "#/components/schemas/ApiResponse"
                                 }
                             }
-                        }  
+                        }
+                    }
+                }
+            }
+        },
+        "/services/{id}": {
+            "get": {
+                "tags": ["Services"],
+                "summary": "Afficher un service",
+                "description": "Récupère les détails d'un service spécifique",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" },  
+                        "description": "ID du type du service"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Service trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TypeConge"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-
     }
 }

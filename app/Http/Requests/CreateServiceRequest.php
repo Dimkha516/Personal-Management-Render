@@ -22,7 +22,7 @@ class CreateServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique|min:5'
+            'name' => 'required|string|min:5'
         ];
     }
 
@@ -30,7 +30,6 @@ class CreateServiceRequest extends FormRequest
     {
         return [
             'name.required' => 'le nom du service est requis',
-            'name.unique' => 'ce nom de service existe dejas',
             'name.min' => 'le nom de service doit comporter 5 caractères au moins',
         ];
     }

@@ -532,7 +532,9 @@ Route::prefix('v1')->group(function () {
     //--------------- SERVICES Routes ---------------
     Route::prefix('services')->group(function () {
         Route::middleware('auth.expirable')->get("/", [ServiceController::class, 'index']);
+        Route::get("/addChefService/{id}", [ServiceController::class, 'addChefService']);
         Route::middleware('auth.expirable')->get("/{id}", [ServiceController::class, 'show']);
+        // Route::middleware('auth.expirable')->get("/addChefService/{id}", [ServiceController::class, 'addChefService']);
         Route::middleware('auth.expirable')->post("/", [ServiceController::class, 'store']);
     });
     //--------------- FONCTIONS Routes ---------------
