@@ -16,6 +16,8 @@ class Employe extends Model
         'lieu_naiss',
         'situation_matrimoniale',
         'date_prise_service',
+        'date_fin_contrat',
+        'duree_contrat_mois',
         'genre',
         'type_contrat',
         'solde_conge_jours',
@@ -60,7 +62,8 @@ class Employe extends Model
         return $this->hasMany(Cessation::class);
     }
 
-    public function disponibilites() {
+    public function disponibilites()
+    {
         return $this->hasMany(Disponibilite::class);
     }
 }

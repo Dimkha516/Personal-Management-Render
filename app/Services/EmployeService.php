@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Employe;
 use App\Repositories\EmployeRepository;
+use Carbon\Carbon;
 
 class EmployeService
 {
@@ -26,6 +27,16 @@ class EmployeService
 
     public function createEmploye(array $data)
     {
+        if (
+            in_array($data['type_contrat'], ['CDD', 'Intérim', 'Stage', 'Apprentissage']) &&
+            !empty($data['duree_contrat_mois'])
+        ) {
+            $datePriseService = Carbon::parse($data['date_prise_service']);
+            $dateFin = $datePriseService->addMonths($data['duree_contrat_mois']);
+            $data['date_fin_contrat'] = $dateFin->toDateString();
+            $data['duree_contrat_mois'] = $data['duree_contrat_mois'];
+        }
+
         return $this->employeRepository->createEmploye($data);
     }
 

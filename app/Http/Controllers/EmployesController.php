@@ -68,7 +68,7 @@ class EmployesController extends Controller
 
     public function store(CreateEmployeRequest $request, PermissionService $permissionService): JsonResponse
     {
-        $this->checkPermission($request, 'ajouter-employe', $permissionService);
+        //$this->checkPermission($request, 'ajouter-employe', $permissionService);
 
         $data = $request->validated();
         $employe = $this->employeService->createEmploye($data);

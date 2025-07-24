@@ -70,6 +70,13 @@
                         "type": "string",
                         "format": "date"
                     },
+                    "date_fin_contrat": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "duree_contrat_mois": {
+                        "type": "integer"
+                    },
                     "genre": { "type": "string" },
                     "type_contrat": { "type": "string" },
                     "solde_conge_jours": { "type": "integer" },
@@ -645,6 +652,7 @@
                                     "prenom",
                                     "telephone",
                                     "email",
+                                    "adresse",
                                     "date_naiss",
                                     "lieu_naiss",
                                     "situation_matrimoniale",
@@ -683,6 +691,9 @@
                                     "date_prise_service": {
                                         "type": "string",
                                         "format": "date"
+                                    },
+                                    "duree_contrat_mois": {
+                                        "type": "integer"
                                     },
                                     "genre": {
                                         "type": "string",
@@ -1864,7 +1875,7 @@
                         "name": "id",
                         "in": "path",
                         "required": true,
-                        "schema": { "type": "integer" },  
+                        "schema": { "type": "integer" },
                         "description": "ID du type du service"
                     }
                 ],
