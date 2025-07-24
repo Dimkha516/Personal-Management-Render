@@ -117,7 +117,9 @@ class DisponibiliteService
         }
 
         $decision = $data['decision'];
-        $employe = $disponibilite->conge->employe;
+        // $employe = $disponibilite->conge->employe;
+        $employe = $disponibilite->employe;
+        $data['employe_id'] = $employe->id;
 
         if ($decision === 'valide') {
             $dateDebut = Carbon::parse($data['date_debut']);
