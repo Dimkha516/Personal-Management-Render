@@ -1,20 +1,20 @@
---- Statistiques pour le user connecté ==>
+--- Un rh peut faire une demande pour lui même et valider aussi ==> Done
+--- Le congés de l'utilisateur connecté ne s'affichent pas ==> Corrected
+--- Ajout duree_contrat et date_fin_contrat sur employes ==> Done 
+--- Mis à jour création employe avec date de fin contrat en cas de contrat différent de cdi ==> Done
 
+
+--- Statistiques pour le user connecté ==>
 --- Faire une demande pour un autre ==>
 
---- Un rh peut faire une demande pour lui même et valider aussi ==> Done
-
---- Le congés de l'utilisateur connecté ne s'affichent pas ==> Corrected
  
 --- Nommer les fiches par le nom du fiche + le nom employe ==>
 
 --- Mis a jour employer avec documents (ajouter documents) ==>
 
---- Ajout date_fin_contrat sur employes ==> 
---- Mis à jour création employe avec date de fin contrat en cas de contrat différent de cdi ==>
 
 --- Profil employe pour chaque employé ==> 
 
 --- Mis à jour infos employe avec piece justificative, exemple: un certificat de mariage en cas de mariage ==>
 
---- Craeatio table Jours Exclus(fériés et autres) pour les utiliser dans les congés ==>
+--- Creation table Jours Exclus(fériés et autres) pour les utiliser dans les congés ==>

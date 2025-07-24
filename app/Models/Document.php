@@ -11,4 +11,10 @@ class Document extends Model
     public function employe() {
         return $this->belongsTo(Employe::class);
     }
+
+    public function typeDocument()
+    {
+        return $this->belongsTo(TypeDocument::class, 'type_document_id');
+        // return $this->belongsTo(TypeAgent::class, 'type_agent_id');
+    }
 }
