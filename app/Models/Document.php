@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model
 {
-    protected $fillable = ['nom', 'fichier', 'description', 'employe_id'];
+    protected $fillable = ['nom', 'fichier', 'description', 'employe_id', 'type_document_id', 'chemin'];
 
     public function employe() {
         return $this->belongsTo(Employe::class);

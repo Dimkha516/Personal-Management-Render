@@ -169,7 +169,35 @@
                     "updated_at": { "type": "string", "format": "date-time" }
                 }
             },
-
+            "Fonction": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                }
+            },
+            "Document": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer" },
+                    "type_document_id": { "type": "integer" },
+                    "nom": { "type": "string" },
+                    "fichier": { "type": "string", "format": "file" },
+                    "description": { "type": "string" },
+                    "employe_id": { "type": "integer" },
+                    "chemin": { "type": "string" }
+                }
+            },
+            "TypeDocument": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer" },
+                    "type": { "type": "string" },
+                    "description": { "type": "string" }
+                }
+            },
             "ApiResponse": {
                 "type": "object",
                 "properties": {
@@ -224,6 +252,22 @@
         {
             "name": "Statistiques",
             "description": "Statistiques de l'application"
+        },
+        {
+            "name": "Services",
+            "description": "Gestion des services"
+        },
+        {
+            "name": "Fonctions",
+            "description": "Gestion des fonctions employes"
+        },
+        {
+            "name": "Documents",
+            "description": "Gestion des documents employes"
+        },
+        {
+            "name": "Types Documents",
+            "description": "Gestion des types de documents"
         }
     ],
 
@@ -1893,6 +1937,130 @@
                                         },
                                         "data": {
                                             "$ref": "#/components/schemas/TypeConge"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/fonctions/": {
+            "get": {
+                "tags": ["Fonctions"],
+                "summary": "Afficher les fonctions",
+                "description": "Récupère les Fonctions des employes",
+                "responses": {
+                    "200": {
+                        "description": "Liste des fonctions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Fonctions"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/documents/": {
+            "get": {
+                "tags": ["Documents"],
+                "summary": "Afficher les documents",
+                "description": "Récupère les documents des employes",
+                "responses": {
+                    "200": {
+                        "description": "Liste des documents",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Document"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Documents"],
+                "summary": "Ajouter document employé",
+                "description": "ajouter un nouveau document employé",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "type_document_id",
+                                    "employe_id",
+                                    "documents"
+                                ],
+                                "properties": {
+                                    "type_document_id": { "type": "integer" },
+                                    "employe_id": { "type": "integer" },
+                                    "documents": {
+                                        "type": "string",
+                                        "format": "file"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Document(s) ajouté(s) avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/documents/typeDocument": {
+            "get": {
+                "tags": ["Types Documents"],
+                "summary": "Afficher les types de documents",
+                "description": "Récupère les types de documents",
+                "responses": {
+                    "200": {
+                        "description": "Liste des types documents",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TypeDocument"
                                         }
                                     }
                                 }

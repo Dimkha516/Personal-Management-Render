@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CessationController;
 use App\Http\Controllers\CongeController;
 use App\Http\Controllers\DisponibiliteController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EmployesController;
 use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\ServiceController;
@@ -552,7 +553,16 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [StatistiqueController::class, 'index']); // Toutes les stats
         Route::get('/{entity}', [StatistiqueController::class, 'show']); // Stats ciblées
     });
-});
+
+
+    //--------------- DOCUMENTS Routes ---------------
+    Route::prefix('documents')->group(function () {
+        Route::get('/', [DocumentController::class, 'index']);
+        Route::get('/typeDocument', [DocumentController::class, 'allTypeDocument']);
+        Route::post('/', [DocumentController::class, 'store']);
+        Route::post('/typeDocument', [DocumentController::class, 'createDocumentType']);
+    });
+}); 
 
 // components fermé avant tags
 

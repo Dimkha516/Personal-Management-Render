@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Interfaces\CessationInterface;
 use App\Interfaces\CongesInterface;
 use App\Interfaces\DisponibiliteInterface;
+use App\Interfaces\DocumentInterface;
 use App\Interfaces\EmployeInterface;
 use App\Interfaces\TypesCongesInterface;
 use App\Interfaces\UserInterface;
@@ -17,6 +18,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
 use App\Models\PersonalAccessToken;
 use App\Repositories\DisponibiliteRepository;
+use App\Repositories\DocumentRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CessationInterface::class, CessationRepository::class);
         $this->app->bind(TypesCongesInterface::class, TypesCongesRepository::class);
         $this->app->bind(DisponibiliteInterface::class, DisponibiliteRepository::class);
+        $this->app->bind(DocumentInterface::class, DocumentRepository::class);
     }
 
     /**
