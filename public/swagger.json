@@ -2068,6 +2068,37 @@
                         }
                     }
                 }
+            },
+            "post": {
+                "tags": ["Types Documents"],
+                "summary": "Ajouter nouveau type de document",
+                "description": "ajouter un nouveau type de document",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["type"],
+                                "properties": {
+                                    "type": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Type de document ajouté avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
