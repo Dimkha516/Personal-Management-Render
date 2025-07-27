@@ -40,7 +40,7 @@ class UserController extends Controller
 
     public function createUserForEmploye(CreateAccountRequest $request, PermissionService $permissionService): JsonResponse
     {
-        $this->checkPermission($request, 'creer-compte-employe', $permissionService);
+        // $this->checkPermission($request, 'creer-compte-employe', $permissionService);
 
         $data = $request->validated();
 

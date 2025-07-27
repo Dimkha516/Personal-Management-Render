@@ -4,13 +4,14 @@
 --- Mis à jour création employe avec date de fin contrat en cas de contrat différent de cdi ==> Done
 
 
+--- Creation jours exclus et mis à jour traitement demandes
 --- Statistiques pour le user connecté ==>
 --- Faire une demande pour un autre ==>
 
  
---- Nommer les fiches par le nom du fiche + le nom employe ==>
+--- Nommer les fiches par le nom du fiche + le nom employe ==> 
 
---- Mis a jour employer avec documents (ajouter documents) ==>
+--- Mis a jour employer avec documents (ajouter documents) ==> 
 
 
 --- Profil employe pour chaque employé ==> 
@@ -18,3 +19,6 @@
 --- Mis à jour infos employe avec piece justificative, exemple: un certificat de mariage en cas de mariage ==>
 
 --- Creation table Jours Exclus(fériés et autres) pour les utiliser dans les congés ==>
+
+26 au 28 
+29 au 28

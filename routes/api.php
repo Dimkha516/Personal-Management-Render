@@ -470,7 +470,8 @@ Route::prefix('v1')->group(function () {
     //--------------- Users Routes ---------------
     Route::prefix('users')->group(function () {
         Route::middleware('auth.expirable')->get("/all", [UserController::class, 'index']);
-        Route::middleware('auth.expirable')->post('/create-employe-account', [UserController::class, 'createUserForEmploye']);
+        // Route::middleware('auth.expirable')->post('/create-employe-account', [UserController::class, 'createUserForEmploye']);
+        Route::post('/create-employe-account', [UserController::class, 'createUserForEmploye']);
         Route::middleware('auth.expirable')->get("/{id}", [UserController::class, 'show']);
         Route::middleware('auth.expirable')->put("/{id}", [UserController::class, 'update']);
         Route::middleware('auth.expirable')->delete("/{id}", [UserController::class, 'destroy']);
