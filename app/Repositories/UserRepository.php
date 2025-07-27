@@ -53,14 +53,18 @@ class UserRepository implements UserInterface
         return $user->delete();
     }
 
+    
     public function createUserForEmploye(array $data)
     {
-        $employe = Employe::findOrFail($data['employe_id']);
+        $employe = Employe::where('id', $data['employe_id'])
+            ->whereNull('user_id')
+            ->firstOrFail();
 
-        // Vérifie si un compte utilisateur est déjà lié
-        if (!is_null($employe->user_id)) {
-            throw new \Exception('Compte utilisateur déjà créé pour cet employé');
-        }
+            if($employe->user_id){
+                return ('Compte déjas créer');
+            }
+
+
         $defaultPassword = "passer123";
 
         $user = $this->model->create([
@@ -77,32 +81,4 @@ class UserRepository implements UserInterface
 
         return $user;
     }
-
-    // public function createUserForEmploye(array $data)
-    // {
-    //     $employe = Employe::where('id', $data['employe_id'])
-    //         ->whereNull('user_id')
-    //         ->firstOrFail();
-
-    //         if($employe->user_id){
-    //             return ('Compte déjas créer');
-    //         }
-
-
-    //     $defaultPassword = "passer123";
-
-    //     $user = $this->model->create([
-    //         'email' => $employe->email,
-    //         'password' => Hash::make($defaultPassword),
-    //         'role_id' => $data['role_id'],
-    //         'status' => 'actif',
-    //     ]);
-
-    //     $employe->user_id = $user->id;
-    //     $employe->save();
-
-    //     $this->accountNotificationService->sendPasswordResetLink($user);
-
-    //     return $user;
-    // }
 }
