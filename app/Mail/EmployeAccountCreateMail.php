@@ -28,9 +28,12 @@ class EmployeAccountCreateMail extends Mailable
 
     public function build()
     {
+        $prenom = $this->user->employe->prenom ?? 'Employé(e)';
+        $nom = $this->user->employe->nom ?? '';
+
         return $this->subject('Activation de votre compte utilisateur')
             ->html("
-            <h2>Bonjour cher(e) <strong>Employé(e)</strong></h2>
+            <h2>Bonjour cher(e) <strong>{$prenom} {$nom}</strong></h2>
             <p>Votre compte a été crée avec l'email : <strong>{$this->user->email}</strong></p>
             <p>Veuillez cliquer sur le lien suivant pour définir votre mot de passe pour pouvoir accèder à la plateforme RH Management : </p>
             <a href='{$this->resetLink}'>Modifier mon mot de passe</a>
