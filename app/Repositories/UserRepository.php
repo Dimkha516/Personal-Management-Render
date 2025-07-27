@@ -53,16 +53,16 @@ class UserRepository implements UserInterface
         return $user->delete();
     }
 
-    
+
     public function createUserForEmploye(array $data)
     {
         $employe = Employe::where('id', $data['employe_id'])
-            ->whereNull('user_id')
+            // ->whereNull('user_id')
             ->firstOrFail();
 
-            if($employe->user_id){
-                return ('Compte déjas créer');
-            }
+        if (!is_null($employe->user_id)) {
+            throw new \Exception('Compte utilisateur déjà créé pour cet employé');
+        }
 
 
         $defaultPassword = "passer123";
