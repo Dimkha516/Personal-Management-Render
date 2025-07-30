@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\CongesInterface;
 use App\Models\Employe;
+use App\Repositories\CongeRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -14,10 +15,12 @@ use Illuminate\Validation\ValidationException;
 class CongeService
 {
     protected $congeRepo;
+    protected $congeExactRepository;
 
-    public function __construct(CongesInterface $congeRepo)
+    public function __construct(CongesInterface $congeRepo, CongeRepository $congeExactRepository)
     {
         $this->congeRepo = $congeRepo;
+        $this->congeExactRepository = $congeExactRepository;
     }
 
     //--------------------------------------- TOUTS LES CONGES
@@ -37,7 +40,8 @@ class CongeService
             ], 404);
         }
 
-        $conges = $this->congeRepo->getByEmployeId($user->employe->id);
+        // $conges = $this->congeRepo->getByEmployeId($user->employe->id);
+        $conges = $this->congeExactRepository->getCongesByEmployeId($user->employe->id);
 
         return $conges;
     }

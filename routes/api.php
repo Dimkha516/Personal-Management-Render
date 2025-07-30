@@ -470,8 +470,8 @@ Route::prefix('v1')->group(function () {
     //--------------- Users Routes ---------------
     Route::prefix('users')->group(function () {
         Route::middleware('auth.expirable')->get("/all", [UserController::class, 'index']);
-        // Route::middleware('auth.expirable')->post('/create-employe-account', [UserController::class, 'createUserForEmploye']);
-        Route::post('/create-employe-account', [UserController::class, 'createUserForEmploye']);
+        Route::middleware('auth.expirable')->post('/create-employe-account', [UserController::class, 'createUserForEmploye']);
+        // Route::post('/create-employe-account', [UserController::class, 'createUserForEmploye']);
         Route::middleware('auth.expirable')->get("/{id}", [UserController::class, 'show']);
         Route::middleware('auth.expirable')->put("/{id}", [UserController::class, 'update']);
         Route::middleware('auth.expirable')->delete("/{id}", [UserController::class, 'destroy']);
@@ -481,7 +481,6 @@ Route::prefix('v1')->group(function () {
 
     //--------------- Employes Routes ---------------
     Route::prefix('employes')->group(function () {
-        // Route::middleware('auth:sanctum')->get("/", [EmployesController::class, 'index']);
         Route::middleware(['auth.expirable'])->get("/", [EmployesController::class, 'index']);
         Route::middleware(['auth.expirable'])->get("/soldeConge", [EmployesController::class, 'getSoldeConge']);
         Route::middleware('auth.expirable')->get("/{id}", [EmployesController::class, 'show']);
@@ -492,7 +491,6 @@ Route::prefix('v1')->group(function () {
 
     //--------------- Conges Routes ---------------
     Route::prefix('conges')->group(function () {
-        // Route::middleware('auth:sanctum')->get("/", [CongeController::class, 'index']);
         Route::middleware(['auth.expirable'])->get("/", [CongeController::class, 'index']);
         Route::middleware('auth.expirable')->get("/mesConges", [CongeController::class, 'mesConges']);
         Route::middleware('auth.expirable')->get("/{id}", [CongeController::class, 'show']);
@@ -524,7 +522,6 @@ Route::prefix('v1')->group(function () {
     Route::prefix('disponibilites')->group(function () {
         Route::middleware('auth.expirable')->get("/", [DisponibiliteController::class, 'index']);
         Route::middleware('auth.expirable')->get("/mesDisponibilites", [DisponibiliteController::class, 'mesDisponibilites']);
-        // Route::middleware(['auth:sanctum'])->get('/mesDisponibilites', [DisponibiliteController::class, 'mesDisponibilites']);
         Route::middleware('auth.expirable')->get("/{id}", [DisponibiliteController::class, 'show']);
 
         Route::middleware('auth.expirable')->post("/", [DisponibiliteController::class, 'store']);

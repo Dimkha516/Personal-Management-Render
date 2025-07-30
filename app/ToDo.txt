@@ -4,9 +4,13 @@
 --- Mis à jour création employe avec date de fin contrat en cas de contrat différent de cdi ==> Done
 
 
---- Creation jours exclus et mis à jour traitement demandes
---- Statistiques pour le user connecté ==>
 --- Faire une demande pour un autre ==>
+--- Statistiques pour le user connecté ==>
+--- Attribuer Endpoint solde pour employé
+
+
+
+--- Creation jours exclus et mis à jour traitement demandes
 
  
 --- Nommer les fiches par le nom du fiche + le nom employe ==> 
@@ -20,5 +24,16 @@
 
 --- Creation table Jours Exclus(fériés et autres) pour les utiliser dans les congés ==>
 
-26 au 28 
-29 au 28
+--- Liste des opérations et leurs résultats pour l'admin (Logs administartifs)
+
+--- Création demande(possibilité de rensiegner date fin ou nombre de jpurs pour calcul automatique)
+
+--- Nombre de jours fixe pour type de congé annuel.
+--- Ajouter jours exclus backend et sa table.
+
+
+-- Jointure pour l'affichage des CONGES de l'utilisateur connecté:==> DONE(type de congé affiché. Pas besoin de l'employe tu le récupère en front)
+
+-- Jointure pour l'affichage des CESSATIONS de l'utilisateur connecté:==> DONE(type de congé affiché. Pas besoin de l'employe tu le récupère en front)
+
+-- Jointure pour l'affichage des DISPONIBILITES de l'utilisateur connecté:==> DONE(Pas besoin de jointure aucuns détail externe)
