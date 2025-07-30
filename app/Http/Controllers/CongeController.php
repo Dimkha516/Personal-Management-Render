@@ -9,6 +9,7 @@ use App\Http\Requests\ValidationCongeRequest;
 use App\Services\CongeService;
 use App\Traits\HandlesPermissions;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CongeController extends Controller
 {
@@ -56,6 +57,17 @@ class CongeController extends Controller
             'message' => 'Demande de congé créée avec succès.',
             'data' => $conge
         ], 201);
+    }
+
+    public function demandeForEmploye(CongeRequest $request, int $id)
+    {
+        $data = $request->all();
+        $createdDemande = $this->congeService->createDemandeForEmploye($data, $id);
+
+        return response()->json([
+            'message' => 'Demande de congé pour employé créée avec succès',
+            'demande' => $createdDemande
+        ]);
     }
 
     //-------------------------------- TRAITER DEMANDE DE CONGE-----------------------------------

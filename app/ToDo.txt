@@ -2,36 +2,28 @@
 --- Le congés de l'utilisateur connecté ne s'affichent pas ==> Corrected
 --- Ajout duree_contrat et date_fin_contrat sur employes ==> Done 
 --- Mis à jour création employe avec date de fin contrat en cas de contrat différent de cdi ==> Done
+--- Mis a jour employer avec documents (ajouter documents) ==> DONE
 
 
+----------------------------------------------------PRIORITE 1--------------------------------------------
 --- Faire une demande pour un autre ==>
+--- Nombre de jours fixe pour type de congé annuel.
 --- Statistiques pour le user connecté ==>
 --- Attribuer Endpoint solde pour employé
-
-
-
---- Creation jours exclus et mis à jour traitement demandes
-
- 
---- Nommer les fiches par le nom du fiche + le nom employe ==> 
-
---- Mis a jour employer avec documents (ajouter documents) ==> 
-
-
---- Profil employe pour chaque employé ==> 
-
 --- Mis à jour infos employe avec piece justificative, exemple: un certificat de mariage en cas de mariage ==>
-
 --- Creation table Jours Exclus(fériés et autres) pour les utiliser dans les congés ==>
-
---- Liste des opérations et leurs résultats pour l'admin (Logs administartifs)
-
---- Création demande(possibilité de rensiegner date fin ou nombre de jpurs pour calcul automatique)
-
---- Nombre de jours fixe pour type de congé annuel.
 --- Ajouter jours exclus backend et sa table.
 
+----------------------------------------------------PRIORITE 2--------------------------------------------
 
+--- Creation jours exclus et mis à jour traitement demandes
+--- Nommer les fiches par le nom du fiche + le nom employe ==> 
+--- Profil employe pour chaque employé ==> 
+--- Liste des opérations et leurs résultats pour l'admin (Logs administartifs)
+--- Création demande(possibilité de rensiegner date fin ou nombre de jpurs pour calcul automatique)
+
+
+----------------------------------------------------DONE ET A EXPLIQUER--------------------------------------------
 -- Jointure pour l'affichage des CONGES de l'utilisateur connecté:==> DONE(type de congé affiché. Pas besoin de l'employe tu le récupère en front)
 
 -- Jointure pour l'affichage des CESSATIONS de l'utilisateur connecté:==> DONE(type de congé affiché. Pas besoin de l'employe tu le récupère en front)

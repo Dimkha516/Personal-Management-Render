@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\CreateAccountRequest;
+use App\Models\User;
 use App\Services\PermissionService;
 use App\Services\UserService;
 use App\Traits\HandlesPermissions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 class UserController extends Controller
 {
@@ -49,7 +51,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Utilisateur créé avec succès',
             'data' => $user
-        ], 201); 
+        ], 201);
     }
 
     public function show(int $id, Request $request, PermissionService $permissionService): JsonResponse
@@ -104,16 +106,29 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    // public function changePassword(ChangePasswordRequest $request): JsonResponse
+    public function changePassword(ChangePasswordRequest $request, $id): JsonResponse
     {
-        $user = $request->user();
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Utilisateur non trouvé'
+            ], 404);
+        }
 
         if (!$user->firstConnexion) {
             return response()->json([
-                'message' => 'Le mot de passe a déjà été modifié.'
+                'message' => 'Le mot de passe a déjà été modifié'
             ], 400);
         }
 
+        // Optionnel : valider que le token reçu est valide (non expiré)
+        if (!Password::tokenExists($user, $request->token)) {
+            return response()->json(['message' => 'Token invalide ou expiré'], 400);
+        }
+
+        // Mise à jour du mot de passe
         $user->password = Hash::make($request->password);
         $user->firstConnexion = false;
         $user->save();
@@ -122,5 +137,27 @@ class UserController extends Controller
             'message' => 'Mot de passe modifié avec succès.',
             'user' => $user
         ], 200);
+
+
+        // $user = $request->user();
+        // if(!$user) {
+        //    return response()->json([
+        //         'message' => 'Utilisateur non récupéré'
+        //     ], 400);     
+        // }
+        // if (!$user->firstConnexion) {
+        //     return response()->json([
+        //         'message' => 'Le mot de passe a déjà été modifié.'
+        //     ], 400);
+        // }
+
+        // $user->password = Hash::make($request->password);
+        // $user->firstConnexion = false;
+        // $user->save();
+
+        // return response()->json([
+        //     'message' => 'Mot de passe modifié avec succès.',
+        //     'user' => $user
+        // ], 200);
     }
 }
