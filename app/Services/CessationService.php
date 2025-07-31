@@ -99,8 +99,11 @@ class CessationService
         $employe = $cessation->employe;
 
         if ($decision === 'valide') {
-            $dateDebut = Carbon::parse($data['date_debut']);
-            $dateFin = Carbon::parse($data['date_fin']);
+            // $dateDebut = Carbon::parse($data['date_debut']);
+            // $dateFin = Carbon::parse($data['date_fin']);
+            // Forcer le format et le fuseau horaire
+            $dateDebut = Carbon::createFromFormat('Y-m-d', $data['date_debut'])->startOfDay();
+            $dateFin = Carbon::createFromFormat('Y-m-d', $data['date_fin'])->startOfDay();
             $nbJours = $this->calculJoursOuvrables($dateDebut, $dateFin);
 
             if ($employe->solde_conge_jours < $nbJours) {

@@ -24,10 +24,8 @@ class CessationTraitementRequest extends FormRequest
     {
         return [
             'decision' => ['required', Rule::in(['valide', 'rejete'])],
-            'date_debut' => 'required',
-            'date_fin' => 'required',
-            // 'date_debut' => 'required_if:decision,valide|date|before_or_equal:date_fin',
-            // 'date_fin' => 'required_if:decision,valide|date|after_or_equal:date_debut',
+            'date_debut' => 'required_if:decision,valide|date|before_or_equal:date_fin',
+            'date_fin' => 'required_if:decision,valide|date|after_or_equal:date_debut',
             'motif' => 'required_if:decision,rejete|string',
             'commentaire' => 'nullable|string',
         ];
