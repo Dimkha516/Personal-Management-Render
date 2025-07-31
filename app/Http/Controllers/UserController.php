@@ -124,9 +124,9 @@ class UserController extends Controller
         }
 
         // Optionnel : valider que le token reçu est valide (non expiré)
-        if (!Password::tokenExists($user, $request->token)) {
-            return response()->json(['message' => 'Token invalide ou expiré'], 400);
-        }
+        // if (!Password::tokenExists($user, $request->token)) {
+        //     return response()->json(['message' => 'Token invalide ou expiré'], 400);
+        // }
 
         // Mise à jour du mot de passe
         $user->password = Hash::make($request->password);

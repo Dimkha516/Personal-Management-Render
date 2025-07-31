@@ -475,9 +475,9 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth.expirable')->get("/{id}", [UserController::class, 'show']);
         Route::middleware('auth.expirable')->put("/{id}", [UserController::class, 'update']);
         Route::middleware('auth.expirable')->delete("/{id}", [UserController::class, 'destroy']);
-        Route::middleware(['auth.expirable'])->post('/change-password', [UserController::class, 'changePassword']);
-        // Route::post('/change-password', [UserController::class, 'changePassword']);
         Route::post('/change-password/{id}', [UserController::class, 'changePassword']);
+        // Route::middleware(['auth.expirable'])->post('/change-password', [UserController::class, 'changePassword']);
+        // Route::post('/change-password', [UserController::class, 'changePassword']);
     });
 
     //--------------- Employes Routes ---------------
