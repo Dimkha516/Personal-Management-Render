@@ -15,7 +15,8 @@ class Cessation extends Model
         'statut',
         'commentaire',
         'fiche_cessation_pdf',
-        'nombre_jours'
+        'nombre_jours',
+        'motif'
     ];
 
 
