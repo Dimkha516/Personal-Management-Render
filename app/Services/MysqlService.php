@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Employe;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -18,6 +19,9 @@ class MysqlService
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
+        $employe = Employe::where('user_id', $user->id)->first();
+        
+
         if ($user->firstConnexion) {
             return ['error' => 'first_connexion'];
         }
@@ -25,6 +29,7 @@ class MysqlService
         $token = $user->createToken('auth_token')->plainTextToken;
         return [
             'user' => $user,
+            'employe' => $employe,
             'token' => $token,
         ];
     }
