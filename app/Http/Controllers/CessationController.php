@@ -48,7 +48,7 @@ class CessationController extends Controller
         $createdDemande = $this->cessationService->demandeForEmploye($data, $id);
 
         return response()->json([
-            'message' => 'Demande de cessation pour employé créée avec succès',
+            'message' => 'La Demande de cessation pour employé créée avec succès',
             'demande' => $createdDemande
         ]);
     }
@@ -58,7 +58,7 @@ class CessationController extends Controller
         $cessation = $this->cessationService->traiterCessation($id, $request->validated());
 
         return response()->json([
-            'message' => 'Décision sur la cessation enregistrée',
+            'message' => 'La Décision sur la cessation enregistrée',
             'data' => $cessation
         ]);
     }

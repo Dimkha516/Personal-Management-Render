@@ -3,10 +3,10 @@
 --- Ajout duree_contrat et date_fin_contrat sur employes ==> Done 
 --- Mis à jour création employe avec date de fin contrat en cas de contrat différent de cdi ==> Done
 --- Mis a jour employer avec documents (ajouter documents) ==> DONE
+--- Faire une demande pour un autre ==> DONE
 
 
 ----------------------------------------------------PRIORITE 1--------------------------------------------
---- Faire une demande pour un autre ==>
 --- Nombre de jours fixe pour type de congé annuel.
 --- Statistiques pour le user connecté ==>
 --- Attribuer Endpoint solde pour employé

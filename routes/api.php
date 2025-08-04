@@ -511,7 +511,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth.expirable')->get("/mesCessations", [CessationController::class, 'mesCessations']);
         Route::middleware('auth.expirable')->get("/{id}", [CessationController::class, 'show']);
         Route::middleware('auth.expirable')->post("/demandeForEmploye/{id}", [CessationController::class, 'demandeForEmploye']);
-
+  
 
         Route::middleware('auth.expirable')->post("/", [CessationController::class, 'store']);
         Route::middleware('auth.expirable')->post("/traiterDemandeCessation/{id}", [CessationController::class, 'traiter']);
