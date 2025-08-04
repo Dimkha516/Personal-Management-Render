@@ -112,22 +112,30 @@ class CongeService
     }
 
 
-    public function createDemandeForEmploye(array $data, int $employeId){
-        
+    public function createDemandeForEmploye(array $data, int $employeId)
+    {
+
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $concernedEmploye = Employe::findOrFail($employeId);
 
         // Vérifier si l'utilisateur connecté est RH
-        if(!$user->hasRole('rh')) {
+        if (!$user->hasRole('rh')) {
             throw ValidationException::withMessages([
                 'Erreur Profil' => 'Seul un RH peut faire une demande pour un employé'
             ]);
         }
-        
+
+        // Vérifier que le RH ne fait pas une demande pour lui-même
+        if ($concernedEmploye->user_id === $user->id) {
+            throw ValidationException::withMessages([
+                'Erreur Employé' => 'Un RH ne peut pas faire une demande pour lui-même.'
+            ]);
+        }
+
         $data['employe_id'] = $concernedEmploye->id;
         $data['date_demande'] = now();
-        
+
         return $this->congeRepo->store($data);
     }
 

@@ -33,7 +33,7 @@ class CongeRequest extends FormRequest
     public function rules(): array
     {   
         return [
-            'employe_id' => 'required|exists:employes,id',
+            // 'employe_id' => 'required|exists:employes,id',
             'type_conge_id' => 'required|exists:types_conges,id',
             'piece_jointe' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
         ];
@@ -74,7 +74,7 @@ class CongeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'employe_id.required' => "L'identifiant de l'employé est requis.",
+            // 'employe_id.required' => "L'identifiant de l'employé est requis.",
             'type_conge_id.required' => 'Le type de congé est obligatoire.',
             'piece_jointe.required' => 'Un fichier justificatif est requis.(contrat de travail ou attestation dernier congé)',
             // 'employe_id.not_in' => "Un RH ne peut pas faire une demande pour lui-même via cette méthode.",

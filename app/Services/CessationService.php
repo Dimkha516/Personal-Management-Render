@@ -60,28 +60,79 @@ class CessationService
     {
         $employe = Employe::where('user_id', Auth::id())->firstOrFail();
         $typeCongeId = TypeConge::findOrFail($data['type_conge_id']);
+        
+        $dateDebutStr = $data['date_debut'];
+        $dateFinStr = $data['date_fin'];
 
-        // $conge = Conge::findOrFail($data['conge_id']);
+        $dateDebut = Carbon::createFromFormat('Y-m-d', $dateDebutStr)->startOfDay();
+        $dateFin = Carbon::createFromFormat('Y-m-d', $dateFinStr)->startOfDay();
 
-        // if ($conge->statut !== 'approuve') {
-
-        //     throw new \Exception('le congé doit être validé pour soumettre une cessation');
-        // }
+        $nbJours = $dateDebut->diffInDays($dateFin) + 1;
+    
 
         if (isset($data['piece_jointe'])) {
             $path = $data['piece_jointe']->store('cessations_pieces');
             $data['piece_jointe'] = $path;
         }
+
+        return $this->cessationRepository->store([
+            // 'conge_id' => $conge->id,
+            'employe_id' => $employe->id,
+            'type_conge_id' => $typeCongeId->id,
+            // 'date_debut' => $data['date_debut'],
+            // 'date_fin' => $data['date_fin'],
+            'date_debut' => $dateDebutStr,
+            'date_fin' => $dateFinStr,
+            'motif' => $data['motif'],
+            'nombre_jours' => $nbJours,
+            // 'piece_jointe' => $this->uploadFichier($data['piece_jointe']),
+        ]);
+    }
+
+    public function demandeForEmploye(array $data, int $employeId)
+    {
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $employe = Employe::findOrFail($employeId);
+        $typeCongeId = TypeConge::findOrFail($data['type_conge_id']);
+
+        $dateDebutStr = $data['date_debut'];
+        $dateFinStr = $data['date_fin'];
+
+        $dateDebut = Carbon::createFromFormat('Y-m-d', $dateDebutStr)->startOfDay();
+        $dateFin = Carbon::createFromFormat('Y-m-d', $dateFinStr)->startOfDay();
+
+        $nbJours = $dateDebut->diffInDays($dateFin) + 1;
+
+        // Vérifier si l'utilisateur connecté est RH
+        if (!$user->hasRole('rh')) {
+            throw ValidationException::withMessages([
+                'Erreur Profil' => 'Seul un RH peut faire une demande pour un employé'
+            ]);
+        }
+
+        // Vérifier que le RH ne fait pas une demande pour lui-même
+        if ($employe->user_id === $user->id) {
+            throw ValidationException::withMessages([
+                'Erreur Employé' => 'Un RH ne peut pas faire une demande pour lui-même.'
+            ]);
+        }
+        if (isset($data['piece_jointe'])) {
+            $path = $data['piece_jointe']->store('cessations_pieces');
+            $data['piece_jointe'] = $path;
+        }
+
         // $nbJours = $this->calculJoursOuvrables($data['dateDebut'], $data['dateFin']);
 
         return $this->cessationRepository->store([
             // 'conge_id' => $conge->id,
             'employe_id' => $employe->id,
             'type_conge_id' => $typeCongeId->id,
-            'date_debut' => $data['date_debut'],
-            'date_fin' => $data['date_fin'],
+            'date_debut' => $dateDebutStr,
+            'date_fin' => $dateFinStr,
             'motif' => $data['motif'],
-            // 'nombre_jours' => $nbJours,
+            'nombre_jours' => $nbJours,
             // 'piece_jointe' => $this->uploadFichier($data['piece_jointe']),
         ]);
     }

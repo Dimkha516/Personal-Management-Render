@@ -42,6 +42,17 @@ class CessationController extends Controller
         ], 200);
     }
 
+    public function demandeForEmploye(CessationRequest $request, int $id)
+    {
+        $data = $request->all();
+        $createdDemande = $this->cessationService->demandeForEmploye($data, $id);
+
+        return response()->json([
+            'message' => 'Demande de cessation pour employé créée avec succès',
+            'demande' => $createdDemande
+        ]);
+    }
+
     public function traiter($id, CessationTraitementRequest $request)
     {
         $cessation = $this->cessationService->traiterCessation($id, $request->validated());
