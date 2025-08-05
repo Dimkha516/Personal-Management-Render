@@ -61,6 +61,7 @@ class CongeService
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $employe = $user->employe;
+        
 
         // $employe = Employe::findOrFail($data['employe_id']);
 

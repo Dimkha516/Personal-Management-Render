@@ -29,3 +29,11 @@
 -- Jointure pour l'affichage des CESSATIONS de l'utilisateur connecté:==> DONE(type de congé affiché. Pas besoin de l'employe tu le récupère en front)
 
 -- Jointure pour l'affichage des DISPONIBILITES de l'utilisateur connecté:==> DONE(Pas besoin de jointure aucuns détail externe)
+
+
+Pour la demande de congés annuel:
+ 1) date de début = 
+         si date_dernier_demande (null) ==> date_prise_de_service
+		 sinon date_dernier_demande
+ 
+2) date de fin = ???

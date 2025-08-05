@@ -17,6 +17,7 @@ class Employe extends Model
         'situation_matrimoniale',
         'date_prise_service',
         'date_fin_contrat',
+        'date_dernier_demande_conge',
         'duree_contrat_mois',
         'genre',
         'type_contrat',
