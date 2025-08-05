@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Interfaces\CongesInterface;
+use App\Models\Conge;
 use App\Models\Employe;
+use App\Models\TypeConge;
 use App\Repositories\CongeRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -61,9 +63,16 @@ class CongeService
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $employe = $user->employe;
+        $dateDernierDemande = $employe->date_dernier_demande_conge;
         
+        
+        if($dateDernierDemande == null) {
+            $data['date_debut'] = $employe->date_prise_service;
+        } else {
+            $data['date_debut'] = $employe->dateDernierDemande;
+        }
 
-        // $employe = Employe::findOrFail($data['employe_id']);
+        // dd($data);
 
         $ancienneteMois = now()->diffInMonths($employe->date_prise_service);
         if ($ancienneteMois < 12) {
@@ -74,42 +83,11 @@ class CongeService
 
         $data['employe_id'] = $employe->id;
         $data['date_demande'] = now();
+        // $data['date_debut'] = $dateDebut;
+       
 
         return $this->congeRepo->store($data);
 
-        // // RH → demande pour un autre employé
-        // if ($user->hasRole('rh')) {
-        //     // Vérification de la clé fournie
-        //     if (!isset($data['employe_id'])) {
-        //         throw ValidationException::withMessages([
-        //             'employe_id' => 'L\'employé concerné doit être spécifié pour une demande RH.'
-        //         ]);
-        //     }
-
-        //     $employe = Employe::findOrFail($data['employe_id']);
-
-        //     // S'assurer que RH ne demande pas pour lui-même
-        //     if ($employe->user_id === $user->id) {
-        //         throw ValidationException::withMessages([
-        //             'employe_id' => 'Un RH ne peut pas faire une demande pour lui-même via ce mode.'
-        //         ]);
-        //     }
-        // } else {
-        //     // Employé → on prend automatiquement son employe_id
-        //     $employe = $user->employe;
-        //     // dd($employe);
-
-        //     // Ajoute automatiquement l'employé connecté dans les données
-        //     $data['employe_id'] = $employe->id;
-        // }
-
-        // Vérifier ancienneté
-
-        // if ($ancienneteMois < 12 && !$user->hasRole('rh')) {
-        //     throw ValidationException::withMessages([
-        //         'employe_id' => 'Vous devez avoir au moins 1 an de service pour faire une demande. Sinon, demandez au RH.'
-        //     ]);
-        // }
     }
 
 
@@ -119,6 +97,14 @@ class CongeService
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $concernedEmploye = Employe::findOrFail($employeId);
+
+        $dateDernierDemande = $concernedEmploye->date_dernier_demande_conge;
+
+        if($dateDernierDemande == null) {
+            $data['date_debut'] = $concernedEmploye->date_prise_service;
+        } else {
+            $data['date_debut'] = $concernedEmploye->dateDernierDemande;
+        }
 
         // Vérifier si l'utilisateur connecté est RH
         if (!$user->hasRole('rh')) {
