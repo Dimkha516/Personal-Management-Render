@@ -42,12 +42,18 @@ class CongeRepository implements CongesInterface
 
     public function getById(int $id)
     {
-        return $this->model->findOrFail($id);
+        return $this->model
+        ->with(['employe:id,prenom,nom,solde_conge_jours'])
+        ->with(['typeConge:id,libelle'])
+        ->findOrFail($id);
+        //----------------------------------
+        
+        //----------------------------------
         // return $this->model
-        //     ->with(['employe:id,prenom,nom,solde_conge_jours'])
-        //     ->with(['typeConge:id,libelle'])
-        //     ->latest()
-        //     ->get();
+        // ->with(['employe:id,prenom,nom,solde_conge_jours'])
+        // ->with(['typeConge:id,libelle'])
+        // ->latest()
+        // ->get();
     }
 
     public function store(array $data)

@@ -21,12 +21,9 @@ class DisponibiliteRepository implements InterfacesDisponibiliteInterface
 
     public function getById(int $id)
     {
-        return $this->model->findOrFail($id);
-        // return $this->model
-        //     ->with(['employe:id,prenom,nom,solde_conge_jours'])
-        //     ->with(['typeConge:id,libelle'])
-        //     ->latest()
-        //     ->get();
+        return $this->model
+        ->with(['employe:id,prenom,nom,solde_conge_jours'])
+        ->findOrFail($id);
     }
 
     public function getByEmployeId(int $employeId)

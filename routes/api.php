@@ -566,6 +566,11 @@ Route::prefix('v1')->group(function () {
     });
 }); 
 
+// Cessation/id
+// Congé/id
+// Disponibilite/id
+
+
 // components fermé avant tags
 
 

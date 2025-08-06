@@ -55,6 +55,10 @@ class CongeService
     public function find(int $id)
     {
         return $this->congeRepo->getById($id);
+        // ->with(['employe:id,prenom,nom,solde_conge_jours']);
+            // ->with(['typeConge:id,libelle'])
+            // ->latest()
+            // ->get();
     }
 
     //--------------------------------------- AJOUTER UNE NOUVELLE DEMANDE CONGE

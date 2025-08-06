@@ -23,8 +23,12 @@ class CessationRepository implements CessationInterface
     }
 
     public function getById(int $id)
-    {
-        return $this->model->findOrFail($id);
+    {   
+        return $this->model
+        ->with(['employe:id,prenom,nom,solde_conge_jours'])
+        ->with(['typeConge:id,libelle'])
+        ->findOrFail($id);
+        // return $this->model->findOrFail($id);
         // return $this->model
         //     ->with(['employe:id,prenom,nom,solde_conge_jours'])
         //     ->with(['typeConge:id,libelle'])
