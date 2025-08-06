@@ -24,7 +24,7 @@ class DisponibiliteController extends Controller
         return response()->json([
             'message' => 'Toutes les demandes de disponibilités',
             'data' => $dispos
-        ]);
+        ], 200);
     }
 
     public function show($id)
