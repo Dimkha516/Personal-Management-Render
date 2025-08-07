@@ -55,6 +55,9 @@ class CongeRequest extends FormRequest
             'type_conge_id' => 'required|exists:types_conges,id',
             'piece_jointe' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
             'date_debut' => 'nullable|date',
+            'motif' => 'required|string|min:5',
+            'numero' => 'nullable|string|max:255',
+
 
             'date_fin' => [
                 $isCongeAnnuel ? 'required' : 'nullable',
@@ -78,6 +81,7 @@ class CongeRequest extends FormRequest
             'date_fin.required' => 'La date de fin est obligatoire pour un congé annuel.',
             'date_fin.date' => 'La date de fin doit être une date valide.',
             'date_fin.after' => 'La date de fin doit être postérieure à la date de début.',
+            'motif.required' => 'Le motif de la demande de congé est obligatoire.',
         ];
     }
 }

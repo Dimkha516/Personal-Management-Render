@@ -27,7 +27,8 @@ class CessationRequest extends FormRequest
             'type_conge_id' => 'required|exists:types_conges,id',
             'date_debut' => 'required|date|after_or_equal:today',
             'date_fin' => 'required|date|after_or_equal:date_debut',
-            // 'motif' => 'required|string|min:5',
+            'numero' => 'nullable|string|max:255',
+            'motif' => 'required|string|min:5',
             // 'piece_jointe' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ];
     }
@@ -41,7 +42,7 @@ class CessationRequest extends FormRequest
             'type_conge_id.exists' => "Ce type de congé n'est pas valide",
             'date_debut.required' => 'La date de début est requise.',
             'date_fin.required' => 'La date de fin est requise.',
-            // 'motif.required' => 'Le motif de la demande de cessation est obligatoire.',
+            'motif.required' => 'Le motif de la demande de cessation est obligatoire.',
             // 'piece_jointe.required' => 'Veuillez joindre un fichier justificatif.',
         ];
     }

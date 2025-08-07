@@ -35,6 +35,6 @@
 
 07/08/2025------------------------------
 --- Réglons d'abord le problème avec le motif dans la demande
+--- Numéro cessation, congé, DISPONIBILITES
 --- Alerter pour date fin de contrat proche + fonctionnalité de renouvellement contrat
 --- Générer contrat employé
---- Numéro cessation, congé, DISPONIBILITES

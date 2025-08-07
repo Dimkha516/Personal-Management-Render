@@ -51,7 +51,6 @@ class CongeController extends Controller
             $data['piece_jointe'] = $path;
         }
 
-
         $conge = $this->congeService->create($data);
 
         return response()->json([

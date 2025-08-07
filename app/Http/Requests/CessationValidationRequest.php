@@ -25,7 +25,7 @@ class CessationValidationRequest extends FormRequest
             'date_debut' => 'required|date|after_or_equal:today',
             'date_fin' => 'required|date|after_or_equal:date_debut',
             'commentaire' => 'required|string|min:3',
-            'fiche_cessation_pdf' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048'
+            'fiche_cessation_pdf' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
         ];
     }
 

@@ -27,6 +27,7 @@ class DisponibiliteRequest extends FormRequest
             'avec_solde' => 'required|boolean',
             'motif' => 'required|string|min:3',
             'piece_jointe' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'numero' => 'nullable|string|max:255',
         ];
     }
 

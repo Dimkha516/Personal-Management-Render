@@ -74,6 +74,9 @@ class CessationService
             $path = $data['piece_jointe']->store('cessations_pieces');
             $data['piece_jointe'] = $path;
         }
+        // Vérification du champ "numero"
+    $numero = !empty($data['numero']) ? $data['numero'] : null;
+
 
         return $this->cessationRepository->store([
             // 'conge_id' => $conge->id,
@@ -85,6 +88,7 @@ class CessationService
             'date_fin' => $dateFinStr,
             'motif' => $data['motif'],
             'nombre_jours' => $nbJours,
+            'numero' => $numero
             // 'piece_jointe' => $this->uploadFichier($data['piece_jointe']),
         ]);
     }
@@ -123,6 +127,9 @@ class CessationService
             $data['piece_jointe'] = $path;
         }
 
+        // Vérification du champ "numero"
+    $numero = !empty($data['numero']) ? $data['numero'] : null;
+
         // $nbJours = $this->calculJoursOuvrables($data['dateDebut'], $data['dateFin']);
 
         return $this->cessationRepository->store([
@@ -133,6 +140,7 @@ class CessationService
             'date_fin' => $dateFinStr,
             'motif' => $data['motif'],
             'nombre_jours' => $nbJours,
+            'numero' => $numero
             // 'piece_jointe' => $this->uploadFichier($data['piece_jointe']),
         ]);
     }

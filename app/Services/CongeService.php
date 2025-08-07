@@ -87,8 +87,12 @@ class CongeService
 
         $data['employe_id'] = $employe->id;
         $data['date_demande'] = now();
+        
         // $data['date_debut'] = $dateDebut;
        
+         // Vérification du champ "numero"
+    $data['numero'] = !empty($data['numero']) ? $data['numero'] : null;
+
 
         return $this->congeRepo->store($data);
 
@@ -126,6 +130,9 @@ class CongeService
 
         $data['employe_id'] = $concernedEmploye->id;
         $data['date_demande'] = now();
+
+        // Vérification du champ "numero"
+    $data['numero'] = !empty($data['numero']) ? $data['numero'] : null;
 
         return $this->congeRepo->store($data);
     }
