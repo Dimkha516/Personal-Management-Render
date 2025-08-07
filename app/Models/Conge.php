@@ -10,6 +10,7 @@ class Conge extends Model
 
     protected $fillable = [
         'employe_id',
+        'numero',
         'type_conge_id',
         'date_demande',
         'date_debut',

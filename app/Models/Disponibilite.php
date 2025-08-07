@@ -11,6 +11,7 @@ class Disponibilite extends Model
 
     protected $fillable = [
         'employe_id',
+        'numero',
         'date_demande',
         'date_debut',
         'date_fin',
