@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\Statistics\CessationStatsProvider;
 use App\Repositories\Statistics\CongeStatsProvider;
+use App\Repositories\Statistics\DisponibiliteStatsProvider;
 use App\Repositories\Statistics\EmployeStatsProvider;
 
 
@@ -16,6 +17,7 @@ class StatistiqueService
         $this->providers = [
             'conges' => new CongeStatsProvider(),
             'cessations' => new CessationStatsProvider(),
+            'disponibilites' => new DisponibiliteStatsProvider(),
             'employes' => new EmployeStatsProvider(),
         ];
     }
@@ -26,6 +28,17 @@ class StatistiqueService
 
         foreach ($this->providers as $key => $provider) {
             $stats[$key] = $provider->getStats();
+        }
+
+        return $stats;
+    }
+
+    public function getConnectedUserStats(): array
+    {
+        $stats = [];
+
+        foreach ($this->providers as $key => $provider) {
+            $stats[$key] = $provider->getStatsForCurrentUser();
         }
 
         return $stats;

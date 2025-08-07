@@ -552,7 +552,8 @@ Route::prefix('v1')->group(function () {
 
     //--------------- STATISTICS Routes ---------------
     Route::prefix('stats')->group(function () {
-        Route::get('/', [StatistiqueController::class, 'index']); // Toutes les stats
+        Route::get('/all', [StatistiqueController::class, 'index']); // Toutes les stats
+        Route::middleware('auth.expirable')->get("/myStats", [StatistiqueController::class, 'connectedUserStats']);
         Route::get('/{entity}', [StatistiqueController::class, 'show']); // Stats ciblées
     });
 

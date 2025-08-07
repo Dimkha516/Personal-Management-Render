@@ -25,6 +25,13 @@ class StatistiqueController extends Controller
         ]);
     }
 
+    public function connectedUserStats() {
+        return response()->json([
+            'message' => 'Statistiques globales',
+            'data' => $this->statsService->getConnectedUserStats(),
+        ]);
+    }
+
     public function show($entity)
     {
         return response()->json([

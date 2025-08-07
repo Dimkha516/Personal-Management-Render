@@ -18,4 +18,12 @@ class EmployeStatsProvider
             // 'fonctionnaires' => Employe::where('type_contrat', 'fonctionnaire')->count(),
         ];
     }
+
+    public function getStatsForCurrentUser(): array
+    {
+
+        return [
+            "message" => "Ressources destinées au RH"
+        ];
+    }
 }
