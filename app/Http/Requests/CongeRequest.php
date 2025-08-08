@@ -56,7 +56,7 @@ class CongeRequest extends FormRequest
             'piece_jointe' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
             'date_debut' => 'nullable|date',
             'motif' => 'required|string|min:5',
-            'numero' => 'nullable|string|max:255',
+            'numero' => 'required|unique:conges,numero|string|max:255',
 
 
             'date_fin' => [
@@ -82,6 +82,8 @@ class CongeRequest extends FormRequest
             'date_fin.date' => 'La date de fin doit être une date valide.',
             'date_fin.after' => 'La date de fin doit être postérieure à la date de début.',
             'motif.required' => 'Le motif de la demande de congé est obligatoire.',
-        ];
+            'numero.required' => 'Le numéro de la demande de congé est requis',
+            'numero.unique' => 'Ce numéro de congé existe deja'
+         ];
     }
 }

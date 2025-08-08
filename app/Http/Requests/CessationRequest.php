@@ -27,7 +27,7 @@ class CessationRequest extends FormRequest
             'type_conge_id' => 'required|exists:types_conges,id',
             'date_debut' => 'required|date|after_or_equal:today',
             'date_fin' => 'required|date|after_or_equal:date_debut',
-            'numero' => 'nullable|string|max:255',
+            'numero' => 'required|unique:cessations,numero|string|max:255',
             'motif' => 'required|string|min:5',
             // 'piece_jointe' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ];
@@ -44,6 +44,8 @@ class CessationRequest extends FormRequest
             'date_fin.required' => 'La date de fin est requise.',
             'motif.required' => 'Le motif de la demande de cessation est obligatoire.',
             // 'piece_jointe.required' => 'Veuillez joindre un fichier justificatif.',
+            'numero.required' => 'Le numéro de la demande de cessation est requis',
+            'numero.unique' => 'Ce numéro de cessation existe deja'
         ];
     }
 }

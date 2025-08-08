@@ -28,6 +28,8 @@ class CessationTraitementRequest extends FormRequest
             'date_fin' => 'required_if:decision,valide|date|after_or_equal:date_debut',
             'motif' => 'required_if:decision,rejete|string',
             'commentaire' => 'nullable|string',
+            //'fichier'
+            //'numero'
         ];
     }
 

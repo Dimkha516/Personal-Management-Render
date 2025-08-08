@@ -56,9 +56,9 @@ class CongeService
     {
         return $this->congeRepo->getById($id);
         // ->with(['employe:id,prenom,nom,solde_conge_jours']);
-            // ->with(['typeConge:id,libelle'])
-            // ->latest()
-            // ->get();
+        // ->with(['typeConge:id,libelle'])
+        // ->latest()
+        // ->get();
     }
 
     //--------------------------------------- AJOUTER UNE NOUVELLE DEMANDE CONGE
@@ -68,9 +68,9 @@ class CongeService
         $user = Auth::user();
         $employe = $user->employe;
         $dateDernierDemande = $employe->date_dernier_demande_conge;
-        
-        
-        if($dateDernierDemande == null) {
+
+
+        if ($dateDernierDemande == null) {
             $data['date_debut'] = $employe->date_prise_service;
         } else {
             $data['date_debut'] = $employe->dateDernierDemande;
@@ -87,15 +87,11 @@ class CongeService
 
         $data['employe_id'] = $employe->id;
         $data['date_demande'] = now();
-        
-        // $data['date_debut'] = $dateDebut;
-       
-         // Vérification du champ "numero"
-    $data['numero'] = !empty($data['numero']) ? $data['numero'] : null;
+
+        $data['numero'] = $data['numero'];
 
 
         return $this->congeRepo->store($data);
-
     }
 
 
@@ -108,7 +104,7 @@ class CongeService
 
         $dateDernierDemande = $concernedEmploye->date_dernier_demande_conge;
 
-        if($dateDernierDemande == null) {
+        if ($dateDernierDemande == null) {
             $data['date_debut'] = $concernedEmploye->date_prise_service;
         } else {
             $data['date_debut'] = $concernedEmploye->dateDernierDemande;
@@ -132,7 +128,7 @@ class CongeService
         $data['date_demande'] = now();
 
         // Vérification du champ "numero"
-    $data['numero'] = !empty($data['numero']) ? $data['numero'] : null;
+        $data['numero'] = ($data['numero']);
 
         return $this->congeRepo->store($data);
     }

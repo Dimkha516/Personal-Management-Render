@@ -60,7 +60,7 @@ class CessationService
     {
         $employe = Employe::where('user_id', Auth::id())->firstOrFail();
         $typeCongeId = TypeConge::findOrFail($data['type_conge_id']);
-        
+
         $dateDebutStr = $data['date_debut'];
         $dateFinStr = $data['date_fin'];
 
@@ -68,15 +68,15 @@ class CessationService
         $dateFin = Carbon::createFromFormat('Y-m-d', $dateFinStr)->startOfDay();
 
         $nbJours = $dateDebut->diffInDays($dateFin) + 1;
-    
+
 
         if (isset($data['piece_jointe'])) {
             $path = $data['piece_jointe']->store('cessations_pieces');
             $data['piece_jointe'] = $path;
         }
-        // Vérification du champ "numero"
-    $numero = !empty($data['numero']) ? $data['numero'] : null;
 
+
+        $numero = ($data['numero']);
 
         return $this->cessationRepository->store([
             // 'conge_id' => $conge->id,
@@ -128,7 +128,7 @@ class CessationService
         }
 
         // Vérification du champ "numero"
-    $numero = !empty($data['numero']) ? $data['numero'] : null;
+        $numero = ($data['numero']);
 
         // $nbJours = $this->calculJoursOuvrables($data['dateDebut'], $data['dateFin']);
 
