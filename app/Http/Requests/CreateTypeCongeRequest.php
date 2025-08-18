@@ -28,7 +28,7 @@ class CreateTypeCongeRequest extends FormRequest
         ];
     }
 
-    public function messages(): array
+    public function messages(): array 
     {
         return [
             'libelle.required' => 'Le libellé est du type de congé est requis',

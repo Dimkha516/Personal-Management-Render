@@ -28,6 +28,8 @@ class TraitementCongeRequest extends FormRequest
             // 'date_fin' => 'required_if:decision,valide|date|after_or_equal:date_debut',
             'motif' => 'required_if:decision,rejete|string',
             'commentaire' => 'nullable|string',
+            'piece_jointe' => 'required_if:decision,valide|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'numero' => 'required_if:decision,valide|unique:conges,numero|string|max:255',
         ];
     }
 
@@ -38,6 +40,12 @@ class TraitementCongeRequest extends FormRequest
             // 'date_debut.required_if' => 'La date de début est requise pour une validation.',
             // 'date_fin.required_if' => 'La date de fin est requise pour une validation.',
             'motif.required_if' => 'Le motif est requis en cas de rejet.',
+            'numero.required' => 'Le numéro de la demande de congé est requis',
+            'numero.unique' => 'Ce numéro de congé existe deja',
+            'piece_jointe.required' => 'Un fichier justificatif est requis (contrat de travail ou attestation dernier congé).',
+            'piece_jointe.file' => 'Le fichier joint doit être un fichier valide.',
+            'piece_jointe.mimes' => 'Le fichier joint doit être au format PDF, DOC, DOCX, JPG ou PNG.',
+            'piece_jointe.max' => 'Le fichier joint ne doit pas dépasser 2 Mo.',
         ];
     }
 }

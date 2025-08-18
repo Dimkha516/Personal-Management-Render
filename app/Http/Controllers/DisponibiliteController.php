@@ -50,9 +50,6 @@ class DisponibiliteController extends Controller
         ]);
     }
 
-
-
-
     public function store(DisponibiliteRequest $request)
     {
         $dispo = $this->service->create($request->validated());

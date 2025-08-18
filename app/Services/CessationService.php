@@ -76,7 +76,7 @@ class CessationService
         }
 
 
-        $numero = ($data['numero']);
+        // $numero = ($data['numero']);
 
         return $this->cessationRepository->store([
             // 'conge_id' => $conge->id,
@@ -88,7 +88,7 @@ class CessationService
             'date_fin' => $dateFinStr,
             'motif' => $data['motif'],
             'nombre_jours' => $nbJours,
-            'numero' => $numero
+            // 'numero' => $numero
             // 'piece_jointe' => $this->uploadFichier($data['piece_jointe']),
         ]);
     }
@@ -128,7 +128,7 @@ class CessationService
         }
 
         // Vérification du champ "numero"
-        $numero = ($data['numero']);
+        // $numero = ($data['numero']);
 
         // $nbJours = $this->calculJoursOuvrables($data['dateDebut'], $data['dateFin']);
 
@@ -140,7 +140,7 @@ class CessationService
             'date_fin' => $dateFinStr,
             'motif' => $data['motif'],
             'nombre_jours' => $nbJours,
-            'numero' => $numero
+            // 'numero' => $numero
             // 'piece_jointe' => $this->uploadFichier($data['piece_jointe']),
         ]);
     }
@@ -180,6 +180,8 @@ class CessationService
                 'date_debut' => $dateDebutStr,
                 'date_fin' => $dateFinStr,
                 'nombre_jours' => $nbJours,
+                'numero' => $data['numero'],
+                'fiche_cessation_pdf' => $data['fiche_cessation_pdf'],
                 'commentaire' => $data['commentaire'] ?? null,
             ]);
 

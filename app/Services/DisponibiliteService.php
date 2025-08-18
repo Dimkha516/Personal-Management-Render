@@ -105,7 +105,7 @@ class DisponibiliteService
             $data['piece_jointe'] = $data['piece_jointe']->store('disponibilites', 'public');
         }
 
-        $data['numero'] = ($data['numero']);
+        // $data['numero'] = ($data['numero']);
 
         return $this->repo->store($data);
     }

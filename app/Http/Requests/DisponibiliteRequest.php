@@ -28,7 +28,7 @@ class DisponibiliteRequest extends FormRequest
             'motif' => 'required|string|min:3',
             'piece_jointe' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'numero' => 'required|unique:disponibilites,numero|string|max:255',
-            'motif' => 'required|string|min:5',
+            // 'motif' => 'required|string|min:5',
         ];
     }
 
@@ -39,8 +39,8 @@ class DisponibiliteRequest extends FormRequest
             'date_fin.required' => 'La date de fin est requise et doit être supérieure de la date de début.',
             'motif.required' => 'Un motif est requis.',
             'piece_jointe.required' => 'Veuillez joindre un fichier justificatif.',
-            'numero.required' => 'Le numéro de la demande de disponibilité" est requis',
-            'numero.unique' => 'Ce numéro de cessation existe deja'
+            // 'numero.required' => 'Le numéro de la demande de disponibilité" est requis',
+            // 'numero.unique' => 'Ce numéro de cessation existe deja'
         ];
     }
 }

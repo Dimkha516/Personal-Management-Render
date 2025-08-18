@@ -28,6 +28,8 @@ class CessationTraitementRequest extends FormRequest
             'date_fin' => 'required_if:decision,valide|date|after_or_equal:date_debut',
             'motif' => 'required_if:decision,rejete|string',
             'commentaire' => 'nullable|string',
+            'fiche_cessation_pdf' => 'required_if:decision,valide|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'numero' => 'required_if:decision,valide|unique:cessations,numero|string|max:255',
             //'fichier'
             //'numero'
         ];
@@ -40,6 +42,12 @@ class CessationTraitementRequest extends FormRequest
             'date_debut.required_if' => 'La date de début est requise pour une validation.',
             'date_fin.required_if' => 'La date de fin est requise pour une validation.',
             'motif.required_if' => 'Le motif est requis en cas de rejet.',
+            'numero.required' => 'Le numéro de la demande de congé est requis',
+            'numero.unique' => 'Ce numéro de cessation existe deja',
+            'fiche_cessation_pdf.required' => 'La fiche de cessation est requise',
+            'fiche_cessation_pdf.file' => 'La fiche de cessation doit être un fichier valide.',
+            'fiche_cessation_pdf.mimes' => 'La fiche de cessation doit être au format PDF, DOC, DOCX, JPG ou PNG.',
+            'fiche_cessation_pdf.max' => 'La fiche de cessation ne doit pas dépasser 2 Mo.',
         ];
     }
 }

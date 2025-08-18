@@ -88,7 +88,7 @@ class CongeService
         $data['employe_id'] = $employe->id;
         $data['date_demande'] = now();
 
-        $data['numero'] = $data['numero'];
+        // $data['numero'] = $data['numero'];
 
 
         return $this->congeRepo->store($data);
@@ -128,7 +128,7 @@ class CongeService
         $data['date_demande'] = now();
 
         // Vérification du champ "numero"
-        $data['numero'] = ($data['numero']);
+        // $data['numero'] = ($data['numero']);
 
         return $this->congeRepo->store($data);
     }
@@ -158,9 +158,11 @@ class CongeService
         }
 
         if ($data['decision'] === 'valide') {
-            // Mise à jour du statut uniquement
+            // Mise à jour du statut et ajout du numéro
             $conge->update([
                 'statut' => 'approuve',
+                'numero' => $data['numero'],
+                'piece_jointe' => $data['piece_jointe'],
                 'commentaire' => $data['commentaire'] ?? null,
             ]);
         } elseif ($data['decision'] === 'rejete') {
