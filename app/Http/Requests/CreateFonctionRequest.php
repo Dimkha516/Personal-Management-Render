@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateServiceRequest extends FormRequest
+class CreateFonctionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,15 +22,14 @@ class CreateServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string'
+            "name" => "required|string"
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'le nom du service est requis',
-            'name.min' => 'le nom de service doit comporter 5 caractères au moins',
+            'name.required' => 'le nom de la fonction est requis',
         ];
     }
 }

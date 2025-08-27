@@ -7,6 +7,7 @@ use App\Http\Controllers\CongeController;
 use App\Http\Controllers\DisponibiliteController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EmployesController;
+use App\Http\Controllers\FonctionController;
 use App\Http\Controllers\OrdreMissionController;
 use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\ServiceController;
@@ -55,10 +56,10 @@ Route::get('/migrate', function () {
     }
 });
 Route::get('/list-tables', function () {
-//---------------------------------------------
+    //---------------------------------------------
 
 
-//2---------------------------------------------
+    //2---------------------------------------------
     $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
     return collect($tables)->pluck('tablename');
 });
@@ -133,7 +134,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth.expirable')->get("/mesCessations", [CessationController::class, 'mesCessations']);
         Route::middleware('auth.expirable')->get("/{id}", [CessationController::class, 'show']);
         Route::middleware('auth.expirable')->post("/demandeForEmploye/{id}", [CessationController::class, 'demandeForEmploye']);
-  
+
 
         Route::middleware('auth.expirable')->post("/", [CessationController::class, 'store']);
         Route::middleware('auth.expirable')->post("/traiterDemandeCessation/{id}", [CessationController::class, 'traiter']);
@@ -164,7 +165,12 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth.expirable')->post("/", [ServiceController::class, 'store']);
     });
     //--------------- FONCTIONS Routes ---------------
-    Route::prefix('fonctions')->group(function () {});
+    Route::prefix('fonctions')->group(function () {
+        // Route::middleware('auth.expirable')->get("/", [ServiceController::class, 'index']);
+        Route::get("/", [FonctionController::class, 'index']);
+        Route::middleware('auth.expirable')->get("/{id}", [FonctionController::class, 'show']);
+        Route::middleware('auth.expirable')->post("/", [FonctionController::class, 'store']);
+    });
 
     //--------------- TYPES CONGES Routes ---------------
     Route::prefix('typesConges')->group(function () {
@@ -204,18 +210,16 @@ Route::prefix('v1')->group(function () {
     });
 
     //--------------- ORDRE MISSION Routes ---------------
-    Route::prefix('ordresMission')->group(function() {
+    Route::prefix('ordresMission')->group(function () {
         // Route::middleware('auth.expirable')->get("/", [OrdreMissionController::class, 'index']);
         Route::get("/", [OrdreMissionController::class, 'index']);
         Route::get("/{id}", [OrdreMissionController::class, 'show']);
         Route::middleware('auth.expirable')->post("/", [OrdreMissionController::class, 'store']);
     });
-
-}); 
+});
 
 
 /**
-
 A demander: A qui envoyer la notification de création demande OM si chef de service null ?  Pour le moment si chef
 de service null, je l'envoi au DG directement. 
-*/
+ */
