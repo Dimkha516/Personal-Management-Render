@@ -12,6 +12,7 @@ use App\Http\Controllers\OrdreMissionController;
 use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StatistiqueController;
+use App\Http\Controllers\TypeAgentController;
 use App\Http\Controllers\TypesCongesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehiculeController;
@@ -171,6 +172,13 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth.expirable')->get("/{id}", [FonctionController::class, 'show']);
         Route::middleware('auth.expirable')->post("/", [FonctionController::class, 'store']);
     });
+
+    //--------------- TYPES AGENT Routes ---------------
+    Route::prefix('typesAgent')->group(function () {
+        Route::get("/", [TypeAgentController::class, 'index']);
+        Route::post("/", [TypeAgentController::class, 'store']);
+    });
+
 
     //--------------- TYPES CONGES Routes ---------------
     Route::prefix('typesConges')->group(function () {

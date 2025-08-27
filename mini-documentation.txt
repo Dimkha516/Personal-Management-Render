@@ -37,40 +37,82 @@
 -------------------------------------------------SUR LES SERVICES:
 -------------------------------------------------------------------
 
-Structure de l'objet d'un dossier d'employé:
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Produit; // Assurez-vous d'avoir un modèle Produit
+use Illuminate\Http\Request;
+
+class ProduitController extends Controller
 {
-    dossier: {
-        infos_perso: {
-            nom,
-            prenom,
-            email,
-            adresse,
-            date_naissance,
-            lieu_naissance,
-            situation_matimoniale,
-            genre 
-        },
-        infos_profess: {
-            date_prise_service,
-            type_contrat,
-            fonction,
-            service,
-            type_agent
-        },
-        gestion_absences: {
-            conges: {
-                
-            },
-            cessations: {
+    /**
+     * Retourne la liste de toutes les ressources.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index()
+    {
+        $produits = Produit::all();
+        return response()->json($produits); // Retourne un tableau JSON
+    }
 
-            },
-            disponibilites: {
+    /**
+     * Stocke une nouvelle ressource nouvellement créée en base de données.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request)
+    {
+        // Valider la requête (par exemple, en utilisant des Form Requests)
+        $produit = Produit::create($request->all());
+        return response()->json([
+            'message' => 'Produit créé avec succès !',
+            'produit' => $produit
+        ], 201); // Code 201 pour Created
+    }
 
-            }
-        },
-        documents_admin: {
+    /**
+     * Affiche la ressource spécifiée.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id)
+    {
+        $produit = Produit::findOrFail($id); // Trouve le produit ou lance une erreur 404
+        return response()->json($produit);
+    }
 
-        }
+    /**
+     * Met à jour la ressource spécifiée en base de données.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $id)
+    {
+        $produit = Produit::findOrFail($id);
+        $produit->update($request->all());
+        return response()->json([
+            'message' => 'Produit mis à jour avec succès !',
+            'produit' => $produit
+        ]);
+    }
 
+    /**
+     * Supprime la ressource spécifiée en base de données.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        Produit::destroy($id);
+        return response()->json([
+            'message' => 'Produit supprimé avec succès !'
+        ]);
     }
 }
