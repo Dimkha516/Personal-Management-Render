@@ -169,9 +169,8 @@ class CongeService
             if (empty($data['motif'])) {
                 throw ValidationException::withMessages([
                     'motif' => 'Le motif du rejet est requis.'
-                ]);
-            }
-
+                ]);  
+            };
             $conge->update([
                 'statut' => 'refuse',
                 'motif' => $data['motif'],

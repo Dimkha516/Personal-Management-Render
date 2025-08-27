@@ -8,6 +8,7 @@ use App\Interfaces\CongesInterface;
 use App\Interfaces\DisponibiliteInterface;
 use App\Interfaces\DocumentInterface;
 use App\Interfaces\EmployeInterface;
+use App\Interfaces\OrdreMissionInterface;
 use App\Interfaces\TypesCongesInterface;
 use App\Interfaces\UserInterface;
 use App\Interfaces\VehiculeInterface;
@@ -22,6 +23,7 @@ use App\Models\PersonalAccessToken;
 use App\Repositories\ChauffeurRepository;
 use App\Repositories\DisponibiliteRepository;
 use App\Repositories\DocumentRepository;
+use App\Repositories\OrdreMissionRepository;
 use App\Repositories\VehiculeRepository;
 
 class AppServiceProvider extends ServiceProvider
@@ -40,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DocumentInterface::class, DocumentRepository::class);
         $this->app->bind(VehiculeInterface::class, VehiculeRepository::class);
         $this->app->bind(ChauffeurInterface::class, ChauffeurRepository::class);
+        $this->app->bind(OrdreMissionInterface::class, OrdreMissionRepository::class);
     }
 
     /**

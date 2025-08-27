@@ -7,6 +7,7 @@ use App\Http\Controllers\CongeController;
 use App\Http\Controllers\DisponibiliteController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EmployesController;
+use App\Http\Controllers\OrdreMissionController;
 use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StatistiqueController;
@@ -155,7 +156,8 @@ Route::prefix('v1')->group(function () {
 
     //--------------- SERVICES Routes ---------------
     Route::prefix('services')->group(function () {
-        Route::middleware('auth.expirable')->get("/", [ServiceController::class, 'index']);
+        // Route::middleware('auth.expirable')->get("/", [ServiceController::class, 'index']);
+        Route::get("/", [ServiceController::class, 'index']);
         Route::get("/addChefService/{id}", [ServiceController::class, 'addChefService']);
         Route::middleware('auth.expirable')->get("/{id}", [ServiceController::class, 'show']);
         // Route::middleware('auth.expirable')->get("/addChefService/{id}", [ServiceController::class, 'addChefService']);
@@ -201,4 +203,19 @@ Route::prefix('v1')->group(function () {
         Route::post("/", [ChauffeurController::class, 'store']);
     });
 
+    //--------------- ORDRE MISSION Routes ---------------
+    Route::prefix('ordresMission')->group(function() {
+        // Route::middleware('auth.expirable')->get("/", [OrdreMissionController::class, 'index']);
+        Route::get("/", [OrdreMissionController::class, 'index']);
+        Route::get("/{id}", [OrdreMissionController::class, 'show']);
+        Route::middleware('auth.expirable')->post("/", [OrdreMissionController::class, 'store']);
+    });
+
 }); 
+
+
+/**
+
+A demander: A qui envoyer la notification de création demande OM si chef de service null ?  Pour le moment si chef
+de service null, je l'envoi au DG directement. 
+*/
