@@ -176,6 +176,7 @@ Route::prefix('v1')->group(function () {
     //--------------- TYPES AGENT Routes ---------------
     Route::prefix('typesAgent')->group(function () {
         Route::get("/", [TypeAgentController::class, 'index']);
+        Route::get("/{id}", [TypeAgentController::class, 'show']);
         Route::post("/", [TypeAgentController::class, 'store']);
     });
 
@@ -227,7 +228,14 @@ Route::prefix('v1')->group(function () {
 });
 
 
-/**
+/*
+Créer la table jours_exclus:
+Méthodes: 
+	-- Ajouter jour exclu: Date, Motif
+	-- GetAll Jours exclus
+	-- Retirer jour exclus
+    -- Ajouter plusieurs jours exclus en même temps pour le calendrier
+
 A demander: A qui envoyer la notification de création demande OM si chef de service null ?  Pour le moment si chef
 de service null, je l'envoi au DG directement. 
- */
+*/

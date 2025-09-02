@@ -85,6 +85,6 @@ class CreateEmployeRequest extends FormRequest
             'documents.*.nom.required' => 'Le nom du document est requis.',
             'documents.*.nom.in' => 'Le nom du document doit être l\'un des suivants : CV, CNI, Diplôme, Autre.',
             'documents.*.fichier.required' => 'Le fichier du document est requis.',
-        ];
+        ]; 
     }
 }

@@ -5,13 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateTypeAgentRequest;
 use App\Models\TypeAgent;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class TypeAgentController extends Controller
 {
-    /**
-        Retourne la liste des types d'agent
-     */
 
     public function index(): JsonResponse
     {
@@ -30,7 +26,7 @@ class TypeAgentController extends Controller
 
 
     public function store(CreateTypeAgentRequest $request)
-    {   
+    {
         $data = $request->validated();
 
         // $typeAgent = TypeAgent::create($request->all());
@@ -39,5 +35,11 @@ class TypeAgentController extends Controller
             'message' => 'Type Agent créé avec succès !',
             'produit' => $typeAgent
         ], 201); // Code 201 pour Created
+    }
+
+     public function show($id)
+    {
+        $typeAgent = TypeAgent::findOrFail($id); // Trouve le type$typeAgent ou lance une erreur 404
+        return response()->json($typeAgent);
     }
 }
