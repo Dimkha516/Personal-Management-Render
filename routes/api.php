@@ -8,6 +8,7 @@ use App\Http\Controllers\DisponibiliteController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EmployesController;
 use App\Http\Controllers\FonctionController;
+use App\Http\Controllers\JoursExclusController;
 use App\Http\Controllers\OrdreMissionController;
 use App\Http\Controllers\PermissionRoleController;
 use App\Http\Controllers\ServiceController;
@@ -224,6 +225,15 @@ Route::prefix('v1')->group(function () {
         Route::get("/", [OrdreMissionController::class, 'index']);
         Route::get("/{id}", [OrdreMissionController::class, 'show']);
         Route::middleware('auth.expirable')->post("/", [OrdreMissionController::class, 'store']);
+    });
+
+    //--------------- JOURS EXCLUS Routes ---------------
+    Route::prefix('joursExclus')->group(function () {
+        Route::get("/", [JoursExclusController::class, 'index']);
+        Route::get("/{id}", [JoursExclusController::class, 'show']);
+        Route::post("/", [JoursExclusController::class, 'store']);
+        Route::put('/{id}', [JoursExclusController::class, 'update']);
+        Route::delete("/{id}", [JoursExclusController::class, 'destroy']);
     });
 });
 

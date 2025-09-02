@@ -55,7 +55,7 @@ class VehiculeController extends Controller
 
         return response()->json([
             'message' => 'Véhicule crée avec succès',
-            'type_conge' => $vehicule
+            'data' => $vehicule
         ]);
     }
 }

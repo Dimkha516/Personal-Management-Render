@@ -9,6 +9,7 @@ use App\Interfaces\DisponibiliteInterface;
 use App\Interfaces\DocumentInterface;
 use App\Interfaces\EmployeInterface;
 use App\Interfaces\FonctionInterface;
+use App\Interfaces\JourExcluInterface;
 use App\Interfaces\OrdreMissionInterface;
 use App\Interfaces\ServiceInterface;
 use App\Interfaces\TypesCongesInterface;
@@ -26,6 +27,7 @@ use App\Repositories\ChauffeurRepository;
 use App\Repositories\DisponibiliteRepository;
 use App\Repositories\DocumentRepository;
 use App\Repositories\FonctionRepository;
+use App\Repositories\JourExcluRepository;
 use App\Repositories\OrdreMissionRepository;
 use App\Repositories\ServiceRepository;
 use App\Repositories\VehiculeRepository;
@@ -49,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(OrdreMissionInterface::class, OrdreMissionRepository::class);
         $this->app->bind(ServiceInterface::class, ServiceRepository::class);
         $this->app->bind(FonctionInterface::class, FonctionRepository::class);
+        $this->app->bind(JourExcluInterface::class, JourExcluRepository::class);
     }
 
     /**
