@@ -5,8 +5,10 @@ namespace App\Services;
 use App\Interfaces\CessationInterface;
 use App\Models\Conge;
 use App\Models\Employe;
+use App\Models\JourExclu;
 use App\Models\TypeConge;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -156,6 +158,8 @@ class CessationService
         $decision = $data['decision'];
         $employe = $cessation->employe;
 
+
+
         if ($decision === 'valide') {
             // Garder les dates comme chaînes pour éviter les problèmes de conversion
             $dateDebutStr = $data['date_debut'];
@@ -166,7 +170,8 @@ class CessationService
             $dateFin = Carbon::createFromFormat('Y-m-d', $dateFinStr)->startOfDay();
 
             // Calcul simple : différence en jours + 1 (pour inclure le jour de début et de fin)
-            $nbJours = $dateDebut->diffInDays($dateFin) + 1;
+            // $nbJours = $dateDebut->diffInDays($dateFin) + 1;
+            $nbJours = $this->calculerJoursValides($dateDebut, $dateFin);
 
             if ($employe->solde_conge_jours < $nbJours) {
                 throw ValidationException::withMessages([
@@ -208,67 +213,6 @@ class CessationService
         return $cessation;
     }
 
-    // public function traiterCessation(int $id, array $data)
-    // {
-    //     $cessation = $this->cessationRepository->findOrFail($id);
-
-    //     if ($cessation->statut !== 'en_attente') {
-    //         throw new \Exception('Cette cessation a déjà été traitée.');
-    //     }
-
-    //     $decision = $data['decision'];
-    //     // $employe = $cessation->conge->employe;
-    //     $employe = $cessation->employe;
-
-    //     if ($decision === 'valide') {
-
-    //         $dateDebut = Carbon::parse($data['date_debut']);
-    //         $dateFin = Carbon::parse($data['date_fin']);
-
-    //         $nbJours = $this->calculJoursOuvrables($dateDebut, $dateFin);
-
-    //         if ($employe->solde_conge_jours < $nbJours) {
-    //             throw ValidationException::withMessages([
-    //                 'solde' => 'Le solde de congé est insuffisant.'
-    //             ]);
-    //         }
-
-    //         // Mise à jour
-    //         $cessation->update([
-    //             'statut' => 'valide',
-    //             'date_debut' => $dateDebut,
-    //             'date_fin' => $dateFin,
-    //             'nombre_jours' => $nbJours,
-    //             'commentaire' => $data['commentaire'] ?? null,
-    //             // 'fiche_cessation_pdf' => $this->uploadFichier($cessation)
-    //         ]);
-
-    //         // Déduction du solde
-    //         $employe->decrement('solde_conge_jours', $nbJours);
-    //     } elseif ($decision === 'rejete') {
-    //         if (empty($data['motif'])) {
-    //             throw ValidationException::withMessages([
-    //                 'motif' => 'Le motif de rejet est requis.'
-    //             ]);
-    //         }
-
-    //         $cessation->update([
-    //             'statut' => 'rejete',
-    //             'motif' => $data['motif'],
-    //             'commentaire' => $data['commentaire'] ?? null,
-    //         ]);
-    //     } else {
-    //         throw ValidationException::withMessages([
-    //             'decision' => 'Valeur invalide pour la décision. (valide ou rejete)'
-    //         ]);
-    //     }
-
-    //     return $cessation;
-    // }
-
-
-
-
     //----------------------------SPECIFIC METHODES-SERVICES----------------------------------
     protected function calculJoursOuvrables($debut, $fin): int
     {
@@ -291,5 +235,40 @@ class CessationService
     protected function uploadFichier($file): string
     {
         return $file->store('cessations', 'public');
+    }
+
+    protected function calculerJoursValides(Carbon $dateDebut, Carbon $dateFin): int
+    {
+        // Récupérer les jours exclus spécifiques
+        $joursExclusSpecifiques = JourExclu::where('type_exclusion', 'unique')
+            ->pluck('date')
+            ->map(fn($d) => Carbon::parse($d)->toDateString())
+            ->toArray();
+
+        // Récupérer les jours exclus récurrents
+        $joursExclusReccurrents = JourExclu::where('type_exclusion', 'recurrent')
+            ->pluck('jour_semaine')
+            ->toArray();
+
+        // Générer la période complète
+        $periode = CarbonPeriod::create($dateDebut, $dateFin);
+
+        $joursValides = [];
+
+        foreach ($periode as $jour) {
+            $jourStr = $jour->toDateString();
+            $jourSemaine = $jour->dayOfWeekIso; // 1 = Lundi ... 7 = Dimanche
+
+            if (in_array($jourStr, $joursExclusSpecifiques)) {
+                continue; // Exclu (date précise)
+            }
+
+            if (in_array($jourSemaine, $joursExclusReccurrents)) {
+                continue; // Exclu (jour reccurent)
+            }
+
+            $joursValides[] = $jourStr;
+        }
+        return count($joursValides);
     }
 }
