@@ -123,11 +123,6 @@ class UserController extends Controller
             ], 400);
         }
 
-        // Optionnel : valider que le token reçu est valide (non expiré)
-        // if (!Password::tokenExists($user, $request->token)) {
-        //     return response()->json(['message' => 'Token invalide ou expiré'], 400);
-        // }
-
         // Mise à jour du mot de passe
         $user->password = Hash::make($request->password);
         $user->firstConnexion = false;
@@ -137,27 +132,42 @@ class UserController extends Controller
             'message' => 'Mot de passe modifié avec succès.',
             'user' => $user
         ], 200);
+    }
 
+    // Demande de Réinitialisation de mot de passe en cas d'oubli:
+    public function demandeResetPassword(Request $request)
+    {
+        $request->validate([
+            'prenom' => 'required|string',
+            'nom' => 'required|string',
+            'telephone' => 'required|string',
+            'email' => 'required|email',
+        ]);
 
-        // $user = $request->user();
-        // if(!$user) {
-        //    return response()->json([
-        //         'message' => 'Utilisateur non récupéré'
-        //     ], 400);     
-        // }
-        // if (!$user->firstConnexion) {
-        //     return response()->json([
-        //         'message' => 'Le mot de passe a déjà été modifié.'
-        //     ], 400);
-        // }
+        $this->userService->demandeResetPassword($request->all());
 
-        // $user->password = Hash::make($request->password);
-        // $user->firstConnexion = false;
-        // $user->save();
+        return response()->json([
+            'message' => 'Si les informations sont correctes, un mail de réinitialisation a été envoyé.'
+        ]);
+    }
 
-        // return response()->json([
-        //     'message' => 'Mot de passe modifié avec succès.',
-        //     'user' => $user
-        // ], 200);
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'token' => 'required|string',
+            'password' => 'required|string|confirmed|min:8'
+        ]);
+
+        $user = $this->userService->resetPassword(
+            $request->email,
+            $request->token,
+            $request->password
+        );
+
+        return response()->json([
+            'message' => 'Mot de passe mis à jour avec succès.',
+            'user' => $user
+        ]);
     }
 }

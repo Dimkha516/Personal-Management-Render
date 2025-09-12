@@ -101,6 +101,9 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth.expirable')->put("/{id}", [UserController::class, 'update']);
         Route::middleware('auth.expirable')->delete("/{id}", [UserController::class, 'destroy']);
         Route::post('/change-password/{id}', [UserController::class, 'changePassword']);
+        Route::post('/reset-password/demande', [UserController::class, 'demandeResetPassword']);
+        Route::post('/reset-password', [UserController::class, 'resetPassword']);
+
         // Route::middleware(['auth.expirable'])->post('/change-password', [UserController::class, 'changePassword']);
         // Route::post('/change-password', [UserController::class, 'changePassword']);
     });
@@ -256,3 +259,5 @@ Mot de passe oublié.
 En cas de CDI pas de durée.
 Modifier Infos Employé.
 */
+
+//78 570 24 74 => Aminata 
