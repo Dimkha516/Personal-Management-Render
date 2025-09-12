@@ -248,4 +248,10 @@ Méthodes:
 
 A demander: A qui envoyer la notification de création demande OM si chef de service null ?  Pour le moment si chef
 de service null, je l'envoi au DG directement. 
+----------------------------------------------------------------------------
+Congé annuel éviter les nombres de jour trop élevés.
+Mot de passe oublié.
+Changement statut matrimoniale
+En cas de CDI pas de durée.
+Modifier Infos Employé.
 */

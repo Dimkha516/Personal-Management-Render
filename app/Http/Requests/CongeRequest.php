@@ -38,23 +38,22 @@ class CongeRequest extends FormRequest
 
         if ($typeCongeId) {
             $typeConge = TypeConge::find($typeCongeId);
-            // Solution 1: Comparer en minuscules des deux côtés
-            // $isCongeAnnuel = $typeConge && strtolower($typeConge->libelle) === 'annuel';
 
-            // OU Solution 2: Comparer directement sans transformation
             $isCongeAnnuel = $typeConge && $typeConge->libelle === 'Annuel';
-
-            // OU Solution 3: Utiliser strcasecmp pour une comparaison insensible à la casse
-            // $isCongeAnnuel = $typeConge && strcasecmp($typeConge->libelle, 'Annuel') === 0;
-            //  $isCongeAnnuel = $typeConge && $typeConge = 1;
         }
 
-
+        // Vérifier si l'employé a déjà fait une demande
+        $user = Auth::user();
+        $employe = $user->employe;
+        $dateDernierDemande = $employe->date_dernier_demande_conge;
 
         return [
             'type_conge_id' => 'required|exists:types_conges,id',
             'piece_jointe' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
-            'date_debut' => 'nullable|date',
+            // 👉 si jamais pas de dernière demande => date_debut obligatoire
+            'date_debut' => [$dateDernierDemande == null ? 'required' : 'nullable', 'date'],
+
+            // 'date_debut' => 'nullable|date',
             'motif' => 'required|string|min:5',
             // 'numero' => 'required|unique:conges,numero|string|max:255',
 
@@ -77,6 +76,7 @@ class CongeRequest extends FormRequest
             'piece_jointe.file' => 'Le fichier joint doit être un fichier valide.',
             'piece_jointe.mimes' => 'Le fichier joint doit être au format PDF, DOC, DOCX, JPG ou PNG.',
             'piece_jointe.max' => 'Le fichier joint ne doit pas dépasser 2 Mo.',
+            'date_debut.required' => 'La date de début est requise en cas de dernière date demande nulle',
             'date_debut.date' => 'La date de début doit être une date valide.',
             'date_fin.required' => 'La date de fin est obligatoire pour un congé annuel.',
             'date_fin.date' => 'La date de fin doit être une date valide.',
@@ -84,6 +84,6 @@ class CongeRequest extends FormRequest
             'motif.required' => 'Le motif de la demande de congé est obligatoire.',
             // 'numero.required' => 'Le numéro de la demande de congé est requis',
             // 'numero.unique' => 'Ce numéro de congé existe deja'
-         ];
+        ];
     }
 }

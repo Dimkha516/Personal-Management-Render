@@ -69,12 +69,24 @@ class CongeService
         $employe = $user->employe;
         $dateDernierDemande = $employe->date_dernier_demande_conge;
 
-
         if ($dateDernierDemande == null) {
-            $data['date_debut'] = $employe->date_prise_service;
+            // 👉 On garde la date saisie par l'utilisateur
+            if (empty($data['date_debut'])) {
+                throw ValidationException::withMessages([
+                    'date_debut' => 'Vous devez renseigner une date de début pour votre première demande de congé.'
+                ]);
+            }
         } else {
-            $data['date_debut'] = $employe->dateDernierDemande;
+            // 👉 Pour les demandes suivantes, on force la date début = dernière demande
+            $data['date_debut'] = $dateDernierDemande;
         }
+
+
+        // if ($dateDernierDemande == null) {
+        //     $data['date_debut'] = $employe->date_prise_service;
+        // } else {
+        //     $data['date_debut'] = $employe->dateDernierDemande;
+        // }
 
         // dd($data);
 
@@ -105,10 +117,22 @@ class CongeService
         $dateDernierDemande = $concernedEmploye->date_dernier_demande_conge;
 
         if ($dateDernierDemande == null) {
-            $data['date_debut'] = $concernedEmploye->date_prise_service;
+            // 👉 On garde la date saisie par l'utilisateur
+            if (empty($data['date_debut'])) {
+                throw ValidationException::withMessages([
+                    'date_debut' => 'Vous devez renseigner une date de début pour votre première demande de congé.'
+                ]);
+            }
         } else {
-            $data['date_debut'] = $concernedEmploye->dateDernierDemande;
+            // 👉 Pour les demandes suivantes, on force la date début = dernière demande
+            $data['date_debut'] = $dateDernierDemande;
         }
+
+        // if ($dateDernierDemande == null) {
+        //     $data['date_debut'] = $concernedEmploye->date_prise_service;
+        // } else {
+        //     $data['date_debut'] = $concernedEmploye->dateDernierDemande;
+        // }
 
         // Vérifier si l'utilisateur connecté est RH
         if (!$user->hasRole('rh')) {
@@ -169,7 +193,7 @@ class CongeService
             if (empty($data['motif'])) {
                 throw ValidationException::withMessages([
                     'motif' => 'Le motif du rejet est requis.'
-                ]);  
+                ]);
             };
             $conge->update([
                 'statut' => 'refuse',
