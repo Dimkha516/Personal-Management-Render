@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Employe;
 use App\Repositories\EmployeRepository;
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class EmployeService
 {
@@ -43,6 +44,37 @@ class EmployeService
     public function updateEmploye(int $id, array $data)
     {
         return $this->employeRepository->updateEmploye($id, $data);
+    }
+
+    public function updateSituationMatrimoniale($id, string $nouvelleSituation)
+    {
+        $employe = $this->employeRepository->getEmployeById($id);
+
+        if (!$employe) {
+            throw ValidationException::withMessages([
+                'employe' => 'Employé introuvable.'
+            ]);
+        }
+
+        // ✅ Liste des valeurs autorisées
+        $situationsAutorisees = ['Célibataire', 'Marié', 'Divorcé', 'Veuve'];
+
+        if (!in_array($nouvelleSituation, $situationsAutorisees)) {
+            throw ValidationException::withMessages([
+                'situation_matrimoniale' => 'Valeur non valide. Valeurs acceptées: ' . implode(', ', $situationsAutorisees)
+            ]);
+        }
+
+        // ✅ Vérif que la nouvelle valeur est différente de l’actuelle
+        if ($employe->situation_matrimoniale === $nouvelleSituation) {
+            throw ValidationException::withMessages([
+                'situation_matrimoniale' => 'La nouvelle situation matrimoniale doit être différente de l’ancienne.'
+            ]);
+        }
+
+        return $this->employeRepository->updateEmploye($id, [
+            'situation_matrimoniale' => $nouvelleSituation
+        ]);
     }
 
     public function deleteEmploye(int $id)

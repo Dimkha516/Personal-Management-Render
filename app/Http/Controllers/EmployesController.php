@@ -127,7 +127,7 @@ class EmployesController extends Controller
             'disponibilites',
             'documents'
         ])->findOrFail($id);
-  
+
         $dossier = $this->employeService->buildDossier($employe);
 
         return response()->json($dossier);
@@ -193,6 +193,23 @@ class EmployesController extends Controller
             'message' => 'Employé modifié avec succès',
             'data' => $employe
         ], 200);
+    }
+
+    public function updateSituationMatrimoniale(Request $request, $id)
+    {
+        $request->validate([
+            'situation_matrimoniale' => 'required|string'
+        ]);
+
+        $employe = $this->employeService->updateSituationMatrimoniale(
+            $id,
+              $request->input('situation_matrimoniale')
+        );
+
+        return response()->json([
+            'message' => 'Situation matrimoniale mise à jour avec succès.',
+            'data' => $employe
+        ]);
     }
 
     public function destroy(int $id, Request $request, PermissionService $permissionService): JsonResponse

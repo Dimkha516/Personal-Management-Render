@@ -112,6 +112,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth.expirable')->get("/{id}", [EmployesController::class, 'show']);
         Route::middleware('auth.expirable')->post("/", [EmployesController::class, 'store']);
         Route::middleware('auth.expirable')->put("/{id}", [EmployesController::class, 'update']);
+        Route::middleware('auth.expirable')->patch("/{id}/situation-matrimoniale", [EmployesController::class, 'updateSituationMatrimoniale']);
         Route::get('/dossiers/{id}', [EmployesController::class, 'getEmployeDoc']);
     });
 
@@ -250,8 +251,8 @@ A demander: A qui envoyer la notification de création demande OM si chef de ser
 de service null, je l'envoi au DG directement. 
 ----------------------------------------------------------------------------
 Congé annuel éviter les nombres de jour trop élevés.
-Mot de passe oublié.
 Changement statut matrimoniale
+Mot de passe oublié.
 En cas de CDI pas de durée.
 Modifier Infos Employé.
 */
