@@ -10,7 +10,7 @@ class PasswordResetMail
 
     public function sendResetPasswordMail(string $email, string $token)
     {
-        $resetUrl =  "http://localhost:4200/reset-password?token=$token&email=$email";
+        $resetUrl =  "http://localhost:4200/api/update-password?token=$token&email=$email";
         // $resetUrl =  "http://localhost:4200/api/update-password/id?token=$token&email=$email";
         // http://localhost:4200/api/update-password/id
         $subject = "Réinitialisation de votre mot de passe";
