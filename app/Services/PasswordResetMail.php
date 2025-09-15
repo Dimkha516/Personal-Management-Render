@@ -10,9 +10,9 @@ class PasswordResetMail
 
     public function sendResetPasswordMail(string $email, string $token)
     {
-        // 👉 URL du frontend Angular (exemple : http://localhost:4200)
-        $resetUrl =  "http://localhost:4200/reset-password?token=$token&email=$email";
-
+        // $resetUrl =  "http://localhost:4200/reset-password?token=$token&email=$email";
+        $resetUrl =  "http://localhost:4200/api/update-password/id?token=$token&email=$email";
+        // http://localhost:4200/api/update-password/id
         $subject = "Réinitialisation de votre mot de passe";
 
         $messageBody = "
