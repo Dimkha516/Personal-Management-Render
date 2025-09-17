@@ -50,7 +50,7 @@ class EmployesController extends Controller
 
     public function show(int $id, Request $request, PermissionService $permissionService): JsonResponse
     {
-        $this->checkPermission($request, 'lister-employes', $permissionService);
+        //$this->checkPermission($request, 'lister-employes', $permissionService);
 
         $employe = $this->employeService->getEmployeById($id);
 
