@@ -86,7 +86,9 @@ class UserService
         );
 
         // Envoi mail avec le token
-        $this->passwordResetMail->sendResetPasswordMail($user->email, $token);
+        // $this->passwordResetMail->sendResetPasswordMail($user->email, $token);
+        $this->passwordResetMail->sendResetPasswordMail($user->id, $user->email, $token);
+
 
         return true;
     }
