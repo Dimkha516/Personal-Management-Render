@@ -56,6 +56,12 @@ class OrdreMissionController extends Controller
         ], 200);
     }
 
+    public function mesOM()
+    {
+        $ordresMission = $this->ordreMissionService->connectedUserOM();
+        return response()->json($ordresMission);
+    }
+
     public function store(CreateOMRequest $request): JsonResponse
     {
         $ordreMission = $this->ordreMissionService->createOM($request->validated());

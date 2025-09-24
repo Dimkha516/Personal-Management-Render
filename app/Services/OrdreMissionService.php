@@ -27,6 +27,31 @@ class OrdreMissionService
         return $this->ordreMissionRepository->getById($id);
     }
 
+    public function connectedUserOM()
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->employe) {
+            return response()->json([
+                'message' => 'Employé non trouvé pour l’utilisateur connecté.'
+            ], 404);
+        }
+
+        $ordresMission = $this->ordreMissionRepository->getByDemandeurId($user->employe->id);
+
+        if ($ordresMission->isEmpty()) {
+            return response()->json([
+                'message' => 'Aucun ordre de mission pour cet employé'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Liste des ordres de mission de l\'employé connecté',
+            'ordres_mission' => $ordresMission
+        ]);
+    }
+
+
     public function createOM(array $data)
     {
         $employe = Employe::where('user_id', Auth::id())->firstOrFail();

@@ -610,6 +610,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('ordresMission')->group(function () {
         // Route::middleware('auth.expirable')->get("/", [OrdreMissionController::class, 'index']);
         Route::get("/", [OrdreMissionController::class, 'index']);
+        Route::middleware('auth.expirable')->get("/mesOM", [OrdreMissionController::class, 'mesOM']);
         Route::get("/{id}", [OrdreMissionController::class, 'show']);
         Route::middleware('auth.expirable')->post("/", [OrdreMissionController::class, 'store']);
     });

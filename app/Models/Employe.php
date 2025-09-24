@@ -67,4 +67,9 @@ class Employe extends Model
     {
         return $this->hasMany(Disponibilite::class);
     }
+
+    public function ordresMission()
+    {
+        return $this->hasMany(OrdreMission::class);
+    }
 }

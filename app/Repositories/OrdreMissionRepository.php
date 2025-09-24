@@ -38,6 +38,10 @@ class OrdreMissionRepository implements OrdreMissionInterface
         return $this->model->find($id);
     }
 
+    public function getByDemandeurId(int $demandeurId){
+        return $this->model::where('demandeur_id', $demandeurId)->get();
+    }
+
     public function create(array $data)
     {
         return $this->model->create($data);
