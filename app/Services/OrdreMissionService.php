@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\Mail\OrdreMissionNotificationMail;
 use App\Models\Employe;
 use App\Repositories\OrdreMissionRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+
 
 class OrdreMissionService
 {
@@ -59,30 +62,31 @@ class OrdreMissionService
         // Récupération du chef de service de l'employé demandeur
         $chefServiceEmploye = $employe->service?->chef;
 
-        dd($chefServiceEmploye); // Pour debug
+        // Pour debug
+        //dd($chefServiceEmploye);
         // dd($employe);   
 
 
-        $destination = $data['destination'];
-        $kilometrage = $data['kilometrage'];
-        $VehiculeID = $data['vehicule_id'] ?? null;
-        $chauffeurID = $data['chauffeur_id'] ?? null;
-        $dateDepart = $data['date_depart'];
-        $dateDebut = $data['date_debut'];
-        $dateFin = $data['date_fin'];
-        $nombreJours = (new \Carbon\Carbon($data['date_debut']))->diffInDays(new \Carbon\Carbon($data['date_fin'])) + 1;
-
-        return $this->ordreMissionRepository->create([
+        $ordreMission = $this->ordreMissionRepository->create([
             'demandeur_id' => $employe->id,
-            'destination' => $destination,
-            'kilometrage' => $kilometrage,
-            'vehicule_id' => $VehiculeID,
-            'chauffeur_id' => $chauffeurID,
-            'date_depart' => $dateDepart,
-            'date_debut' => $dateDebut,
-            'date_fin' => $dateFin,
-            'nb_jours' => $nombreJours
+            'destination'  => $data['destination'],
+            'kilometrage'  => $data['kilometrage'],
+            'vehicule_id'  => $data['vehicule_id'] ?? null,
+            'chauffeur_id' => $data['chauffeur_id'] ?? null,
+            'date_depart'  => $data['date_depart'],
+            'date_debut'   => $data['date_debut'],
+            'date_fin'     => $data['date_fin'],
+            'nb_jours'     => (new \Carbon\Carbon($data['date_debut']))
+                ->diffInDays(new \Carbon\Carbon($data['date_fin'])) + 1
         ]);
+
+        // dd($ordreMission);
+
+        // Envoi de l’email au chef de service
+        Mail::to($chefServiceEmploye->user->email) // supposons que chaque employé a un user avec email
+            ->send(new OrdreMissionNotificationMail($employe, $ordreMission));
+
+        return $ordreMission;
     }
 
     public function deleteOM(int $id)

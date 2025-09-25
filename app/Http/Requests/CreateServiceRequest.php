@@ -22,7 +22,8 @@ class CreateServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string'
+            'name' => 'required|string|unique:services',
+            'chef_service_id' => 'required|exists:employes,id'
         ];
     }
 
@@ -31,6 +32,9 @@ class CreateServiceRequest extends FormRequest
         return [
             'name.required' => 'le nom du service est requis',
             'name.min' => 'le nom de service doit comporter 5 caractères au moins',
+            'chef_service_id.required' => 'Vous devez sélectionner un chef de service',
+            "chef_service_id.exists" => 'Le chef de service sélectionné est inexistant',
+            'name.unique' => 'Ce nom de service existe deja.'
         ];
     }
 }
