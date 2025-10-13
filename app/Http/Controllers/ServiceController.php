@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateServiceRequest;
 use App\Services\ServService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -59,8 +60,21 @@ class ServiceController extends Controller
         ], 201);
     }
 
-    public function updateChefService(int $id) {
+    public function updateChefService(int $id)
+    {
         $service = $this->servService->addChefService($id);
         return $service;
+    }
+
+    /**
+     * Endpoint pour récupérer les chefs de service
+     */
+    public function getChefsService(): JsonResponse
+    {
+        $chefs = $this->servService->getChefsService();
+        return response()->json([
+            'status' => 'success',
+            'data' => $chefs
+        ], 200);
     }
 }

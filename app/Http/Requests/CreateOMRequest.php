@@ -32,7 +32,8 @@ class CreateOMRequest extends FormRequest
             'vehicule_id'  => 'nullable|exists:vehicules,id',
             'chauffeur_id' => 'nullable|exists:chauffeurs,id',
 
-            'date_depart'  => 'required|date|after_or_equal:today',
+            'date_depart'  => 'nullable|date|after_or_equal:today',
+            // 'date_depart'  => 'required|date|after_or_equal:today',
             'date_debut'   => 'required|date|after_or_equal:date_depart',
             'date_fin'     => 'required|date|after_or_equal:date_debut',
 

@@ -96,7 +96,7 @@ Route::get('/seed-permissions', function () {
     try {
         $permissions = [
             'lister-utilisateurs',
-            'creer-compte-employe',  
+            'creer-compte-employe',
             'modifier-utilisateur',
             'modifer-utilisateur',
             'supprimer-utilisateur',
@@ -549,6 +549,7 @@ Route::prefix('v1')->group(function () {
         // Route::middleware('auth.expirable')->get("/", [ServiceController::class, 'index']);
         Route::get("/", [ServiceController::class, 'index']);
         Route::get("/addChefService/{id}", [ServiceController::class, 'addChefService']);
+        Route::middleware('auth.expirable')->get('/chefs', [ServiceController::class, 'getChefsService']);
         Route::middleware('auth.expirable')->get("/{id}", [ServiceController::class, 'show']);
         // Route::middleware('auth.expirable')->get("/addChefService/{id}", [ServiceController::class, 'addChefService']);
         Route::middleware('auth.expirable')->post("/", [ServiceController::class, 'store']);
@@ -605,14 +606,18 @@ Route::prefix('v1')->group(function () {
         Route::get("/{id}", [ChauffeurController::class, 'show']);
         Route::post("/", [ChauffeurController::class, 'store']);
     });
-
+    http: //localhost:4200/api/v1/ordresMission/
     //--------------- ORDRE MISSION Routes ---------------
     Route::prefix('ordresMission')->group(function () {
         // Route::middleware('auth.expirable')->get("/", [OrdreMissionController::class, 'index']);
+
         Route::get("/", [OrdreMissionController::class, 'index']);
         Route::middleware('auth.expirable')->get("/mesOM", [OrdreMissionController::class, 'mesOM']);
         Route::get("/{id}", [OrdreMissionController::class, 'show']);
         Route::middleware('auth.expirable')->post("/", [OrdreMissionController::class, 'store']);
+        Route::middleware('auth.expirable')->put("/chefServiceDecision/{id}", [OrdreMissionController::class, 'traiterParChefService']);
+        Route::middleware('auth.expirable')->put("/directionDecision/{id}", [OrdreMissionController::class, 'traiterParDirection']);
+        Route::middleware('auth.expirable')->put("/chefParcAction/{id}", [OrdreMissionController::class, 'traiterParChefParc']);
     });
 
     //--------------- JOURS EXCLUS Routes ---------------
@@ -643,5 +648,3 @@ Mot de passe oublié.
 En cas de CDI pas de durée.
 Modifier Infos Employé.
 */
-
-//78 570 24 74 => Aminata 

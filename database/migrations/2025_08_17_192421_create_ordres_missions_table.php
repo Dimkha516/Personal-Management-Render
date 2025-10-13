@@ -28,7 +28,7 @@ return new class extends Migration
             $table->date('date_fin')->nullable();
             $table->integer('nb_jours')->nullable();
 
-            $table->enum('statut', ['en_attente', 'approuve', 'rejete'])->default('en_attente');
+            $table->enum('statut', ['en_attente', 'approuve','rejete'])->default('en_attente');
             $table->boolean('carburant_valide')->default(false);
             $table->timestamps();
         });
@@ -42,3 +42,5 @@ return new class extends Migration
         Schema::dropIfExists('ordres_missions');
     }
 };
+
+

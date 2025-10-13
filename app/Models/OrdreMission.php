@@ -25,6 +25,8 @@ class OrdreMission extends Model
         'date_fin',
         'nb_jours',
         'statut',
+        'chef_service_validation',
+        'motif_rejet',
         'carburant_valide',
     ];
 

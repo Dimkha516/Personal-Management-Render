@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChefServiceValidationRequest;
 use App\Http\Requests\CreateOMRequest;
+use App\Http\Requests\TraiterOMChefParcRequest;
+use App\Http\Requests\TraiterOMDirectionRequest;
 use App\Services\OrdreMissionService;
 use App\Services\PermissionService;
 use App\Traits\HandlesPermissions;
@@ -70,5 +73,45 @@ class OrdreMissionController extends Controller
             'message' => 'Ordre de mission crée avec succès',
             'data' => $ordreMission
         ], 201);
+    }
+
+    public function traiterParChefService(int $id, ChefServiceValidationRequest $request)
+    {
+        try {
+            $ordreMission = $this->ordreMissionService->traiterParChefService(
+                $id,
+                $request->input('action'),
+                $request->input('motif_rejet')
+            );
+            return response()->json([
+                'message' => "Ordre de mission traité avec succès",
+                'data' => $ordreMission
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function traiterParDirection(TraiterOMDirectionRequest $request, $id)
+    {
+        $ordreMission = $this->ordreMissionService->traiterParDirection($request->validated(), $id);
+
+        return response()->json([
+            'message' => 'Traitement effectué avec succès.',
+            'ordre_mission' => $ordreMission,
+        ]);
+    }
+
+
+    public function traiterParChefParc(TraiterOMChefParcRequest $request, $id)
+    {
+        $ordreMission = $this->ordreMissionService->traiterParChefParc($request->validated(), $id);
+
+        return response()->json([
+            'message' => 'Traitement du chef de parc effectué avec succès.',
+            'ordre_mission' => $ordreMission,
+        ]);
     }
 }

@@ -11,25 +11,28 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrdreMissionNotificationMail extends Mailable
+class OrdreMissionValidationChefMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $demandeur;
     public $ordreMission;
+    public $chefService;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Employe $demandeur, OrdreMission $ordreMission)
+    public function __construct(OrdreMission $ordreMission, Employe $chefService)
     {
-        $this->demandeur = $demandeur;
         $this->ordreMission = $ordreMission;
+        $this->demandeur = $ordreMission->demandeur;
+        $this->chefService = $chefService;
     }
 
     public function build()
     {
-
+        $nomChefService = $this->chefService->nom;
+        $prenomChefService = $this->chefService->prenom;
         $nomDemandeur = $this->demandeur->nom;
         $prenomDemandeur = $this->demandeur->prenom;
         $destination = $this->ordreMission->destination;
@@ -39,19 +42,19 @@ class OrdreMissionNotificationMail extends Mailable
         $nombreJours = $this->ordreMission->nb_jours;
 
 
-
-        return $this->subject("Nouvelle demande d'ordre de mission")
+        return $this->subject("Ordre de mission approuvé par le Chef de Service")
             ->html("
-                <h2>Bonjour cher(e) chef de service, </h2>
-                <p>Une nouvelle demande d'ordre de mission a été soumise.</p>
-                <p>Demandeur: <strong>{$prenomDemandeur} {$nomDemandeur}</strong></p>
-                <p>Destination: <strong>{$destination}</strong></p>
-                <p>Date départ: <strong>{$dateDepart}</strong></p>
-                <p>Date début mission: <strong>{$dateDebut}</strong></p>
-                <p>Date fin de mission: <strong>{$dateFin}</strong></p>
-                <p>Nombre de jours: <strong>{$nombreJours}</strong></p>
-
-                <p>Merci de vous connecter pour approuver ou rejeter cette demande</p>
+                <h2>Bonjour, </h2>
+                <p>Le chef de service <strong>{$nomChefService} {$prenomChefService}</strong></p>
+                <p>vient d'approuver une demande d'ordre de mission par l'agent</p>
+                <p>{$prenomDemandeur} {$nomDemandeur}</p>
+                <p>Destination: {$destination}</p>
+                <p>date départ: {$dateDepart}</p>
+                <p>date début: {$dateDebut}</p>
+                <p>date de fin: {$dateFin}</p>
+                <p>Nombre de jours: {$nombreJours}</p>
+                <p><strong>Veuillez vous connecter et procéder au traitement de l'OM</strong></p>
+                <p>Merci.</p>
             ");
     }
 
@@ -61,10 +64,9 @@ class OrdreMissionNotificationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Nouvelle demande d'ordre de mission",
+            subject: 'Ordre de mission approuvé par le Chef de Service',
         );
     }
-
 
     /**
      * Get the message content definition.
