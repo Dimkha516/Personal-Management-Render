@@ -32,16 +32,30 @@
             window.onload = function () {
                 // Configuration de Swagger UI
                 const ui = SwaggerUIBundle({
-                    url: "/swagger.json", // Chemin vers votre fichier swagger.json
+                    urls: [
+                        { url: "/swagger.json", name: "API Principale" },
+                        { url: "/OmSwagger.json", name: "API OM" },
+                    ],
                     dom_id: "#swagger-ui",
                     deepLinking: true,
-                    presets: [
+                    presets: [  
                         SwaggerUIBundle.presets.apis,
                         SwaggerUIStandalonePreset,
                     ],
                     plugins: [SwaggerUIBundle.plugins.DownloadUrl],
                     layout: "StandaloneLayout",
                 });
+                // const ui = SwaggerUIBundle({
+                //     url: "/swagger.json", // Chemin vers votre fichier swagger.json
+                //     dom_id: "#swagger-ui",
+                //     deepLinking: true,
+                //     presets: [
+                //         SwaggerUIBundle.presets.apis,
+                //         SwaggerUIStandalonePreset,
+                //     ],
+                //     plugins: [SwaggerUIBundle.plugins.DownloadUrl],
+                //     layout: "StandaloneLayout",
+                // });
 
                 window.ui = ui;
             };

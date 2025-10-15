@@ -549,7 +549,8 @@ Route::prefix('v1')->group(function () {
         // Route::middleware('auth.expirable')->get("/", [ServiceController::class, 'index']);
         Route::get("/", [ServiceController::class, 'index']);
         Route::get("/addChefService/{id}", [ServiceController::class, 'addChefService']);
-        Route::middleware('auth.expirable')->get('/chefs', [ServiceController::class, 'getChefsService']);
+        // Route::middleware('auth.expirable')->get('/chefs', [ServiceController::class, 'getChefsService']);
+        Route::get('/chefs', [ServiceController::class, 'getChefsService']);
         Route::middleware('auth.expirable')->get("/{id}", [ServiceController::class, 'show']);
         // Route::middleware('auth.expirable')->get("/addChefService/{id}", [ServiceController::class, 'addChefService']);
         Route::middleware('auth.expirable')->post("/", [ServiceController::class, 'store']);
@@ -648,3 +649,7 @@ Mot de passe oublié.
 En cas de CDI pas de durée.
 Modifier Infos Employé.
 */
+
+// https://personal-management.onrender.com/api/v1/services/chefs
+
+<!-- http://156.67.31.244/ -->
