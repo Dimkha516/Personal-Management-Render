@@ -614,6 +614,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get("/", [OrdreMissionController::class, 'index']);
         Route::middleware('auth.expirable')->get("/mesOM", [OrdreMissionController::class, 'mesOM']);
+        Route::get('/chefs', [ServiceController::class, 'getChefsService']);
         Route::get("/{id}", [OrdreMissionController::class, 'show']);
         Route::middleware('auth.expirable')->post("/", [OrdreMissionController::class, 'store']);
         Route::middleware('auth.expirable')->put("/chefServiceDecision/{id}", [OrdreMissionController::class, 'traiterParChefService']);
