@@ -85,11 +85,11 @@ class OrdreMissionService
         ]);
 
         // dd($ordreMission);
-
+        
         // Envoi de l’email au chef de service
-        Mail::to($chefServiceEmploye->user->email) // supposons que chaque employé a un user avec email
-            ->send(new OrdreMissionNotificationMail($employe, $ordreMission));
-
+        // Mail::to($chefServiceEmploye->user->email) // supposons que chaque employé a un user avec email
+        // ->send(new OrdreMissionNotificationMail($employe, $ordreMission));
+        
         return $ordreMission;
     }
 
