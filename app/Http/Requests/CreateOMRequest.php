@@ -24,6 +24,7 @@ class CreateOMRequest extends FormRequest
         return [
             // 'demandeur_id' => 'required|exists:employes,id',
             'destination'  => 'required|string|max:255',
+            'motif_demande' => 'required|string|min:5',
 
             // 'kilometrage'  => 'nullable|integer|min:0',
             'kilometrage'  => 'required|integer|min:10',
@@ -46,6 +47,7 @@ class CreateOMRequest extends FormRequest
         return [
             // 'demandeur_id.required' => 'Le demandeur est obligatoire.',
             'destination.required'  => 'La destination est obligatoire.',
+            'motif_demande.required'  => 'Le motif de la demande est obligatoire.',
             'kilometrage.required' => 'Le nombre de kilomètre est requis',
             'kilometrage.min' => 'Le nombre de kilomètre minimun est 10',
             'date_depart.after_or_equal' => 'La date de départ doit être aujourd\'hui ou après.',

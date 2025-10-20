@@ -14,6 +14,7 @@ class OrdreMission extends Model
      protected $fillable = [
         'demandeur_id',
         'destination',
+        'motif_demande',
         'kilometrage',
         'qte_carburant',
         'vehicule_id',

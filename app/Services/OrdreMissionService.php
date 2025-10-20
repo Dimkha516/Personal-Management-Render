@@ -74,6 +74,7 @@ class OrdreMissionService
         $ordreMission = $this->ordreMissionRepository->create([
             'demandeur_id' => $employe->id,
             'destination'  => $data['destination'],
+            'motif_demande' => $data['motif_demande'],
             'kilometrage'  => $data['kilometrage'],
             'vehicule_id'  => $data['vehicule_id'] ?? null,
             'chauffeur_id' => $data['chauffeur_id'] ?? null,
