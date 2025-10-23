@@ -87,7 +87,7 @@ class OrdreMissionService
 
         // dd($ordreMission);
         
-        // Envoi de l’email au chef de service
+        // Envoi de l’email au chef de service: SERVICE INDISPONIBLE SUR RENDER
         // Mail::to($chefServiceEmploye->user->email) // supposons que chaque employé a un user avec email
         // ->send(new OrdreMissionNotificationMail($employe, $ordreMission));
         
@@ -124,13 +124,13 @@ class OrdreMissionService
                 'motif_rejet' => null
             ]);
 
-            // Notification DG & Secrétaire
-            $destinataires = User::whereIn('role', ['DG', 'secretaire'])->get();
-            foreach ($destinataires as $user) {
-                Mail::to($user->email)->send(
-                    new OrdreMissionValidationChefMail($ordreMission, $chef)
-                );
-            }
+            // Notification DG & Secrétaire:---------------SERVICE MAILING INDISPONIBLE SUR RENDER
+            // $destinataires = User::whereIn('role', ['DG', 'secretaire'])->get();
+            // foreach ($destinataires as $user) {
+            //     Mail::to($user->email)->send(
+            //         new OrdreMissionValidationChefMail($ordreMission, $chef)
+            //     );
+            // }
         } elseif ($action === 'rejeter') {
             if (!$motifRejet) {
                 throw new \Exception("Un motif de rejet est obligatoire.");
@@ -199,9 +199,10 @@ class OrdreMissionService
         $employe = Employe::where('user_id', Auth::id())->firstOrFail();
         $role = $employe->user->role ?? null;
 
-        if ($role !== 'chef_parc') {
-            abort(403, "Vous n'êtes pas autorisé à effectuer cette action.");
-        }
+        //------------------Vérification a faire sur le controller
+        // if ($role !== 'chef_parc') {
+        //     abort(403, "Vous n'êtes pas autorisé à effectuer cette action.");
+        // }
 
         // Chauffeur et véhicule fournis ou non
         $vehiculeId = $data['vehicule_id'] ?? $ordreMission->vehicule_id;
@@ -215,8 +216,10 @@ class OrdreMissionService
         $ordreMission->update([
             'vehicule_id' => $vehiculeId,
             'chauffeur_id' => $chauffeurId,
-            'statut' => 'pret', // ou "assigné"
+            // 'statut' => 'pret', // ou "assigné"
         ]);
+
+        // NOTIFIER CHEUFFEUR: SERVICE MAILING INDISPON SUR RENDER
 
         // Notification du demandeur --------------------- PARTIE A REVOIR SI NECESSAIRE OU PAS
         // $demandeur = $ordreMission->demandeur;

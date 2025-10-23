@@ -75,8 +75,9 @@ class OrdreMissionController extends Controller
         ], 201);
     }
 
-    public function traiterParChefService(int $id, ChefServiceValidationRequest $request)
+    public function traiterParChefService(int $id, ChefServiceValidationRequest $request,  PermissionService $permissionService)
     {
+        // $this->checkPermission($request, 'traiterDemandeOM', $permissionService);
         try {
             $ordreMission = $this->ordreMissionService->traiterParChefService(
                 $id,
@@ -96,6 +97,8 @@ class OrdreMissionController extends Controller
 
     public function traiterParDirection(TraiterOMDirectionRequest $request, $id)
     {
+
+        // $this->checkPermission($request, 'traiterDemandeOM', $permissionService);
         $ordreMission = $this->ordreMissionService->traiterParDirection($request->validated(), $id);
 
         return response()->json([
@@ -107,6 +110,7 @@ class OrdreMissionController extends Controller
 
     public function traiterParChefParc(TraiterOMChefParcRequest $request, $id)
     {
+        // $this->checkPermission($request, 'modifier_ordre_mission', $permissionService);
         $ordreMission = $this->ordreMissionService->traiterParChefParc($request->validated(), $id);
 
         return response()->json([

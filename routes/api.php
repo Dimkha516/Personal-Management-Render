@@ -618,14 +618,13 @@ Route::prefix('v1')->group(function () {
     //--------------- ORDRE MISSION Routes ---------------
     Route::prefix('ordresMission')->group(function () {
         // Route::middleware('auth.expirable')->get("/", [OrdreMissionController::class, 'index']);
-
         Route::get("/", [OrdreMissionController::class, 'index']);
         Route::middleware('auth.expirable')->get("/mesOM", [OrdreMissionController::class, 'mesOM']);
         Route::get('/chefs', [ServiceController::class, 'getChefsService']);
         Route::get("/{id}", [OrdreMissionController::class, 'show']);
         Route::middleware('auth.expirable')->post("/", [OrdreMissionController::class, 'store']);
-        Route::middleware('auth.expirable')->put("/chefServiceDecision/{id}", [OrdreMissionController::class, 'traiterParChefService']);
         Route::middleware('auth.expirable')->put("/directionDecision/{id}", [OrdreMissionController::class, 'traiterParDirection']);
+        Route::middleware('auth.expirable')->put("/chefServiceDecision/{id}", [OrdreMissionController::class, 'traiterParChefService']);
         Route::middleware('auth.expirable')->put("/chefParcAction/{id}", [OrdreMissionController::class, 'traiterParChefParc']);
     });
 
