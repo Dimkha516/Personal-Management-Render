@@ -468,6 +468,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/roles-permissions', [PermissionRoleController::class, 'index']);
     });
 
+    //--------------- Roles Routes ---------------
+    Route::prefix('roles')->group(function () {
+        Route::post('/', [PermissionRoleController::class, 'store']);
+    });
+
     //--------------- Authentication Routes ---------------
     Route::prefix('auth')->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
@@ -633,23 +638,6 @@ Route::prefix('v1')->group(function () {
 });
 
 
-/*
-Créer la table jours_exclus:
-Méthodes: 
-	-- Ajouter jour exclu: Date, Motif
-	-- GetAll Jours exclus
-	-- Retirer jour exclus
-    -- Ajouter plusieurs jours exclus en même temps pour le calendrier
-
-A demander: A qui envoyer la notification de création demande OM si chef de service null ?  Pour le moment si chef
-de service null, je l'envoi au DG directement. 
-----------------------------------------------------------------------------
-Congé annuel éviter les nombres de jour trop élevés.
-Changement statut matrimoniale
-Mot de passe oublié.
-En cas de CDI pas de durée.
-Modifier Infos Employé.
-*/
 
 // https://personal-management.onrender.com/api/v1/services/chefs
 
