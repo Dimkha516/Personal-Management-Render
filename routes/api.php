@@ -466,6 +466,8 @@ Route::prefix('v1')->group(function () {
     //--------------- Permissions and Roles Routes ---------------
     Route::prefix('permissions')->group(function () {
         Route::get('/roles-permissions', [PermissionRoleController::class, 'index']);
+        Route::post('/addPermission', [PermissionRoleController::class, 'storePermission']);
+        Route::post('/{roleId}', [PermissionRoleController::class, 'assignPermissions']);
     });
 
     //--------------- Roles Routes ---------------
