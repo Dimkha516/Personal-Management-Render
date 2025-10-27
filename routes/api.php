@@ -614,7 +614,7 @@ Route::prefix('v1')->group(function () {
         Route::get("/{id}", [ChauffeurController::class, 'show']);
         Route::post("/", [ChauffeurController::class, 'store']);
     });
-    http: //localhost:4200/api/v1/ordresMission/
+    // http: //localhost:4200/api/v1/ordresMission/
     //--------------- ORDRE MISSION Routes ---------------
     Route::prefix('ordresMission')->group(function () {
         // Route::middleware('auth.expirable')->get("/", [OrdreMissionController::class, 'index']);

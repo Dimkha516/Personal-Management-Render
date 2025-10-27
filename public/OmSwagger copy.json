@@ -2,19 +2,23 @@
     "openapi": "3.0.3",
     "info": {
         "title": "API Ordres de Mission",
-        "description": "Documentation des endpoints de gestion des Ordres de Mission (OM). Basée sur une architecture Repository, Service, Request et Controller. Authentification par token Sanctum.",
-        "version": "1.0.0"
+        "description": "Documentation des endpoints de gestion des Ordres de Mission (OM) et des Véhicules. Basée sur une architecture Repository, Service, Request et Controller. Authentification par token Sanctum.",
+        "version": "1.1.0"
     },
     "servers": [
         {
-            "url": "/api/v1/ordresMission",
-            "description": "Serveur principal des Ordres de Mission"
+            "url": "/api/v1",
+            "description": "Serveur principal API"
         }
     ],
     "tags": [
         {
             "name": "Ordres de Mission",
             "description": "Gestion complète des ordres de mission"
+        },
+        {
+            "name": "Véhicules",
+            "description": "Gestion des véhicules du parc automobile"
         }
     ],
     "components": {
@@ -68,6 +72,44 @@
                         "example": null
                     },
                     "carburant_valide": { "type": "boolean", "example": false }
+                }
+            },
+            "Vehicule": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "immatriculation": {
+                        "type": "string",
+                        "example": "DK-1234-AA"
+                    },
+                    "marque": { "type": "string", "example": "Toyota" },
+                    "modele": { "type": "string", "example": "Corolla" },
+                    "annee": { "type": "integer", "example": 2020 },
+                    "disponibilite": {
+                        "type": "string",
+                        "enum": ["disponible", "en_mission", "panne"],
+                        "example": "disponible"
+                    },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                }
+            },
+            "CreateVehiculeRequest": {
+                "type": "object",
+                "required": ["immatriculation"],
+                "properties": {
+                    "immatriculation": {
+                        "type": "string",
+                        "example": "DK-9876-BB"
+                    },
+                    "marque": { "type": "string", "example": "Peugeot" },
+                    "modele": { "type": "string", "example": "308" },
+                    "annee": { "type": "integer", "example": 2022 },
+                    "disponibilite": {
+                        "type": "string",
+                        "enum": ["disponible", "en_mission", "panne"],
+                        "example": "disponible"
+                    }
                 }
             },
             "CreateOMRequest": {
@@ -164,7 +206,7 @@
         }
     },
     "paths": {
-        "/": {
+        "/ordresMission": {
             "get": {
                 "tags": ["Ordres de Mission"],
                 "summary": "Lister tous les ordres de mission",
@@ -190,8 +232,7 @@
                                 }
                             }
                         }
-                    },
-                    "204": { "description": "Aucun ordre de mission trouvé" }
+                    }
                 }
             },
             "post": {
@@ -227,48 +268,47 @@
                                 }
                             }
                         }
-                    },
-                    "400": { "description": "Erreur de validation" }
+                    }
                 }
             }
         },
-        "/mesOM": {
+        "/vehicules": {
             "get": {
-                "tags": ["Ordres de Mission"],
-                "summary": "Lister les ordres de mission de l'utilisateur connecté",
-                "security": [{ "bearerAuth": [] }],
+                "tags": ["Véhicules"],
+                "summary": "Lister tous les véhicules",
                 "responses": {
                     "200": {
-                        "description": "Liste des OM du demandeur connecté",
+                        "description": "Liste des véhicules récupérée avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/OrdreMission"
+                                        "$ref": "#/components/schemas/Vehicule"
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-        },
-        "/{id}": {
-            "get": {
-                "tags": ["Ordres de Mission"],
-                "summary": "Afficher les détails d'un ordre de mission",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": { "type": "integer" }
+            },
+            "post": {
+                "tags": ["Véhicules"],
+                "summary": "Créer un nouveau véhicule",
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateVehiculeRequest"
+                            }
+                        }
                     }
-                ],
+                },
                 "responses": {
-                    "200": {
-                        "description": "Ordre de mission récupéré avec succès",
+                    "201": {
+                        "description": "Véhicule créé avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -276,110 +316,52 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Ordre de mission recupéré avec succès"
+                                            "example": "Véhicule ajouté avec succès"
                                         },
                                         "data": {
-                                            "$ref": "#/components/schemas/OrdreMission"
+                                            "$ref": "#/components/schemas/Vehicule"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vehicules/{id}": {
+            "get": {
+                "tags": ["Véhicules"],
+                "summary": "Afficher les détails d’un véhicule",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Véhicule récupéré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Détails du véhicule récupérés avec succès"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Vehicule"
                                         }
                                     }
                                 }
                             }
                         }
                     },
-                    "204": { "description": "Ordre de mission non trouvé" }
-                }
-            }
-        },
-        "/chefServiceDecision/{id}": {
-            "put": {
-                "tags": ["Ordres de Mission"],
-                "summary": "Décision du chef de service sur un ordre de mission",
-                "security": [{ "bearerAuth": [] }],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": { "type": "integer" }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ChefServiceValidationRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Décision du chef de service enregistrée avec succès"
-                    },
-                    "400": { "description": "Erreur de validation" }
-                }
-            }
-        },
-        "/directionDecision/{id}": {
-            "put": {
-                "tags": ["Ordres de Mission"],
-                "summary": "Décision de la direction sur un ordre de mission",
-                "security": [{ "bearerAuth": [] }],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": { "type": "integer" }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/TraiterOMDirectionRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Décision de la direction enregistrée avec succès"
-                    },
-                    "400": { "description": "Erreur de validation" }
-                }
-            }
-        },
-        "/chefParcAction/{id}": {
-            "put": {
-                "tags": ["Ordres de Mission"],
-                "summary": "Action du chef de parc sur un ordre de mission (affectation chauffeur/véhicule)",
-                "security": [{ "bearerAuth": [] }],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": { "type": "integer" }
-                    }
-                ],
-                "requestBody": {
-                    "required": false,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/TraiterOMChefParcRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Affectation effectuée avec succès"
-                    },
-                    "400": { "description": "Erreur de validation" }
+                    "404": { "description": "Véhicule non trouvé" }
                 }
             }
         }

@@ -1,299 +1,641 @@
 {
-  "openapi": "3.0.3",
-  "info": {
-    "title": "API Ordres de Mission & Services",
-    "description": "Documentation des endpoints de gestion des Ordres de Mission (OM) et des chefs de services. Authentification via Sanctum pour certains endpoints.",
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "/api/v1",
-      "description": "Serveur principal"
-    }
-  ],
-  "tags": [
-    {
-      "name": "Ordres de Mission",
-      "description": "Gestion complète des ordres de mission"
+    "openapi": "3.0.3",
+    "info": {
+        "title": "API Ordres de Mission",
+        "description": "Documentation des endpoints de gestion des Ordres de Mission (OM). Basée sur une architecture Repository, Service, Request et Controller. Authentification par token Sanctum.",
+        "version": "1.0.0"
     },
-    {
-      "name": "Services",
-      "description": "Gestion et récupération des chefs de services"
-    }
-  ],
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "schemas": {
-      "OrdreMission": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "integer", "example": 1 },
-          "demandeur_id": { "type": "integer", "example": 12 },
-          "destination": { "type": "string", "example": "Dakar" },
-          "kilometrage": { "type": "integer", "example": 250 },
-          "qte_carburant": { "type": "number", "example": 25.5 },
-          "vehicule_id": { "type": "integer", "example": 3 },
-          "chauffeur_id": { "type": "integer", "example": 8 },
-          "total_frais": { "type": "number", "example": 15000 },
-          "numero_identification": { "type": "string", "example": "OM-2025-0001" },
-          "date_depart": { "type": "string", "format": "date", "example": "2025-10-15" },
-          "date_debut": { "type": "string", "format": "date", "example": "2025-10-16" },
-          "date_fin": { "type": "string", "format": "date", "example": "2025-10-18" },
-          "nb_jours": { "type": "integer", "example": 3 },
-          "statut": { "type": "string", "example": "en_attente" },
-          "chef_service_validation": { "type": "boolean", "example": false },
-          "motif_rejet": { "type": "string", "nullable": true, "example": null },
-          "carburant_valide": { "type": "boolean", "example": false }
+    "servers": [
+        {
+            "url": "/api/v1/ordresMission",
+            "description": "Serveur principal des Ordres de Mission"
         }
-      },
-      "CreateOMRequest": {
-        "type": "object",
-        "required": ["destination", "kilometrage", "date_debut", "date_fin"],
-        "properties": {
-          "destination": { "type": "string", "example": "Saint-Louis" },
-          "kilometrage": { "type": "integer", "example": 120 },
-          "qte_carburant": { "type": "number", "example": 20 },
-          "vehicule_id": { "type": "integer", "nullable": true, "example": 5 },
-          "chauffeur_id": { "type": "integer", "nullable": true, "example": 2 },
-          "date_depart": { "type": "string", "format": "date", "example": "2025-10-20" },
-          "date_debut": { "type": "string", "format": "date", "example": "2025-10-21" },
-          "date_fin": { "type": "string", "format": "date", "example": "2025-10-25" },
-          "nb_jours": { "type": "integer", "example": 5 }
+    ],
+    "tags": [
+        {
+            "name": "Ordres de Mission",
+            "description": "Gestion complète des ordres de mission"
+        },
+        {
+            "name": "Véhicules",
+            "description": "Gestion des véhicules du parc automobile"
+        },
+        {
+            "name": "Chauffeurs",
+            "description": "Gestion des chauffeurs"
         }
-      },
-      "ChefServiceValidationRequest": {
-        "type": "object",
-        "required": ["action"],
-        "properties": {
-          "action": { "type": "string", "enum": ["approuver", "rejeter"], "example": "approuver" },
-          "motif_rejet": { "type": "string", "nullable": true, "example": "Mission non conforme" }
-        }
-      },
-      "TraiterOMDirectionRequest": {
-        "type": "object",
-        "required": ["decision"],
-        "properties": {
-          "decision": { "type": "string", "enum": ["approuve", "rejete"], "example": "approuve" },
-          "qte_carburant": { "type": "number", "example": 30 },
-          "motif_rejet": { "type": "string", "nullable": true, "example": "Budget insuffisant" }
-        }
-      },
-      "TraiterOMChefParcRequest": {
-        "type": "object",
-        "properties": {
-          "vehicule_id": { "type": "integer", "nullable": true, "example": 2 },
-          "chauffeur_id": { "type": "integer", "nullable": true, "example": 5 }
-        }
-      },
-      "ChefService": {
-        "type": "object",
-        "properties": {
-          "service_id": { "type": "integer", "example": 1 },
-          "service_name": { "type": "string", "example": "Informatique" },
-          "chef": {
-            "type": "object",
-            "properties": {
-              "id": { "type": "integer", "example": 1 },
-              "nom": { "type": "string", "example": "Mamadou" },
-              "prenom": { "type": "string", "example": "Dramé" },
-              "email": { "type": "string", "format": "email", "example": "dimkha56@gmail.com" },
-              "telephone": { "type": "string", "nullable": true, "example": null }
+    ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
-          }
-        }
-      }
-    }
-  },
-  "paths": {
-    "/ordresMission": {
-      "get": {
-        "tags": ["Ordres de Mission"],
-        "summary": "Lister tous les ordres de mission",
-        "responses": {
-          "200": {
-            "description": "Liste chargée avec succès",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": { "type": "string", "example": "liste ordre de mission chargée avec succès" },
-                    "data": { "type": "array", "items": { "$ref": "#/components/schemas/OrdreMission" } }
-                  }
+        },
+        "schemas": {
+            "OrdreMission": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "demandeur_id": { "type": "integer", "example": 12 },
+                    "destination": { "type": "string", "example": "Dakar" },
+                    "kilometrage": { "type": "integer", "example": 250 },
+                    "qte_carburant": { "type": "number", "example": 25.5 },
+                    "vehicule_id": { "type": "integer", "example": 3 },
+                    "chauffeur_id": { "type": "integer", "example": 8 },
+                    "total_frais": { "type": "number", "example": 15000 },
+                    "numero_identification": {
+                        "type": "string",
+                        "example": "OM-2025-0001"
+                    },
+                    "date_depart": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-15"
+                    },
+                    "date_debut": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-16"
+                    },
+                    "date_fin": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-18"
+                    },
+                    "nb_jours": { "type": "integer", "example": 3 },
+                    "statut": { "type": "string", "example": "en_attente" },
+                    "chef_service_validation": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "motif_rejet": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "carburant_valide": { "type": "boolean", "example": false }
                 }
-              }
-            }
-          },
-          "204": { "description": "Aucun ordre de mission trouvé" }
-        }
-      },
-      "post": {
-        "tags": ["Ordres de Mission"],
-        "summary": "Créer un nouvel ordre de mission",
-        "security": [{ "bearerAuth": [] }],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreateOMRequest" }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Ordre de mission créé avec succès",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": { "type": "string", "example": "Ordre de mission crée avec succès" },
-                    "data": { "$ref": "#/components/schemas/OrdreMission" }
-                  }
+            },
+            "CreateOMRequest": {
+                "type": "object",
+                "required": [
+                    "destination",
+                    "kilometrage",
+                    "date_debut",
+                    "date_fin"
+                ],
+                "properties": {
+                    "destination": {
+                        "type": "string",
+                        "example": "Saint-Louis"
+                    },
+                    "kilometrage": { "type": "integer", "example": 120 },
+                    "qte_carburant": { "type": "number", "example": 20 },
+                    "vehicule_id": {
+                        "type": "integer",
+                        "nullable": true,
+                        "example": 5
+                    },
+                    "chauffeur_id": {
+                        "type": "integer",
+                        "nullable": true,
+                        "example": 2
+                    },
+                    "date_depart": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-20"
+                    },
+                    "date_debut": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-21"
+                    },
+                    "date_fin": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-25"
+                    },
+                    "nb_jours": { "type": "integer", "example": 5 }
                 }
-              }
-            }
-          },
-          "400": { "description": "Erreur de validation" }
-        }
-      }
-    },
-    "/ordresMission/mesOM": {
-      "get": {
-        "tags": ["Ordres de Mission"],
-        "summary": "Lister les ordres de mission de l'utilisateur connecté",
-        "security": [{ "bearerAuth": [] }],
-        "responses": {
-          "200": {
-            "description": "Liste des OM du demandeur connecté",
-            "content": {
-              "application/json": {
-                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/OrdreMission" } }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/ordresMission/{id}": {
-      "get": {
-        "tags": ["Ordres de Mission"],
-        "summary": "Afficher les détails d'un ordre de mission",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
-        ],
-        "responses": {
-          "200": {
-            "description": "Ordre de mission récupéré avec succès",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": { "type": "string", "example": "Ordre de mission recupéré avec succès" },
-                    "data": { "$ref": "#/components/schemas/OrdreMission" }
-                  }
-                }
-              }
-            }
-          },
-          "204": { "description": "Ordre de mission non trouvé" }
-        }
-      }
-    },
-    "/ordresMission/chefServiceDecision/{id}": {
-      "put": {
-        "tags": ["Ordres de Mission"],
-        "summary": "Décision du chef de service sur un ordre de mission",
-        "security": [{ "bearerAuth": [] }],
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/ChefServiceValidationRequest" } }
-          }
-        },
-        "responses": {
-          "200": { "description": "Décision du chef de service enregistrée avec succès" },
-          "400": { "description": "Erreur de validation" }
-        }
-      }
-    },
-    "/ordresMission/directionDecision/{id}": {
-      "put": {
-        "tags": ["Ordres de Mission"],
-        "summary": "Décision de la direction sur un ordre de mission",
-        "security": [{ "bearerAuth": [] }],
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/TraiterOMDirectionRequest" } }
-          }
-        },
-        "responses": {
-          "200": { "description": "Décision de la direction enregistrée avec succès" },
-          "400": { "description": "Erreur de validation" }
-        }
-      }
-    },
-    "/ordresMission/chefParcAction/{id}": {
-      "put": {
-        "tags": ["Ordres de Mission"],
-        "summary": "Action du chef de parc sur un ordre de mission (affectation chauffeur/véhicule)",
-        "security": [{ "bearerAuth": [] }],
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
-        ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/TraiterOMChefParcRequest" } }
-          }
-        },
-        "responses": {
-          "200": { "description": "Affectation effectuée avec succès" },
-          "400": { "description": "Erreur de validation" }
-        }
-      }
-    },
-    "/ordresMission/chefs": {
-      "get": {
-        "tags": ["Services"],
-        "summary": "Liste des chefs de services",
-        "description": "Récupère la liste de tous les chefs de service avec les informations du service et du chef associé.",
-        "responses": {
-          "200": {
-            "description": "Liste des chefs de service récupérée avec succès",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": { "type": "string", "example": "success" },
-                    "data": {
-                      "type": "array",
-                      "items": { "$ref": "#/components/schemas/ChefService" }
+            },
+            "ChefServiceValidationRequest": {
+                "type": "object",
+                "required": ["action"],
+                "properties": {
+                    "action": {
+                        "type": "string",
+                        "enum": ["approuver", "rejeter"],
+                        "example": "approuver"
+                    },
+                    "motif_rejet": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "Mission non conforme"
                     }
-                  }
                 }
-              }
+            },
+            "TraiterOMDirectionRequest": {
+                "type": "object",
+                "required": ["decision"],
+                "properties": {
+                    "decision": {
+                        "type": "string",
+                        "enum": ["approuve", "rejete"],
+                        "example": "approuve"
+                    },
+                    "qte_carburant": { "type": "number", "example": 30 },
+                    "motif_rejet": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "Budget insuffisant"
+                    }
+                }
+            },
+            "TraiterOMChefParcRequest": {
+                "type": "object",
+                "properties": {
+                    "vehicule_id": {
+                        "type": "integer",
+                        "nullable": true,
+                        "example": 2
+                    },
+                    "chauffeur_id": {
+                        "type": "integer",
+                        "nullable": true,
+                        "example": 5
+                    }
+                }
+            },
+            "Vehicule": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "immatriculation": {
+                        "type": "string",
+                        "example": "AA-123-BB"
+                    },
+                    "marque": { "type": "string", "example": "Toyota" },
+                    "modele": { "type": "string", "example": "Hilux" },
+                    "annee": { "type": "integer", "example": 2022 },
+                    "disponibilite": {
+                        "type": "string",
+                        "enum": ["disponible", "en_mission", "panne"],
+                        "example": "disponible"
+                    }
+                }
+            },
+            "CreateVehiculeRequest": {
+                "type": "object",
+                "required": ["immatriculation"],
+                "properties": {
+                    "immatriculation": {
+                        "type": "string",
+                        "example": "DK-4589-AK"
+                    },
+                    "marque": { "type": "string", "example": "Nissan" },
+                    "modele": { "type": "string", "example": "Patrol" },
+                    "annee": { "type": "integer", "example": 2021 }
+                }
+            },
+            "Chauffeur": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "nom": { "type": "string", "example": "Ndiaye" },
+                    "prenom": { "type": "string", "example": "Moussa" },
+                    "telephone": { "type": "string", "example": "778556677" },
+                    "disponible": { "type": "boolean", "example": true }
+                }
+            },
+            "CreateChauffeurRequest": {
+                "type": "object",
+                "required": ["nom", "prenom", "telephone"],
+                "properties": {
+                    "nom": { "type": "string", "example": "Diop" },
+                    "prenom": { "type": "string", "example": "Aliou" },
+                    "telephone": {
+                        "type": "string",
+                        "pattern": "^(77|70|76|75|78)[0-9]{7}$",
+                        "example": "771234567"
+                    }
+                }
             }
-          },
-          "204": { "description": "Aucun chef de service trouvé" },
-          "500": { "description": "Erreur interne du serveur" }
         }
-      }
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "tags": ["Ordres de Mission"],
+                "summary": "Lister tous les ordres de mission",
+                "responses": {
+                    "200": {
+                        "description": "Liste chargée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "liste ordre de mission chargée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OrdreMission"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "204": { "description": "Aucun ordre de mission trouvé" }
+                }
+            },
+            "post": {
+                "tags": ["Ordres de Mission"],
+                "summary": "Créer un nouvel ordre de mission",
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateOMRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ordre de mission créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ordre de mission crée avec succès"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/OrdreMission"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": { "description": "Erreur de validation" }
+                }
+            }
+        },
+        "/mesOM": {
+            "get": {
+                "tags": ["Ordres de Mission"],
+                "summary": "Lister les ordres de mission de l'utilisateur connecté",
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "200": {
+                        "description": "Liste des OM du demandeur connecté",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/OrdreMission"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/{id}": {
+            "get": {
+                "tags": ["Ordres de Mission"],
+                "summary": "Afficher les détails d'un ordre de mission",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ordre de mission récupéré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ordre de mission recupéré avec succès"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/OrdreMission"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "204": { "description": "Ordre de mission non trouvé" }
+                }
+            }
+        },
+        "/chefServiceDecision/{id}": {
+            "put": {
+                "tags": ["Ordres de Mission"],
+                "summary": "Décision du chef de service sur un ordre de mission",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChefServiceValidationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Décision du chef de service enregistrée avec succès"
+                    },
+                    "400": { "description": "Erreur de validation" }
+                }
+            }
+        },
+        "/directionDecision/{id}": {
+            "put": {
+                "tags": ["Ordres de Mission"],
+                "summary": "Décision de la direction sur un ordre de mission",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TraiterOMDirectionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Décision de la direction enregistrée avec succès"
+                    },
+                    "400": { "description": "Erreur de validation" }
+                }
+            }
+        },
+        "/chefParcAction/{id}": {
+            "put": {
+                "tags": ["Ordres de Mission"],
+                "summary": "Action du chef de parc sur un ordre de mission (affectation chauffeur/véhicule)",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TraiterOMChefParcRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Affectation effectuée avec succès"
+                    },
+                    "400": { "description": "Erreur de validation" }
+                }
+            }
+        },
+
+        "/vehicules": {
+            "get": {
+                "tags": ["Véhicules"],
+                "summary": "Lister tous les véhicules",
+                "responses": {
+                    "200": {
+                        "description": "Liste des véhicules",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Vehicule"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "204": { "description": "Aucun véhicule trouvé" }
+                }
+            },
+            "post": {
+                "tags": ["Véhicules"],
+                "summary": "Créer un véhicule",
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateVehiculeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Véhicule créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Véhicule créé avec succès"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Vehicule"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": { "description": "Erreur de validation" }
+                }
+            }
+        },
+        "/vehicules/{id}": {
+            "get": {
+                "tags": ["Véhicules"],
+                "summary": "Afficher les détails d’un véhicule",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails du véhicule",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Détails du véhicule récupérés avec succès"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Vehicule"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": { "description": "Véhicule non trouvé" }
+                }
+            }
+        },
+
+        "/chauffeurs": {
+            "get": {
+                "tags": ["Chauffeurs"],
+                "summary": "Lister tous les chauffeurs",
+                "responses": {
+                    "200": {
+                        "description": "Liste des chauffeurs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Chauffeur"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "204": { "description": "Aucun chauffeur trouvé" }
+                }
+            },
+            "post": {
+                "tags": ["Chauffeurs"],
+                "summary": "Créer un chauffeur",
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateChauffeurRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Chauffeur créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chauffeur créé avec succès"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Chauffeur"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": { "description": "Erreur de validation" }
+                }
+            }
+        },
+        "/chauffeurs/{id}": {
+            "get": {
+                "tags": ["Chauffeurs"],
+                "summary": "Afficher les détails d’un chauffeur",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails du chauffeur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Détails du chauffeur récupérés avec succès"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Chauffeur"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": { "description": "Chauffeur non trouvé" }
+                }
+            }
+        }
     }
-  }
 }

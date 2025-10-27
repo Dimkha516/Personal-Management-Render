@@ -6,8 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CreateVehiculeRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
+    /*
+     Determine if the user is authorized to make this request.
         
     immatriculation, marque, modele, annee
     
@@ -32,7 +32,7 @@ class CreateVehiculeRequest extends FormRequest
         ];
     }
 
-    public function messages(): array 
+    public function messages(): array
     {
         return [
             'immatriculation.required' => 'l`immatriculation est requise',
@@ -41,6 +41,4 @@ class CreateVehiculeRequest extends FormRequest
             'annee' => 'L`année est obligatoire'
         ];
     }
-    
-    
 }
