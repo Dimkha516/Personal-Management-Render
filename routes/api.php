@@ -602,19 +602,31 @@ Route::prefix('v1')->group(function () {
     });
 
     //--------------- VEHICULES Routes ---------------
-    Route::prefix('vehicules')->group(function () {
+    // Route::prefix('vehicules')->group(function () {
+    //     Route::get("/", [VehiculeController::class, 'index']);
+    //     Route::get("/{id}", [VehiculeController::class, 'show']);
+    //     Route::post("/", [VehiculeController::class, 'store']);
+    // });
+
+    Route::prefix('ordresMission/vehicules')->group(function () {
         Route::get("/", [VehiculeController::class, 'index']);
         Route::get("/{id}", [VehiculeController::class, 'show']);
         Route::post("/", [VehiculeController::class, 'store']);
     });
 
     //--------------- Chauffeur Routes ---------------
-    Route::prefix('chauffeurs')->group(function () {
+    // Route::prefix('chauffeurs')->group(function () {
+    //     Route::get("/", [ChauffeurController::class, 'index']);
+    //     Route::get("/{id}", [ChauffeurController::class, 'show']);
+    //     Route::post("/", [ChauffeurController::class, 'store']);
+    // });
+
+    Route::prefix('ordresMission/chauffeurs')->group(function () {
         Route::get("/", [ChauffeurController::class, 'index']);
         Route::get("/{id}", [ChauffeurController::class, 'show']);
         Route::post("/", [ChauffeurController::class, 'store']);
     });
-    // http: //localhost:4200/api/v1/ordresMission/
+
     //--------------- ORDRE MISSION Routes ---------------
     Route::prefix('ordresMission')->group(function () {
         // Route::middleware('auth.expirable')->get("/", [OrdreMissionController::class, 'index']);
